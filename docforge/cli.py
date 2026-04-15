@@ -117,12 +117,12 @@ def _print_help():
     console.print()
 
     commands = [
-        ("init",     "🔨", "Initialize a new docforge project"),
-        ("generate", "🤖", "Generate docs from source code using Gemini AI"),
-        ("collect",  "📦", "Collect source context into docs/_context/"),
-        ("serve",    "🌐", "Start Docusaurus local dev server"),
+        ("init",     "🔨 ", "Initialize a new docforge project"),
+        ("generate", "🤖 ", "Generate docs from source code using Gemini AI"),
+        ("collect",  "📦 ", "Collect source context into docs/_context/"),
+        ("serve",    "🌐 ", "Start Docusaurus local dev server"),
         ("build",    "🏗️", "Build Docusaurus site for production"),
-        ("token",    "🔑", "Generate a new developer access token"),
+        ("token",    "🔑 ", "Generate a new developer access token"),
     ]
 
     for cmd, emoji, desc in commands:
