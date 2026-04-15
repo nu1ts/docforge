@@ -105,11 +105,18 @@ def _confirm(prompt):
 @click.group()
 @click.version_option(version=__version__)
 def main():
+    """docforge — AI-powered documentation generator for developers.
+
+    Generates Markdown docs from source code using Gemini AI
+    and publishes them via Docusaurus to GitHub Pages.
+
+    Docs: https://github.com/nu1ts/docforge
+    """
     pass
 
 
-@main.command()
-@click.option("--name", default=None, help="Name of the project")
+@main.command(help="Initialize a new docforge project in the current directory.")
+@click.option("--name", default=None, help="Name of the project.")
 def init(name):
     _print_header("Initializing docforge", "🔨")
     console.print()
@@ -174,9 +181,9 @@ def init(name):
     _print_success("Initialization complete 🎉")
 
 
-@main.command()
-@click.option("--only", default=None, help="Generate specific doc by ID")
-@click.option("--config", default="docforge.yaml", help="Config file path")
+@main.command(help="Generate documentation using Gemini AI.")
+@click.option("--only", default=None, help="Generate only a specific doc by its ID.")
+@click.option("--config", default="docforge.yaml", help="Path to config file.")
 def generate(only, config):
     _print_header("Generating documentation", "🤖")
 
@@ -199,8 +206,8 @@ def generate(only, config):
     _print_success("Generated [highlight]%d[/] document(s)" % count)
 
 
-@main.command()
-@click.option("--config", default="docforge.yaml")
+@main.command(help="Collect source context and save to docs/_context/.")
+@click.option("--config", default="docforge.yaml", help="Path to config file.")
 def collect(config):
     _print_header("Collecting context", "📦")
 
@@ -226,8 +233,8 @@ def collect(config):
     _print_success("Context saved to [cyan]%s[/]" % ctx_dir)
 
 
-@main.command()
-@click.option("--config", default="docforge.yaml")
+@main.command(help="Start Docusaurus local dev server.")
+@click.option("--config", default="docforge.yaml", help="Path to config file.")
 def serve(config):
     _print_header("Starting dev server", "🌐")
 
@@ -249,8 +256,8 @@ def serve(config):
     _run(["npm", "start"], cwd=str(site_dir))
 
 
-@main.command()
-@click.option("--config", default="docforge.yaml")
+@main.command(help="Build Docusaurus site for production.")
+@click.option("--config", default="docforge.yaml", help="Path to config file.")
 def build(config):
     _print_header("Building site", "🏗️")
 
@@ -274,7 +281,7 @@ def build(config):
         sys.exit(code)
 
 
-@main.command()
+@main.command(help="Generate a new developer access token.")
 @click.argument("developer_name")
 def token(developer_name):
     _print_header("New Access Token", "🔑")
