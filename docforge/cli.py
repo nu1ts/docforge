@@ -1,5 +1,6 @@
 ﻿import hashlib
 import os
+import platform
 import subprocess
 
 import click
@@ -9,6 +10,8 @@ from rich.panel import Panel
 from docforge import __version__
 
 console = Console()
+
+_SHELL = platform.system() == "Windows"
 
 
 def find_project_root():
@@ -144,7 +147,7 @@ def serve(config):
         return
 
     console.print("🌐 Starting dev server...")
-    subprocess.call(["npm", "start"], cwd=str(site_dir))
+    subprocess.call(["npm", "start"], cwd=str(site_dir), shell=_SHELL)
 
 
 @main.command()
@@ -157,7 +160,9 @@ def build(config):
 
     site_dir = os.path.join(str(root), str(cfg.docusaurus_dir))
     console.print("🏗️ Building site...")
-    subprocess.check_call(["npm", "run", "build"], cwd=str(site_dir))
+    subprocess.check_call(
+        ["npm", "run", "build"], cwd=str(site_dir), shell=_SHELL
+    )
     console.print("✅ Built to [cyan]%s[/]" % os.path.join(str(site_dir), "build"))
 
 

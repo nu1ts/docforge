@@ -1,4 +1,5 @@
 ﻿import os
+import platform
 import shutil
 import subprocess
 
@@ -11,6 +12,13 @@ TEMPLATES_DIR = os.path.join(
     os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
     "templates",
 )
+
+_SHELL = platform.system() == "Windows"
+
+
+def _run_npm(args, cwd):
+    cmd = ["npm"] + args
+    subprocess.check_call(cmd, cwd=cwd, shell=_SHELL)
 
 
 def init_config(project_root, project_name):
@@ -170,7 +178,7 @@ def init_docusaurus(project_root, config_path="docforge.yaml"):
         shutil.copy2(css_src, os.path.join(css_dir, "custom.css"))
 
     console.print("\n📦 Installing Docusaurus dependencies...")
-    subprocess.check_call(["npm", "install"], cwd=site_dir)
+    _run_npm(["install"], cwd=site_dir)
 
     console.print("\n✅ Docusaurus initialized in [cyan]%s[/]" % site_dir)
 
