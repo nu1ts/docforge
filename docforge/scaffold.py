@@ -1,4 +1,5 @@
 ﻿import os
+import platform
 import shutil
 import subprocess
 
@@ -11,6 +12,20 @@ TEMPLATES_DIR = os.path.join(
     os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
     "templates",
 )
+
+_SHELL = platform.system() == "Windows"
+
+
+def _run_npm(args, cwd):
+    cmd = ["npm"] + args
+    subprocess.check_call(cmd, cwd=cwd, shell=_SHELL)
+
+
+def _write_file(path, content):
+    if content.startswith("\ufeff"):
+        content = content[1:]
+    with open(path, "w", encoding="utf-8", newline="\n") as f:
+        f.write(content)
 
 
 def init_config(project_root, project_name):
@@ -111,8 +126,7 @@ def init_config(project_root, project_name):
                          project_name, project_name, project_name,
                      )
 
-    with open(config_path, "w", encoding="utf-8") as f:
-        f.write(config_content)
+    _write_file(config_path, config_content)
     console.print("✅ Created [cyan]%s[/]" % config_path)
     console.print("   Edit it to match your project structure")
 
@@ -141,7 +155,7 @@ def init_docusaurus(project_root, config_path="docforge.yaml"):
 
     files_to_render = {
         "docusaurus.config.ts.j2": "docusaurus.config.ts",
-        "sidebars.ts.j2": "sidebars.ts",
+        "sidebars.js.j2": "sidebars.js",
         "package.json.j2": "package.json",
     }
 
@@ -149,8 +163,7 @@ def init_docusaurus(project_root, config_path="docforge.yaml"):
         template = env.get_template(template_name)
         content = template.render(**template_vars)
         output_path = os.path.join(site_dir, output_name)
-        with open(output_path, "w", encoding="utf-8") as f:
-            f.write(content)
+        _write_file(output_path, content)
         console.print("  ✅ %s" % output_path)
 
     if config.auth.enabled:
@@ -159,8 +172,7 @@ def init_docusaurus(project_root, config_path="docforge.yaml"):
         template = env.get_template("Root.tsx.j2")
         content = template.render(**template_vars)
         root_tsx_path = os.path.join(theme_dir, "Root.tsx")
-        with open(root_tsx_path, "w", encoding="utf-8") as f:
-            f.write(content)
+        _write_file(root_tsx_path, content)
         console.print("  ✅ %s" % root_tsx_path)
 
     css_dir = os.path.join(site_dir, "src", "css")
@@ -169,8 +181,27 @@ def init_docusaurus(project_root, config_path="docforge.yaml"):
     if os.path.exists(css_src):
         shutil.copy2(css_src, os.path.join(css_dir, "custom.css"))
 
+    docs_dir = os.path.join(site_dir, "docs")
+    os.makedirs(docs_dir)
+
+    index_content = (
+                        "---\n"
+                        "slug: /\n"
+                        "sidebar_position: 0\n"
+                        "---\n"
+                        "\n"
+                        "# %s\n"
+                        "\n"
+                        "Documentation will be generated here.\n"
+                        "\n"
+                        "Run `docforge generate` to create docs.\n"
+                    ) % config.project_name
+
+    _write_file(os.path.join(docs_dir, "index.md"), index_content)
+    console.print("  ✅ %s" % os.path.join(docs_dir, "index.md"))
+
     console.print("\n📦 Installing Docusaurus dependencies...")
-    subprocess.check_call(["npm", "install"], cwd=site_dir)
+    _run_npm(["install"], cwd=site_dir)
 
     console.print("\n✅ Docusaurus initialized in [cyan]%s[/]" % site_dir)
 
@@ -265,6 +296,5 @@ def init_github_actions(project_root, config_path="docforge.yaml"):
                   config.docusaurus_dir,
               )
 
-    with open(workflow_path, "w", encoding="utf-8") as f:
-        f.write(content)
+    _write_file(workflow_path, content)
     console.print("✅ Created [cyan]%s[/]" % workflow_path)
