@@ -163,11 +163,15 @@ def init(name):
         _print_success("Created [cyan].gitignore[/]")
 
     console.print()
-    console.rule("[dim]Next steps[/]")
-    _print_step("Edit [cyan]docforge.yaml[/]")
-    _print_step("export [cyan]GEMINI_API_KEY[/]='...'")
-    _print_step("Run [cyan]docforge generate[/]")
-    _print_step("Run [cyan]docforge serve[/]")
+    console.print(Panel(
+        "  [dim]1.[/] Edit [cyan]docforge.yaml[/]\n"
+        "  [dim]2.[/] export [cyan]GEMINI_API_KEY[/]='...'\n"
+        "  [dim]3.[/] Run [cyan]docforge generate[/]\n"
+        "  [dim]4.[/] Run [cyan]docforge serve[/]",
+        title="[dim]Next steps[/]",
+        border_style="dim",
+        padding=(0, 2),
+    ))
     console.print()
     _print_success("Initialization complete 🎉")
 

@@ -5,7 +5,7 @@ import subprocess
 
 from jinja2 import Environment, FileSystemLoader
 from rich.console import Console
-from rich.progress import Progress, SpinnerColumn, TextColumn
+from rich.progress import Progress, SpinnerColumn, TextColumn, BarColumn, TaskProgressColumn
 from rich.theme import Theme
 
 custom_theme = Theme({
@@ -43,8 +43,9 @@ def _print_warning(text):
 def _run_npm(args, cwd, description="Running npm..."):
     cmd = ["npm"] + args
     with Progress(
-            SpinnerColumn(),
-            TextColumn("  [info]{task.description}[/]"),
+            TextColumn("  "),
+            SpinnerColumn(spinner_name="dots", style="bold green"),
+            TextColumn("[bold green]{task.description}[/]"),
             console=console,
             transient=True,
     ) as progress:
