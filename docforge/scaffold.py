@@ -21,7 +21,7 @@ def init_config(project_root, project_name):
 
     config_content = (
                          '# docforge.yaml — конфигурация генерации документации\n'
-                         '# Docs: https://github.com/nu1ts/docforge\n'
+                         '# Docs: https://github.com/YOUR_USER/docforge\n'
                          '\n'
                          'project_name: "%s"\n'
                          'description: "Описание проекта"\n'
@@ -29,7 +29,7 @@ def init_config(project_root, project_name):
                          'output_dir: "docs/dev"\n'
                          'docusaurus_dir: "docs-site"\n'
                          '\n'
-                         '# ─── Системный промпт для AI ────────────────────────────────\n'
+                         '# ─── Системный промпт для AI ─────────────────────────────────\n'
                          'system_prompt: |\n'
                          '  Ты — эксперт-технический писатель.\n'
                          '  Проект: %s.\n'
@@ -37,50 +37,58 @@ def init_config(project_root, project_name):
                          '  Язык: русский. Формат: чистый Markdown.\n'
                          '\n'
                          '# ─── Источники контекста ─────────────────────────────────────\n'
+                         '# Настройте паттерны под вашу структуру проекта.\n'
+                         '# Документация по glob: https://docs.python.org/3/library/glob.html\n'
                          'sources:\n'
-                         '  - name: go_sources\n'
-                         '    patterns: ["**/*.go"]\n'
-                         '    exclude: ["vendor/", "node_modules/", "_test.go"]\n'
+                         '\n'
+                         '  # Исходный код проекта\n'
+                         '  # Замените паттерны под ваш язык:\n'
+                         '  #   Python:     ["**/*.py"]\n'
+                         '  #   Go:         ["**/*.go"]\n'
+                         '  #   TypeScript: ["**/*.ts", "**/*.tsx"]\n'
+                         '  #   Java:       ["**/*.java"]\n'
+                         '  #   Rust:       ["**/*.rs"]\n'
+                         '  - name: source_code\n'
+                         '    base_dir: "src"\n'
+                         '    patterns: ["**/*"]\n'
+                         '    exclude: ["**/__pycache__/**", "**/node_modules/**", "**/*.pyc"]\n'
                          '    max_chars: 80000\n'
                          '\n'
-                         '  - name: frontend_sources\n'
-                         '    patterns: ["**/*.jsx", "**/*.tsx", "**/*.js", "**/*.ts"]\n'
-                         '    base_dir: "frontend/src"\n'
-                         '    exclude: []\n'
-                         '    max_chars: 30000\n'
-                         '\n'
-                         '  - name: wails_bindings\n'
-                         '    patterns: ["**/*.js", "**/*.ts"]\n'
-                         '    base_dir: "frontend/wailsjs"\n'
+                         '  # Файлы конфигурации в корне проекта\n'
+                         '  - name: configs\n'
+                         '    base_dir: "."\n'
+                         '    patterns: ["*.toml", "*.yaml", "*.yml", "*.json", "*.ini", "*.cfg"]\n'
+                         '    exclude: ["docforge.yaml"]\n'
                          '    max_chars: 10000\n'
                          '\n'
+                         '  # Структура корневой директории\n'
                          '  - name: structure\n'
+                         '    base_dir: "."\n'
                          '    patterns: ["*"]\n'
+                         '    exclude: ["*.pyc", ".git"]\n'
                          '    max_chars: 5000\n'
                          '\n'
-                         '  - name: go_mod\n'
-                         '    patterns: ["go.mod"]\n'
-                         '    max_chars: 3000\n'
-                         '\n'
-                         '  - name: package_json\n'
-                         '    patterns: ["package.json"]\n'
-                         '    base_dir: "frontend"\n'
-                         '    max_chars: 3000\n'
+                         '  # README и документация\n'
+                         '  - name: readme\n'
+                         '    base_dir: "."\n'
+                         '    patterns: ["README*", "CONTRIBUTING*", "CHANGELOG*"]\n'
+                         '    max_chars: 10000\n'
                          '\n'
                          '# ─── Документы для генерации ─────────────────────────────────\n'
                          'docs:\n'
+                         '\n'
                          '  - id: "architecture/overview"\n'
                          '    output: "architecture/overview.md"\n'
                          '    title: "Архитектура проекта"\n'
                          '    prompt_template: "architecture"\n'
-                         '    sources: ["go_sources", "frontend_sources", "structure"]\n'
+                         '    sources: ["source_code", "structure"]\n'
                          '    sidebar_position: 1\n'
                          '\n'
                          '  - id: "development/setup"\n'
                          '    output: "development/setup.md"\n'
                          '    title: "Настройка среды разработки"\n'
                          '    prompt_template: "setup-guide"\n'
-                         '    sources: ["go_mod", "package_json", "structure"]\n'
+                         '    sources: ["configs", "structure", "readme"]\n'
                          '    sidebar_position: 1\n'
                          '\n'
                          '# ─── Авторизация ─────────────────────────────────────────────\n'
@@ -145,7 +153,6 @@ def init_docusaurus(project_root, config_path="docforge.yaml"):
             f.write(content)
         console.print("  ✅ %s" % output_path)
 
-    # Auth gate
     if config.auth.enabled:
         theme_dir = os.path.join(site_dir, "src", "theme")
         os.makedirs(theme_dir)
@@ -156,14 +163,12 @@ def init_docusaurus(project_root, config_path="docforge.yaml"):
             f.write(content)
         console.print("  ✅ %s" % root_tsx_path)
 
-    # CSS
     css_dir = os.path.join(site_dir, "src", "css")
     os.makedirs(css_dir)
     css_src = os.path.join(docusaurus_templates, "custom.css")
     if os.path.exists(css_src):
         shutil.copy2(css_src, os.path.join(css_dir, "custom.css"))
 
-    # Install deps
     console.print("\n📦 Installing Docusaurus dependencies...")
     subprocess.check_call(["npm", "install"], cwd=site_dir)
 
@@ -189,10 +194,7 @@ def init_github_actions(project_root, config_path="docforge.yaml"):
                   '  push:\n'
                   '    branches: [main]\n'
                   '    paths:\n'
-                  '      - "internal/**"\n'
-                  '      - "*.go"\n'
-                  '      - "frontend/src/**"\n'
-                  '      - "frontend/wailsjs/**"\n'
+                  '      - "src/**"\n'
                   '      - "docforge.yaml"\n'
                   '  workflow_dispatch:\n'
                   '\n'
@@ -220,7 +222,7 @@ def init_github_actions(project_root, config_path="docforge.yaml"):
                   '        uses: actions/cache@v4\n'
                   '        with:\n'
                   '          path: %s\n'
-                  '          key: docs-${{ hashFiles(\'internal/**\', \'*.go\', \'frontend/src/**\') }}\n'
+                  '          key: docs-${{ hashFiles(\'src/**\', \'docforge.yaml\') }}\n'
                   '\n'
                   '      - name: Setup Python\n'
                   '        if: steps.cache.outputs.cache-hit != \'true\'\n'
