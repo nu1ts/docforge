@@ -21,7 +21,7 @@ def init_config(project_root, project_name):
 
     config_content = (
                          '# docforge.yaml — конфигурация генерации документации\n'
-                         '# Docs: https://github.com/nu1ts/docforge\n'
+                         '# Docs: https://github.com/YOUR_USER/docforge\n'
                          '\n'
                          'project_name: "%s"\n'
                          'description: "Описание проекта"\n'
