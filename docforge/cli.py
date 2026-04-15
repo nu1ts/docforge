@@ -26,6 +26,103 @@ console = Console(theme=custom_theme)
 _IS_WINDOWS = platform.system() == "Windows"
 _SHELL = _IS_WINDOWS
 
+_COMMAND_META = {
+    "init": (
+        "🔨 ",
+        "Initialize a new docforge project in the current directory.",
+        "docforge init [--name NAME]",
+        [
+            ("--name NAME", "Name of the project (prompted if omitted)."),
+            ("--help",      "Show this message and exit."),
+        ],
+        [],
+    ),
+    "generate": (
+        "🤖 ",
+        "Generate documentation from source code using Gemini AI.",
+        "docforge generate [--only ID] [--config FILE]",
+        [
+            ("--only ID",    "Generate only a specific doc by its ID."),
+            ("--config FILE", "Path to config file.  [default: docforge.yaml]"),
+            ("--help",       "Show this message and exit."),
+        ],
+        [],
+    ),
+    "collect": (
+        "📦 ",
+        "Collect source context and save to docs/_context/.",
+        "docforge collect [--config FILE]",
+        [
+            ("--config FILE", "Path to config file.  [default: docforge.yaml]"),
+            ("--help",        "Show this message and exit."),
+        ],
+        [],
+    ),
+    "serve": (
+        "🌐 ",
+        "Start Docusaurus local dev server at http://localhost:3000",
+        "docforge serve [--config FILE]",
+        [
+            ("--config FILE", "Path to config file.  [default: docforge.yaml]"),
+            ("--help",        "Show this message and exit."),
+        ],
+        [],
+    ),
+    "build": (
+        "🏗️ ",
+        "Build Docusaurus site for production.",
+        "docforge build [--config FILE]",
+        [
+            ("--config FILE", "Path to config file.  [default: docforge.yaml]"),
+            ("--help",        "Show this message and exit."),
+        ],
+        [],
+    ),
+    "token": (
+        "🔑 ",
+        "Generate a new developer access token and print its SHA-256 hash.",
+        "docforge token DEVELOPER_NAME",
+        [
+            ("--help", "Show this message and exit."),
+        ],
+        [
+            ("DEVELOPER_NAME", "Name of the developer to associate with the token."),
+        ],
+    ),
+}
+
+
+def _print_command_help(name):
+    if name not in _COMMAND_META:
+        return
+
+    emoji, desc, usage, options, args = _COMMAND_META[name]
+
+    console.print(Panel(
+        "%s docforge %s" % (emoji, name),
+        style="bold blue",
+        padding=(0, 2),
+        ))
+    console.print()
+    console.print("  %s" % desc)
+    console.print()
+    console.print("  [dim]Usage:[/] [cyan]%s[/]" % usage)
+
+    if args:
+        console.print()
+        console.rule("[dim]Arguments[/]")
+        console.print()
+        for arg, arg_desc in args:
+            console.print("  [cyan]%-20s[/]  [dim]%s[/]" % (arg, arg_desc))
+
+    console.print()
+    console.rule("[dim]Options[/]")
+    console.print()
+    for opt, opt_desc in options:
+        console.print("  [cyan]%-20s[/]  [dim]%s[/]" % (opt, opt_desc))
+
+    console.print()
+
 
 def _terminate_process(proc):
     if proc is None:
@@ -96,18 +193,84 @@ def _print_error(text):
     console.print("[error]  ✖[/]  %s" % text)
 
 
+def _print_help():
+    console.print(Panel(
+        "🔨  docforge — AI-powered documentation generator",
+        style="bold blue",
+        padding=(0, 2),
+    ))
+    console.print()
+    console.print(
+        "  Generates Markdown docs from source code using Gemini AI\n"
+        "  and publishes them via Docusaurus to GitHub Pages."
+    )
+    console.print()
+    console.print("  [dim]Usage:[/] docforge [dim]<command>[/] [dim][options][/]")
+    console.print()
+    console.print("  [dim]Version:[/] [highlight]%s[/]" % __version__)
+    console.print("  [dim]Docs:[/]    [cyan]https://github.com/nu1ts/docforge[/]")
+    console.print()
+    console.rule("[dim]Commands[/]")
+    console.print()
+
+    commands = [
+        ("init",     "🔨 ", "Initialize a new docforge project"),
+        ("generate", "🤖 ", "Generate docs from source code using Gemini AI"),
+        ("collect",  "📦 ", "Collect source context into docs/_context/"),
+        ("serve",    "🌐 ", "Start Docusaurus local dev server"),
+        ("build",    "🏗️", "Build Docusaurus site for production"),
+        ("token",    "🔑 ", "Generate a new developer access token"),
+    ]
+
+    for cmd, emoji, desc in commands:
+        console.print(
+            "  %s  [cyan]%-10s[/]  [dim]%s[/]" % (emoji, cmd, desc)
+        )
+
+    console.print()
+    console.print(
+        "  Run [cyan]docforge <command> --help[/] for command-specific options."
+    )
+
+
+def _confirm(prompt):
+    return click.confirm("  [?] %s" % prompt, default=True)
+
+
 # ─────────────────────────── CLI ────────────────────────────
 
-@click.group()
+class RichGroup(click.Group):
+    def format_help(self, ctx, formatter):
+        _print_help()
+
+
+class RichCommand(click.Command):
+    def format_help(self, ctx, formatter):
+        _print_command_help(self.name)
+
+
+@click.group(cls=RichGroup, invoke_without_command=True)
 @click.version_option(version=__version__)
-def main():
-    pass
+@click.pass_context
+def main(ctx):
+    if ctx.invoked_subcommand is None:
+        _print_help()
+        console.print()
 
 
-@main.command()
-@click.option("--name", prompt="Project name", help="Name of the project")
+@main.command(cls=RichCommand)
+@click.option("--name", default=None, help="Name of the project.")
 def init(name):
     _print_header("Initializing docforge", "🔨")
+    console.print()
+
+    if name is None:
+        name = console.input("  [dim]›[/] Project name: ").strip()
+        if not name:
+            _print_error("Project name cannot be empty.")
+            sys.exit(1)
+
+    console.print()
 
     root = os.getcwd()
 
@@ -120,10 +283,11 @@ def init(name):
     init_config(root, name)
 
     console.print()
-    if click.confirm("  Initialize Docusaurus site?", default=True):
+    if _confirm("Initialize Docusaurus site?"):
         init_docusaurus(root)
 
-    if click.confirm("  Create GitHub Actions workflow?", default=True):
+    console.print()
+    if _confirm("Create GitHub Actions workflow?"):
         init_github_actions(root)
 
     gitignore_path = os.path.join(root, ".gitignore")
@@ -147,18 +311,22 @@ def init(name):
         _print_success("Created [cyan].gitignore[/]")
 
     console.print()
-    console.rule("[dim]Next steps[/]")
-    _print_step("Edit [cyan]docforge.yaml[/]")
-    _print_step("export [cyan]GEMINI_API_KEY[/]='...'")
-    _print_step("Run [cyan]docforge generate[/]")
-    _print_step("Run [cyan]docforge serve[/]")
+    console.print(Panel(
+        "  [dim]1.[/] Edit [cyan]docforge.yaml[/]\n"
+        "  [dim]2.[/] export [cyan]GEMINI_API_KEY[/]='...'\n"
+        "  [dim]3.[/] Run [cyan]docforge generate[/]\n"
+        "  [dim]4.[/] Run [cyan]docforge serve[/]",
+        title="[dim]Next steps[/]",
+        border_style="dim",
+        padding=(0, 2),
+    ))
     console.print()
     _print_success("Initialization complete 🎉")
 
 
-@main.command()
-@click.option("--only", default=None, help="Generate specific doc by ID")
-@click.option("--config", default="docforge.yaml", help="Config file path")
+@main.command(cls=RichCommand)
+@click.option("--only", default=None, help="Generate only a specific doc by its ID.")
+@click.option("--config", default="docforge.yaml", help="Path to config file.")
 def generate(only, config):
     _print_header("Generating documentation", "🤖")
 
@@ -181,8 +349,8 @@ def generate(only, config):
     _print_success("Generated [highlight]%d[/] document(s)" % count)
 
 
-@main.command()
-@click.option("--config", default="docforge.yaml")
+@main.command(cls=RichCommand)
+@click.option("--config", default="docforge.yaml", help="Path to config file.")
 def collect(config):
     _print_header("Collecting context", "📦")
 
@@ -208,8 +376,8 @@ def collect(config):
     _print_success("Context saved to [cyan]%s[/]" % ctx_dir)
 
 
-@main.command()
-@click.option("--config", default="docforge.yaml")
+@main.command(cls=RichCommand)
+@click.option("--config", default="docforge.yaml", help="Path to config file.")
 def serve(config):
     _print_header("Starting dev server", "🌐")
 
@@ -231,8 +399,8 @@ def serve(config):
     _run(["npm", "start"], cwd=str(site_dir))
 
 
-@main.command()
-@click.option("--config", default="docforge.yaml")
+@main.command(cls=RichCommand)
+@click.option("--config", default="docforge.yaml", help="Path to config file.")
 def build(config):
     _print_header("Building site", "🏗️")
 
@@ -256,7 +424,7 @@ def build(config):
         sys.exit(code)
 
 
-@main.command()
+@main.command(cls=RichCommand)
 @click.argument("developer_name")
 def token(developer_name):
     _print_header("New Access Token", "🔑")

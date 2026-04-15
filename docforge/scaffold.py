@@ -2,10 +2,10 @@
 import platform
 import shutil
 import subprocess
-import sys
 
 from jinja2 import Environment, FileSystemLoader
 from rich.console import Console
+from rich.progress import Progress, SpinnerColumn, TextColumn, BarColumn, TaskProgressColumn
 from rich.theme import Theme
 
 custom_theme = Theme({
@@ -40,12 +40,23 @@ def _print_warning(text):
     console.print("[warning]  ⚠[/]  %s" % text)
 
 
-def _run_npm(args, cwd):
+def _run_npm(args, cwd, description="Running npm..."):
     cmd = ["npm"] + args
-    subprocess.check_call(
-        cmd, cwd=cwd, shell=_SHELL,
-        stdout=sys.stdout, stderr=sys.stderr,
-    )
+    with Progress(
+            TextColumn("  "),
+            SpinnerColumn(spinner_name="dots", style="bold green"),
+            TextColumn("[bold green]{task.description}[/]"),
+            console=console,
+            transient=True,
+    ) as progress:
+        progress.add_task(description, total=None)
+        result = subprocess.call(
+            cmd, cwd=cwd, shell=_SHELL,
+            stdout=subprocess.DEVNULL,
+            stderr=subprocess.DEVNULL,
+        )
+    if result != 0:
+        raise subprocess.CalledProcessError(result, cmd)
 
 
 def _write_file(path, content):
@@ -226,10 +237,11 @@ def init_docusaurus(project_root, config_path="docforge.yaml"):
     _print_success("[cyan]%s[/]" % index_path)
 
     console.print()
-    console.print("  [info]📦 Installing Docusaurus dependencies...[/]")
-    _run_npm(["install"], cwd=site_dir)
-
-    console.print()
+    _run_npm(
+        ["install"],
+        cwd=site_dir,
+        description="Installing Docusaurus dependencies...",
+    )
     _print_success("Docusaurus initialized in [cyan]%s[/]" % site_dir)
 
 
