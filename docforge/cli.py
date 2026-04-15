@@ -96,23 +96,64 @@ def _print_error(text):
     console.print("[error]  ✖[/]  %s" % text)
 
 
+def _print_help():
+    console.print(Panel(
+        "🔨  docforge — AI-powered documentation generator",
+        style="bold blue",
+        padding=(0, 2),
+    ))
+    console.print()
+    console.print(
+        "  Generates Markdown docs from source code using Gemini AI\n"
+        "  and publishes them via Docusaurus to GitHub Pages."
+    )
+    console.print()
+    console.print("  [dim]Usage:[/] docforge [dim]<command>[/] [dim][options][/]")
+    console.print()
+    console.print("  [dim]Version:[/] [highlight]%s[/]" % __version__)
+    console.print("  [dim]Docs:[/]    [cyan]https://github.com/nu1ts/docforge[/]")
+    console.print()
+    console.rule("[dim]Commands[/]")
+    console.print()
+
+    commands = [
+        ("init",     "🔨", "Initialize a new docforge project"),
+        ("generate", "🤖", "Generate docs from source code using Gemini AI"),
+        ("collect",  "📦", "Collect source context into docs/_context/"),
+        ("serve",    "🌐", "Start Docusaurus local dev server"),
+        ("build",    "🏗️", "Build Docusaurus site for production"),
+        ("token",    "🔑", "Generate a new developer access token"),
+    ]
+
+    for cmd, emoji, desc in commands:
+        console.print(
+            "  %s  [cyan]%-10s[/]  [dim]%s[/]" % (emoji, cmd, desc)
+        )
+
+    console.print()
+    console.print(
+        "  Run [cyan]docforge <command> --help[/] for command-specific options."
+    )
+
+
 def _confirm(prompt):
     return click.confirm("  [?] %s" % prompt, default=True)
 
 
 # ─────────────────────────── CLI ────────────────────────────
 
-@click.group()
+class RichGroup(click.Group):
+    def format_help(self, ctx, formatter):
+        _print_help()
+
+
+@click.group(cls=RichGroup, invoke_without_command=True)
 @click.version_option(version=__version__)
-def main():
-    """docforge — AI-powered documentation generator for developers.
-
-    Generates Markdown docs from source code using Gemini AI
-    and publishes them via Docusaurus to GitHub Pages.
-
-    Docs: https://github.com/nu1ts/docforge
-    """
-    pass
+@click.pass_context
+def main(ctx):
+    if ctx.invoked_subcommand is None:
+        _print_help()
+        console.print()
 
 
 @main.command(help="Initialize a new docforge project in the current directory.")
