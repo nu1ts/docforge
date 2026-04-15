@@ -61,19 +61,28 @@ class ProjectConfig:
 
     @classmethod
     def from_file(cls, path):
-        if not os.path.exists(path):
+        config_path = str(path)
+
+        if not os.path.exists(config_path):
             raise IOError(
                 "Configuration not found: %s\n"
-                "Run: docforge init" % path
+                "Run: docforge init" % config_path
             )
 
-        with open(path, "r") as f:
+        with open(config_path, "r", encoding="utf-8") as f:
             raw = yaml.safe_load(f)
 
         sources = [
             SourceConfig(**s) for s in raw.get("sources", [])
         ]
-        docs = [DocConfig(**d) for d in raw.get("docs", [])]
+
+        docs = []
+        for d in raw.get("docs", []):
+            doc_data = dict(d)
+            if "id" in doc_data:
+                doc_data["doc_id"] = doc_data.pop("id")
+            docs.append(DocConfig(**doc_data))
+
         auth = AuthConfig(**raw.get("auth", {}))
         site = SiteConfig(**raw.get("site", {}))
 

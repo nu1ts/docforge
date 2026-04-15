@@ -20,98 +20,98 @@ def init_config(project_root, project_name):
         return
 
     config_content = (
-                         '# docforge.yaml — конфигурация генерации документации\n'
-                         '# Docs: https://github.com/YOUR_USER/docforge\n'
+                         '# docforge.yaml\n'
+                         '# Docs: https://github.com/nu1ts/docforge\n'
                          '\n'
                          'project_name: "%s"\n'
-                         'description: "Описание проекта"\n'
+                         'description: ""\n'
                          'model: "gemini-2.5-flash"\n'
                          'output_dir: "docs/dev"\n'
                          'docusaurus_dir: "docs-site"\n'
                          '\n'
-                         '# ─── Системный промпт для AI ─────────────────────────────────\n'
-                         'system_prompt: |\n'
-                         '  Ты — эксперт-технический писатель.\n'
-                         '  Проект: %s.\n'
-                         '  Пиши чётко, структурированно, с примерами кода.\n'
-                         '  Язык: русский. Формат: чистый Markdown.\n'
+                         '# System prompt (leave empty for default)\n'
+                         'system_prompt: ""\n'
                          '\n'
-                         '# ─── Источники контекста ─────────────────────────────────────\n'
-                         '# Настройте паттерны под вашу структуру проекта.\n'
-                         '# Документация по glob: https://docs.python.org/3/library/glob.html\n'
+                         '# Sources: files that AI will read when generating docs.\n'
+                         '#\n'
+                         '# Pattern examples by language:\n'
+                         '#   Python:     ["**/*.py"]\n'
+                         '#   Go:         ["**/*.go"]\n'
+                         '#   TypeScript: ["**/*.ts", "**/*.tsx"]\n'
+                         '#   Java:       ["**/*.java"]\n'
+                         '#   Rust:       ["**/*.rs"]\n'
+                         '#   C/C++:      ["**/*.c", "**/*.cpp", "**/*.h"]\n'
                          'sources:\n'
                          '\n'
-                         '  # Исходный код проекта\n'
-                         '  # Замените паттерны под ваш язык:\n'
-                         '  #   Python:     ["**/*.py"]\n'
-                         '  #   Go:         ["**/*.go"]\n'
-                         '  #   TypeScript: ["**/*.ts", "**/*.tsx"]\n'
-                         '  #   Java:       ["**/*.java"]\n'
-                         '  #   Rust:       ["**/*.rs"]\n'
                          '  - name: source_code\n'
-                         '    base_dir: "src"\n'
-                         '    patterns: ["**/*"]\n'
-                         '    exclude: ["**/__pycache__/**", "**/node_modules/**", "**/*.pyc"]\n'
+                         '    base_dir: "."\n'
+                         '    patterns: ["**/*.py"]   # <- change to your language\n'
+                         '    exclude:\n'
+                         '      - ".git/"\n'
+                         '      - "node_modules/"\n'
+                         '      - "__pycache__/"\n'
+                         '      - "*.pyc"\n'
+                         '      - "dist/"\n'
+                         '      - "build/"\n'
                          '    max_chars: 80000\n'
                          '\n'
-                         '  # Файлы конфигурации в корне проекта\n'
                          '  - name: configs\n'
                          '    base_dir: "."\n'
                          '    patterns: ["*.toml", "*.yaml", "*.yml", "*.json", "*.ini", "*.cfg"]\n'
                          '    exclude: ["docforge.yaml"]\n'
                          '    max_chars: 10000\n'
                          '\n'
-                         '  # Структура корневой директории\n'
-                         '  - name: structure\n'
-                         '    base_dir: "."\n'
-                         '    patterns: ["*"]\n'
-                         '    exclude: ["*.pyc", ".git"]\n'
-                         '    max_chars: 5000\n'
-                         '\n'
-                         '  # README и документация\n'
                          '  - name: readme\n'
                          '    base_dir: "."\n'
                          '    patterns: ["README*", "CONTRIBUTING*", "CHANGELOG*"]\n'
                          '    max_chars: 10000\n'
                          '\n'
-                         '# ─── Документы для генерации ─────────────────────────────────\n'
+                         '# Documents to generate\n'
                          'docs:\n'
                          '\n'
-                         '  - id: "architecture/overview"\n'
-                         '    output: "architecture/overview.md"\n'
-                         '    title: "Архитектура проекта"\n'
+                         '  - id: "overview"\n'
+                         '    output: "overview.md"\n'
+                         '    title: "Project Overview"\n'
+                         '    prompt_template: "overview"\n'
+                         '    sources: ["source_code", "readme"]\n'
+                         '    sidebar_position: 1\n'
+                         '\n'
+                         '  - id: "architecture"\n'
+                         '    output: "architecture.md"\n'
+                         '    title: "Architecture"\n'
                          '    prompt_template: "architecture"\n'
-                         '    sources: ["source_code", "structure"]\n'
-                         '    sidebar_position: 1\n'
+                         '    sources: ["source_code"]\n'
+                         '    sidebar_position: 2\n'
                          '\n'
-                         '  - id: "development/setup"\n'
-                         '    output: "development/setup.md"\n'
-                         '    title: "Настройка среды разработки"\n'
+                         '  - id: "setup"\n'
+                         '    output: "setup.md"\n'
+                         '    title: "Setup & Installation"\n'
                          '    prompt_template: "setup-guide"\n'
-                         '    sources: ["configs", "structure", "readme"]\n'
-                         '    sidebar_position: 1\n'
+                         '    sources: ["configs", "readme"]\n'
+                         '    sidebar_position: 3\n'
                          '\n'
-                         '# ─── Авторизация ─────────────────────────────────────────────\n'
+                         '# Auth: false = public docs, true = token required\n'
+                         '# Generate token: docforge token <name>\n'
                          'auth:\n'
-                         '  enabled: true\n'
+                         '  enabled: false\n'
                          '  method: "token"\n'
                          '  token_hashes: []\n'
                          '\n'
-                         '# ─── Настройки сайта (GitHub Pages) ─────────────────────────\n'
+                         '# Site settings (GitHub Pages)\n'
                          'site:\n'
                          '  title: "%s Docs"\n'
                          '  url: "https://YOUR_USER.github.io"\n'
                          '  base_url: "/%s/"\n'
                          '  github_user: "YOUR_USER"\n'
                          '  repo_name: "%s"\n'
-                         '  locale: "ru"\n'
+                         '  locale: "en"\n'
                          '  no_index: true\n'
                      ) % (
-                         project_name, project_name,
+                         project_name,
                          project_name, project_name, project_name,
                      )
 
-    with open(config_path, "w") as f:
+    with open(config_path, "w", encoding="utf-8") as f:
         f.write(config_content)
     console.print("✅ Created [cyan]%s[/]" % config_path)
     console.print("   Edit it to match your project structure")
@@ -149,7 +149,7 @@ def init_docusaurus(project_root, config_path="docforge.yaml"):
         template = env.get_template(template_name)
         content = template.render(**template_vars)
         output_path = os.path.join(site_dir, output_name)
-        with open(output_path, "w") as f:
+        with open(output_path, "w", encoding="utf-8") as f:
             f.write(content)
         console.print("  ✅ %s" % output_path)
 
@@ -159,7 +159,7 @@ def init_docusaurus(project_root, config_path="docforge.yaml"):
         template = env.get_template("Root.tsx.j2")
         content = template.render(**template_vars)
         root_tsx_path = os.path.join(theme_dir, "Root.tsx")
-        with open(root_tsx_path, "w") as f:
+        with open(root_tsx_path, "w", encoding="utf-8") as f:
             f.write(content)
         console.print("  ✅ %s" % root_tsx_path)
 
@@ -265,6 +265,6 @@ def init_github_actions(project_root, config_path="docforge.yaml"):
                   config.docusaurus_dir,
               )
 
-    with open(workflow_path, "w") as f:
+    with open(workflow_path, "w", encoding="utf-8") as f:
         f.write(content)
     console.print("✅ Created [cyan]%s[/]" % workflow_path)

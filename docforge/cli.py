@@ -65,14 +65,14 @@ def init(name):
         "docs-site/.docusaurus/\n"
     )
     if os.path.exists(gitignore_path):
-        with open(gitignore_path, "r") as f:
+        with open(gitignore_path, "r", encoding="utf-8") as f:
             content = f.read()
         if "docforge" not in content:
-            with open(gitignore_path, "a") as f:
+            with open(gitignore_path, "a", encoding="utf-8") as f:
                 f.write(additions)
             console.print("✅ Updated .gitignore")
     else:
-        with open(gitignore_path, "w") as f:
+        with open(gitignore_path, "w", encoding="utf-8") as f:
             f.write(additions)
         console.print("✅ Created .gitignore")
 
