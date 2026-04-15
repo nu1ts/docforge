@@ -3,7 +3,6 @@
     url: '{{ site.url }}',
     baseUrl: '{{ site.base_url }}',
     onBrokenLinks: 'warn',
-    onBrokenMarkdownLinks: 'warn',
     favicon: 'img/favicon.ico',
 
     organizationName: '{{ site.github_user }}',
@@ -24,7 +23,8 @@
             {
                 docs: {
                     routeBasePath: '/',
-                    sidebarPath: './sidebars.ts',
+                    sidebarPath: './sidebars.js',
+                    path: 'docs',
                 },
                 blog: false,
                 theme: {

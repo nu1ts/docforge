@@ -177,6 +177,27 @@ def init_docusaurus(project_root, config_path="docforge.yaml"):
     if os.path.exists(css_src):
         shutil.copy2(css_src, os.path.join(css_dir, "custom.css"))
 
+    docs_dir = os.path.join(site_dir, "docs")
+    os.makedirs(docs_dir)
+
+    index_content = (
+                        "---\n"
+                        "slug: /\n"
+                        "sidebar_position: 0\n"
+                        "---\n"
+                        "\n"
+                        "# %s\n"
+                        "\n"
+                        "Documentation will be generated here.\n"
+                        "\n"
+                        "Run `docforge generate` to create docs.\n"
+                    ) % config.project_name
+
+    index_path = os.path.join(docs_dir, "index.md")
+    with open(index_path, "w", encoding="utf-8") as f:
+        f.write(index_content)
+    console.print("  ✅ %s" % index_path)
+
     console.print("\n📦 Installing Docusaurus dependencies...")
     _run_npm(["install"], cwd=site_dir)
 
