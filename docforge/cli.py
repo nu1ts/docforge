@@ -144,6 +144,8 @@ def _run(cmd, cwd=None):
     kwargs = {"cwd": cwd}
     if not _IS_WINDOWS:
         kwargs["preexec_fn"] = os.setsid
+    else:
+        kwargs["shell"] = True
 
     proc = subprocess.Popen(cmd, **kwargs)
     try:
