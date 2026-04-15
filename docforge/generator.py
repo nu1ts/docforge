@@ -156,16 +156,17 @@ def generate_all(config, context, project_root, only=None):
                 doc, context, config, project_root, client, gen_config
             )
             out_path = os.path.join(output_dir, doc.output)
+            out_path = out_path.replace("\\", "/")
             out_dir = os.path.dirname(out_path)
             if not os.path.exists(out_dir):
                 os.makedirs(out_dir)
-            with open(out_path, "w") as f:
+            with open(out_path, "w", encoding="utf-8") as f:
                 f.write(content)
-            console.print("  ✅ %s" % out_path)
+            console.print("[success]  ✔[/]  %s" % out_path)
             success += 1
             time.sleep(2)
         except (IOError, OSError, ValueError, RuntimeError) as e:
-            console.print("  ❌ %s: %s" % (doc.output, e))
+            console.print("[error]  ✖[/]  %s: %s" % (doc.output, e))
 
     if not only:
         _generate_index(config, output_dir)
@@ -202,8 +203,9 @@ def _generate_index(config, output_dir):
         lines.append("")
 
     path = os.path.join(str(output_dir), "index.md")
+    path = path.replace("\\", "/")
     if not os.path.exists(str(output_dir)):
         os.makedirs(str(output_dir))
-    with open(path, "w") as f:
+    with open(path, "w", encoding="utf-8") as f:
         f.write("\n".join(lines))
-    console.print("  ✅ %s" % path)
+    console.print("[success]  ✔[/]  %s" % path)
