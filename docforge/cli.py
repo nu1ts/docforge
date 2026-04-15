@@ -368,7 +368,7 @@ def collect(config):
 
     for name, content in context.items():
         file_path = os.path.join(ctx_dir, "%s.txt" % name)
-        with open(file_path, "w") as f:
+        with open(file_path, "w", encoding="utf-8") as f:
             f.write(content)
         _print_step("Saved [cyan]%s.txt[/]" % name)
 

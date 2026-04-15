@@ -13,7 +13,7 @@ def collect_source(source, project_root):
 
     for pattern in source.patterns:
         search_path = os.path.join(base, str(pattern))
-        matched_files = sorted(glob.glob(search_path))
+        matched_files = sorted(glob.glob(search_path, recursive=True))
 
         for filepath in matched_files:
             rel = os.path.relpath(str(filepath), str(project_root))
@@ -25,7 +25,7 @@ def collect_source(source, project_root):
                 continue
 
             try:
-                with open(filepath, "r") as f:
+                with open(filepath, "r", encoding="utf-8", errors="ignore") as f:
                     content = f.read()
             except (IOError, OSError):
                 continue
