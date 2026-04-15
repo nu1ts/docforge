@@ -21,6 +21,13 @@ def _run_npm(args, cwd):
     subprocess.check_call(cmd, cwd=cwd, shell=_SHELL)
 
 
+def _write_file(path, content):
+    if content.startswith("\ufeff"):
+        content = content[1:]
+    with open(path, "w", encoding="utf-8", newline="\n") as f:
+        f.write(content)
+
+
 def init_config(project_root, project_name):
     config_path = os.path.join(str(project_root), "docforge.yaml")
     if os.path.exists(config_path):
@@ -119,8 +126,7 @@ def init_config(project_root, project_name):
                          project_name, project_name, project_name,
                      )
 
-    with open(config_path, "w", encoding="utf-8") as f:
-        f.write(config_content)
+    _write_file(config_path, config_content)
     console.print("✅ Created [cyan]%s[/]" % config_path)
     console.print("   Edit it to match your project structure")
 
@@ -157,8 +163,7 @@ def init_docusaurus(project_root, config_path="docforge.yaml"):
         template = env.get_template(template_name)
         content = template.render(**template_vars)
         output_path = os.path.join(site_dir, output_name)
-        with open(output_path, "w", encoding="utf-8") as f:
-            f.write(content)
+        _write_file(output_path, content)
         console.print("  ✅ %s" % output_path)
 
     if config.auth.enabled:
@@ -167,8 +172,7 @@ def init_docusaurus(project_root, config_path="docforge.yaml"):
         template = env.get_template("Root.tsx.j2")
         content = template.render(**template_vars)
         root_tsx_path = os.path.join(theme_dir, "Root.tsx")
-        with open(root_tsx_path, "w", encoding="utf-8") as f:
-            f.write(content)
+        _write_file(root_tsx_path, content)
         console.print("  ✅ %s" % root_tsx_path)
 
     css_dir = os.path.join(site_dir, "src", "css")
@@ -193,10 +197,8 @@ def init_docusaurus(project_root, config_path="docforge.yaml"):
                         "Run `docforge generate` to create docs.\n"
                     ) % config.project_name
 
-    index_path = os.path.join(docs_dir, "index.md")
-    with open(index_path, "w", encoding="utf-8") as f:
-        f.write(index_content)
-    console.print("  ✅ %s" % index_path)
+    _write_file(os.path.join(docs_dir, "index.md"), index_content)
+    console.print("  ✅ %s" % os.path.join(docs_dir, "index.md"))
 
     console.print("\n📦 Installing Docusaurus dependencies...")
     _run_npm(["install"], cwd=site_dir)
@@ -294,6 +296,5 @@ def init_github_actions(project_root, config_path="docforge.yaml"):
                   config.docusaurus_dir,
               )
 
-    with open(workflow_path, "w", encoding="utf-8") as f:
-        f.write(content)
+    _write_file(workflow_path, content)
     console.print("✅ Created [cyan]%s[/]" % workflow_path)
