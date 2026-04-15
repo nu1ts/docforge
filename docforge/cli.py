@@ -96,6 +96,10 @@ def _print_error(text):
     console.print("[error]  ✖[/]  %s" % text)
 
 
+def _confirm(prompt):
+    return click.confirm("  [?] %s" % prompt, default=True)
+
+
 # ─────────────────────────── CLI ────────────────────────────
 
 @click.group()
@@ -105,9 +109,18 @@ def main():
 
 
 @main.command()
-@click.option("--name", prompt="Project name", help="Name of the project")
+@click.option("--name", default=None, help="Name of the project")
 def init(name):
     _print_header("Initializing docforge", "🔨")
+    console.print()
+
+    if name is None:
+        name = console.input("  [dim]›[/] Project name: ").strip()
+        if not name:
+            _print_error("Project name cannot be empty.")
+            sys.exit(1)
+
+    console.print()
 
     root = os.getcwd()
 
@@ -120,11 +133,14 @@ def init(name):
     init_config(root, name)
 
     console.print()
-    if click.confirm("  Initialize Docusaurus site?", default=True):
+    if _confirm("Initialize Docusaurus site?"):
         init_docusaurus(root)
 
-    if click.confirm("  Create GitHub Actions workflow?", default=True):
+    console.print()
+    if _confirm("Create GitHub Actions workflow?"):
         init_github_actions(root)
+
+    console.print()
 
     gitignore_path = os.path.join(root, ".gitignore")
     additions = (
