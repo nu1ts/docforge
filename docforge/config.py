@@ -33,7 +33,7 @@ class AuthConfig:
 
 class SiteConfig:
     def __init__(self, title="Dev Docs", url="", base_url="/",
-                 github_user="", repo_name="", locale="ru", no_index=True):
+                 github_user="", repo_name="", locale="en", no_index=True):
         self.title = title
         self.url = url
         self.base_url = base_url
@@ -47,7 +47,7 @@ class ProjectConfig:
     def __init__(self, project_name, description="", model="gemini-2.5-flash",
                  output_dir="docs/dev", docusaurus_dir="docs-site",
                  sources=None, docs=None, auth=None, site=None,
-                 system_prompt=""):
+                 system_prompt="", language="english"):
         self.project_name = project_name
         self.description = description
         self.model = model
@@ -58,6 +58,7 @@ class ProjectConfig:
         self.auth = auth if auth is not None else AuthConfig()
         self.site = site if site is not None else SiteConfig()
         self.system_prompt = system_prompt
+        self.language = language
 
     @classmethod
     def from_file(cls, path):
@@ -97,4 +98,5 @@ class ProjectConfig:
             auth=auth,
             site=site,
             system_prompt=raw.get("system_prompt", ""),
+            language=raw.get("language", "english"),
         )

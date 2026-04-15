@@ -1,18 +1,15 @@
-﻿Создай руководство по настройке среды разработки.
+﻿Generate a development environment setup guide.
 
-go.mod:
-{{ go_mod }}
+Config files:
+{{ configs }}
 
-package.json:
-{{ package_json }}
+README / docs:
+{{ readme }}
 
-Структура:
-{{ structure }}
-
-Разделы:
-1. ## Требования
-2. ## Установка (пошагово)
-3. ## Запуск в режиме разработки
-4. ## Сборка
-5. ## Тестирование
-6. ## Структура проекта
+Sections:
+1. ## Requirements
+2. ## Installation (step by step)
+3. ## Running in development mode
+4. ## Building for production
+5. ## Testing
+6. ## Project structure

@@ -1,22 +1,15 @@
-﻿На основе исходного кода проекта создай подробную документацию
-по архитектуре.
+﻿Generate a detailed architecture document based on the source code below.
 
-Исходный код:
-{{ go_sources }}
+Source code:
+{{ source_code }}
 
-Структура проекта:
-{{ structure }}
-
-Фронтенд:
-{{ frontend_sources }}
-
-Создай документ:
-1. ## Общая архитектура
-    - Описание слоёв приложения
-    - Диаграмма взаимодействия (Mermaid)
-2. ## Пакеты и модули
-    - Описание каждого пакета
-    - Зависимости
-3. ## Поток данных
-    - От действия пользователя до результата
-4. ## Ключевые технические решения
+Sections:
+1. ## Architecture overview
+   - Application layers description
+   - Component interaction diagram (use Mermaid)
+2. ## Modules and packages
+   - Description of each module/package
+   - Dependencies between them
+3. ## Data flow
+   - From user action to result
+4. ## Key technical decisions
