@@ -2,23 +2,50 @@
 import platform
 import shutil
 import subprocess
+import sys
 
 from jinja2 import Environment, FileSystemLoader
 from rich.console import Console
+from rich.theme import Theme
 
-console = Console()
+custom_theme = Theme({
+    "info": "bold cyan",
+    "success": "bold green",
+    "warning": "bold yellow",
+    "error": "bold red",
+    "dim": "dim white",
+    "highlight": "bold white",
+})
+
+console = Console(theme=custom_theme)
 
 TEMPLATES_DIR = os.path.join(
     os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
     "templates",
 )
 
-_SHELL = platform.system() == "Windows"
+_IS_WINDOWS = platform.system() == "Windows"
+_SHELL = _IS_WINDOWS
+
+
+def _print_step(text):
+    console.print("  [dim]›[/] %s" % text)
+
+
+def _print_success(text):
+    console.print("[success]  ✔[/]  %s" % text)
+
+
+def _print_warning(text):
+    console.print("[warning]  ⚠[/]  %s" % text)
 
 
 def _run_npm(args, cwd):
     cmd = ["npm"] + args
-    subprocess.check_call(cmd, cwd=cwd, shell=_SHELL)
+    subprocess.check_call(
+        cmd, cwd=cwd, shell=_SHELL,
+        stdout=sys.stdout, stderr=sys.stderr,
+    )
 
 
 def _write_file(path, content):
@@ -31,7 +58,7 @@ def _write_file(path, content):
 def init_config(project_root, project_name):
     config_path = os.path.join(str(project_root), "docforge.yaml")
     if os.path.exists(config_path):
-        console.print("[yellow]docforge.yaml already exists[/]")
+        _print_warning("[cyan]docforge.yaml[/] already exists, skipping")
         return
 
     config_content = (
@@ -121,14 +148,11 @@ def init_config(project_root, project_name):
                          '  repo_name: "%s"\n'
                          '  locale: "en"\n'
                          '  no_index: true\n'
-                     ) % (
-                         project_name,
-                         project_name, project_name, project_name,
-                     )
+                     ) % (project_name, project_name, project_name, project_name)
 
     _write_file(config_path, config_content)
-    console.print("✅ Created [cyan]%s[/]" % config_path)
-    console.print("   Edit it to match your project structure")
+    _print_success("Created [cyan]%s[/]" % config_path)
+    _print_step("Edit it to match your project structure")
 
 
 def init_docusaurus(project_root, config_path="docforge.yaml"):
@@ -139,7 +163,7 @@ def init_docusaurus(project_root, config_path="docforge.yaml"):
 
     site_dir = os.path.join(str(project_root), str(config.docusaurus_dir))
     if os.path.exists(site_dir):
-        console.print("[yellow]%s already exists[/]" % site_dir)
+        _print_warning("[cyan]%s[/] already exists, skipping" % site_dir)
         return
 
     os.makedirs(site_dir)
@@ -164,7 +188,7 @@ def init_docusaurus(project_root, config_path="docforge.yaml"):
         content = template.render(**template_vars)
         output_path = os.path.join(site_dir, output_name)
         _write_file(output_path, content)
-        console.print("  ✅ %s" % output_path)
+        _print_success("[cyan]%s[/]" % output_path)
 
     if config.auth.enabled:
         theme_dir = os.path.join(site_dir, "src", "theme")
@@ -173,7 +197,7 @@ def init_docusaurus(project_root, config_path="docforge.yaml"):
         content = template.render(**template_vars)
         root_tsx_path = os.path.join(theme_dir, "Root.tsx")
         _write_file(root_tsx_path, content)
-        console.print("  ✅ %s" % root_tsx_path)
+        _print_success("[cyan]%s[/]" % root_tsx_path)
 
     css_dir = os.path.join(site_dir, "src", "css")
     os.makedirs(css_dir)
@@ -197,13 +221,16 @@ def init_docusaurus(project_root, config_path="docforge.yaml"):
                         "Run `docforge generate` to create docs.\n"
                     ) % config.project_name
 
-    _write_file(os.path.join(docs_dir, "index.md"), index_content)
-    console.print("  ✅ %s" % os.path.join(docs_dir, "index.md"))
+    index_path = os.path.join(docs_dir, "index.md")
+    _write_file(index_path, index_content)
+    _print_success("[cyan]%s[/]" % index_path)
 
-    console.print("\n📦 Installing Docusaurus dependencies...")
+    console.print()
+    console.print("  [info]📦 Installing Docusaurus dependencies...[/]")
     _run_npm(["install"], cwd=site_dir)
 
-    console.print("\n✅ Docusaurus initialized in [cyan]%s[/]" % site_dir)
+    console.print()
+    _print_success("Docusaurus initialized in [cyan]%s[/]" % site_dir)
 
 
 def init_github_actions(project_root, config_path="docforge.yaml"):
@@ -297,4 +324,4 @@ def init_github_actions(project_root, config_path="docforge.yaml"):
               )
 
     _write_file(workflow_path, content)
-    console.print("✅ Created [cyan]%s[/]" % workflow_path)
+    _print_success("Created [cyan]%s[/]" % workflow_path)
