@@ -236,6 +236,7 @@ def init_docusaurus(project_root, config_path="docforge.yaml"):
     _write_file(index_path, index_content)
     _print_success("[cyan]%s[/]" % index_path)
 
+    console.print()
     _run_npm(
         ["install"],
         cwd=site_dir,

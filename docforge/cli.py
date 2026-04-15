@@ -140,8 +140,6 @@ def init(name):
     if _confirm("Create GitHub Actions workflow?"):
         init_github_actions(root)
 
-    console.print()
-
     gitignore_path = os.path.join(root, ".gitignore")
     additions = (
         "\n# docforge\n"
