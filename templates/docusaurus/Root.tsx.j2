@@ -1,0 +1,70 @@
+﻿import React, {useState, useEffect} from 'react';
+
+const TOKEN_KEY = 'docforge_token';
+
+async function sha256(message: string): Promise<string> {
+    const msgBuffer = new TextEncoder().encode(message);
+    const hashBuffer = await crypto.subtle.digest('SHA-256', msgBuffer);
+    const hashArray = Array.from(new Uint8Array(hashBuffer));
+    return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+}
+
+const VALID_HASHES: string[] = [
+    {% for hash in auth.token_hashes %}
+    '{{ hash }}',
+    {% endfor %}
+];
+
+export default function Root({children}: {children: React.ReactNode}) {
+    const [authorized, setAuthorized] = useState(false);
+    const [checking, setChecking] = useState(true);
+    const [input, setInput] = useState('');
+    const [error, setError] = useState('');
+
+    useEffect(() => {
+        const saved = localStorage.getItem(TOKEN_KEY);
+        if (saved) {
+            sha256(saved).then(hash => {
+                if (VALID_HASHES.includes(hash)) {
+                    setAuthorized(true);
+                }
+                setChecking(false);
+            });
+        } else {
+            setChecking(false);
+        }
+    }, []);
+
+    if (checking) return null;
+
+    if (!authorized) {
+        return (
+            <div style={ {display:'flex',justifyContent:'center',alignItems:'center',minHeight:'100vh',fontFamily:'system-ui'} }>
+                <div style={ {textAlign:'center',maxWidth:400} }>
+                    <h2>Access Required</h2>
+                    <input
+                        type="password"
+                        placeholder="Enter token"
+                        value={input}
+                        onChange={e => setInput(e.target.value)}
+                        onKeyDown={async e => {
+                            if (e.key === 'Enter') {
+                                const hash = await sha256(input);
+                                if (VALID_HASHES.includes(hash)) {
+                                    localStorage.setItem(TOKEN_KEY, input);
+                                    setAuthorized(true);
+                                } else {
+                                    setError('Invalid token');
+                                }
+                            }
+                        }}
+                        style={ {padding:'8px 12px',fontSize:16,width:'100%',marginTop:16} }
+                    />
+                    {error && <p style={ {color:'red',marginTop:8} }>{error}</p>}
+                </div>
+            </div>
+        );
+    }
+
+    return <>{children}</>;
+}

@@ -1,0 +1,57 @@
+﻿const config = {
+    title: '{{ site.title }}',
+    url: '{{ site.url }}',
+    baseUrl: '{{ site.base_url }}',
+    onBrokenLinks: 'warn',
+    onBrokenMarkdownLinks: 'warn',
+    favicon: 'img/favicon.ico',
+
+    organizationName: '{{ site.github_user }}',
+    projectName: '{{ site.repo_name }}',
+
+    i18n: {
+        defaultLocale: '{{ site.locale }}',
+        locales: ['{{ site.locale }}'],
+    },
+
+    {% if site.no_index %}
+    noIndex: true,
+    {% endif %}
+
+    presets: [
+        [
+            'classic',
+            {
+                docs: {
+                    routeBasePath: '/',
+                    sidebarPath: './sidebars.ts',
+                },
+                blog: false,
+                theme: {
+                    customCss: './src/css/custom.css',
+                },
+            },
+        ],
+    ],
+
+    themeConfig: {
+        navbar: {
+            title: '{{ site.title }}',
+            items: [
+                {% if site.github_user and site.repo_name %}
+                {
+                    href: 'https://github.com/{{ site.github_user }}/{{ site.repo_name }}',
+                    label: 'GitHub',
+                    position: 'right',
+                },
+                {% endif %}
+            ],
+        },
+        footer: {
+            style: 'dark',
+            copyright: 'Built with docforge + Docusaurus.',
+        },
+    },
+};
+
+export default config;

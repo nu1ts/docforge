@@ -141,7 +141,7 @@ def init_docusaurus(project_root, config_path="docforge.yaml"):
 
     files_to_render = {
         "docusaurus.config.ts.j2": "docusaurus.config.ts",
-        "sidebars.ts.j2": "sidebars.ts",
+        "sidebars.js.j2": "sidebars.js",
         "package.json.j2": "package.json",
     }
 
