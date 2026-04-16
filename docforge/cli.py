@@ -144,6 +144,8 @@ def _run(cmd, cwd=None):
     kwargs = {"cwd": cwd}
     if not _IS_WINDOWS:
         kwargs["preexec_fn"] = os.setsid
+    else:
+        kwargs["shell"] = True
 
     proc = subprocess.Popen(cmd, **kwargs)
     try:
@@ -368,7 +370,7 @@ def collect(config):
 
     for name, content in context.items():
         file_path = os.path.join(ctx_dir, "%s.txt" % name)
-        with open(file_path, "w") as f:
+        with open(file_path, "w", encoding="utf-8") as f:
             f.write(content)
         _print_step("Saved [cyan]%s.txt[/]" % name)
 
