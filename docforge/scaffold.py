@@ -196,7 +196,7 @@ def init_docusaurus(project_root, config_path="docforge.yaml"):
 
     files_to_render = {
         "docusaurus.config.ts.j2": "docusaurus.config.ts",
-        "sidebars.js.j2": "sidebars.js",
+        "sidebars.js.j2": os.path.join("src", "js", "sidebars.js"),
         "package.json.j2": "package.json",
     }
 
@@ -204,6 +204,7 @@ def init_docusaurus(project_root, config_path="docforge.yaml"):
         template = env.get_template(template_name)
         content = template.render(**template_vars)
         output_path = os.path.join(site_dir, output_name)
+        os.makedirs(os.path.dirname(output_path), exist_ok=True)
         _write_file(output_path, content)
         _print_success("[cyan]%s[/]" % output_path)
 
