@@ -1,7 +1,7 @@
 ﻿import hashlib
 import os
 import platform
-import signal
+import shutil
 import subprocess
 import sys
 
@@ -24,7 +24,6 @@ custom_theme = Theme({
 console = Console(theme=custom_theme)
 
 _IS_WINDOWS = platform.system() == "Windows"
-_SHELL = _IS_WINDOWS
 
 _COMMAND_META = {
     "init": (
@@ -124,40 +123,64 @@ def _print_command_help(name):
     console.print()
 
 
+def _find_docusaurus_cli(site_dir):
+    candidates = [
+        os.path.join(site_dir, "node_modules", "@docusaurus", "core", "bin", "docusaurus.mjs"),
+        os.path.join(site_dir, "node_modules", "@docusaurus", "core", "bin", "docusaurus.js"),
+        os.path.join(site_dir, "node_modules", "@docusaurus", "core", "bin", "docusaurus.cjs"),
+    ]
+    for path in candidates:
+        if os.path.exists(path):
+            return path
+    return None
+
+
+def _get_docusaurus_cmd(site_dir, action):
+    node = shutil.which("node")
+    cli = _find_docusaurus_cli(site_dir)
+
+    if node and cli:
+        return [node, cli, action]
+
+    if action == "start":
+        return ["npm", "start"]
+    if action == "build":
+        return ["npm", "run", "build"]
+
+    raise ValueError("Unknown docusaurus action: %s" % action)
+
+
 def _run(cmd, cwd=None):
-    if _IS_WINDOWS:
-        proc = subprocess.Popen(
-            cmd,
-            cwd=cwd,
-            shell=True,
-            creationflags=subprocess.CREATE_NEW_PROCESS_GROUP,
-        )
+    exe = shutil.which(cmd[0])
+    if exe:
+        cmd = [exe] + cmd[1:]
+
+    proc = subprocess.Popen(cmd, cwd=cwd)
+
+    try:
+        return proc.wait()
+    except KeyboardInterrupt:
+        console.print("\n[warning]⚠ Stopping the process...[/]")
+
         try:
-            proc.wait()
-        except KeyboardInterrupt:
-            proc.send_signal(signal.CTRL_BREAK_EVENT)
+            return proc.wait(timeout=2)
+        except subprocess.TimeoutExpired:
+            pass
+
+        if _IS_WINDOWS:
+            subprocess.call(
+                ["taskkill", "/F", "/T", "/PID", str(proc.pid)],
+                stdout=subprocess.DEVNULL,
+                stderr=subprocess.DEVNULL,
+            )
+        else:
+            proc.terminate()
             try:
                 proc.wait(timeout=3)
             except subprocess.TimeoutExpired:
                 proc.kill()
-            console.print("\n[warning]⚠ Interrupted[/]")
-            sys.exit(0)
-    else:
-        proc = subprocess.Popen(
-            cmd,
-            cwd=cwd,
-            preexec_fn=os.setsid,
-        )
-        try:
-            proc.wait()
-        except KeyboardInterrupt:
-            try:
-                os.killpg(os.getpgid(proc.pid), signal.SIGTERM)
-            except OSError:
-                proc.kill()
-            console.print("\n[warning]⚠ Interrupted[/]")
-            sys.exit(0)
-    return proc.returncode
+
+        sys.exit(0)
 
 
 def find_project_root():
@@ -399,8 +422,9 @@ def serve(config):
 
     console.print("  [dim]URL:[/] [cyan]http://localhost:3000[/]")
     console.print("  [dim]Dir:[/] [cyan]%s[/]" % site_dir)
+    console.print()
 
-    _run(["npm", "start"], cwd=str(site_dir))
+    _run(_get_docusaurus_cmd(str(site_dir), "start"), cwd=str(site_dir))
 
 
 @main.command(cls=RichCommand)
@@ -419,7 +443,7 @@ def build(config):
     console.print("  [dim]Dir:[/] [cyan]%s[/]" % site_dir)
     console.print()
 
-    code = _run(["npm", "run", "build"], cwd=str(site_dir))
+    code = _run(_get_docusaurus_cmd(str(site_dir), "build"), cwd=str(site_dir))
 
     if code == 0:
         _print_success("Built to [cyan]%s[/]" % build_dir)
