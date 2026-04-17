@@ -124,36 +124,39 @@ def _print_command_help(name):
     console.print()
 
 
-def _terminate_process(proc):
-    if proc is None:
-        return
-    if _IS_WINDOWS:
-        subprocess.call(
-            ["taskkill", "/F", "/T", "/PID", str(proc.pid)],
-            stdout=subprocess.DEVNULL,
-            stderr=subprocess.DEVNULL,
-        )
-    else:
-        try:
-            os.killpg(os.getpgid(proc.pid), signal.SIGTERM)
-        except OSError:
-            proc.kill()
-
-
 def _run(cmd, cwd=None):
-    kwargs = {"cwd": cwd}
-    if not _IS_WINDOWS:
-        kwargs["preexec_fn"] = os.setsid
+    if _IS_WINDOWS:
+        proc = subprocess.Popen(
+            cmd,
+            cwd=cwd,
+            shell=True,
+            creationflags=subprocess.CREATE_NEW_PROCESS_GROUP,
+        )
+        try:
+            proc.wait()
+        except KeyboardInterrupt:
+            proc.send_signal(signal.CTRL_BREAK_EVENT)
+            try:
+                proc.wait(timeout=3)
+            except subprocess.TimeoutExpired:
+                proc.kill()
+            console.print("\n[warning]⚠ Interrupted[/]")
+            sys.exit(0)
     else:
-        kwargs["shell"] = True
-
-    proc = subprocess.Popen(cmd, **kwargs)
-    try:
-        proc.wait()
-    except KeyboardInterrupt:
-        _terminate_process(proc)
-        console.print("\n[warning]⚠ Interrupted[/]")
-        sys.exit(0)
+        proc = subprocess.Popen(
+            cmd,
+            cwd=cwd,
+            preexec_fn=os.setsid,
+        )
+        try:
+            proc.wait()
+        except KeyboardInterrupt:
+            try:
+                os.killpg(os.getpgid(proc.pid), signal.SIGTERM)
+            except OSError:
+                proc.kill()
+            console.print("\n[warning]⚠ Interrupted[/]")
+            sys.exit(0)
     return proc.returncode
 
 
@@ -396,7 +399,6 @@ def serve(config):
 
     console.print("  [dim]URL:[/] [cyan]http://localhost:3000[/]")
     console.print("  [dim]Dir:[/] [cyan]%s[/]" % site_dir)
-    console.print()
 
     _run(["npm", "start"], cwd=str(site_dir))
 
