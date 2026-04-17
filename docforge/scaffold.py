@@ -222,8 +222,8 @@ def init_docusaurus(project_root, config_path="docforge.yaml"):
     if os.path.exists(css_src):
         shutil.copy2(css_src, os.path.join(css_dir, "custom.css"))
 
-    docs_dir = os.path.join(site_dir, "_pages")
-    os.makedirs(docs_dir)
+    content_dir = os.path.join(site_dir, "content")
+    os.makedirs(content_dir)
 
     index_content = (
                         "---\n"
@@ -238,7 +238,7 @@ def init_docusaurus(project_root, config_path="docforge.yaml"):
                         "Run `docforge generate` to create docs.\n"
                     ) % config.project_name
 
-    index_path = os.path.join(docs_dir, "index.md")
+    index_path = os.path.join(content_dir, "index.md")
     _write_file(index_path, index_content)
     _print_success("[cyan]%s[/]" % index_path)
 
@@ -297,7 +297,7 @@ def init_github_actions(project_root, config_path="docforge.yaml"):
                   '        id: cache\n'
                   '        uses: actions/cache@v4\n'
                   '        with:\n'
-                  '          path: %s/_pages\n'
+                  '          path: %s/content\n'
                   '          key: docs-${{ hashFiles(\'src/**\', \'docforge.yaml\') }}\n'
                   '\n'
                   '      - name: Setup Python\n'

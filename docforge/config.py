@@ -61,7 +61,7 @@ class ProjectConfig:
 
     @property
     def docs_dir(self):
-        return os.path.join(self.docusaurus_dir, "_pages")
+        return os.path.join(self.docusaurus_dir, "content")
 
     @classmethod
     def from_file(cls, path):
