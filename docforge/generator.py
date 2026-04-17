@@ -138,7 +138,7 @@ def generate_doc(doc, context, config, project_root, client, gen_config):
 def generate_all(config, context, project_root, only=None):
     client = _get_client()
     gen_config = _build_config(config)
-    output_dir = os.path.join(str(project_root), config.output_dir)
+    output_dir = os.path.join(str(project_root), config.docs_dir)
 
     docs = config.docs
     if only:

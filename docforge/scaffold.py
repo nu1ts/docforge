@@ -79,7 +79,6 @@ def init_config(project_root, project_name):
                          'project_name: "%s"\n'
                          'description: ""\n'
                          'model: "gemini-3.1-flash-lite-preview"\n'
-                         'output_dir: "docs-site/docs"\n'
                          'docusaurus_dir: "docs-site"\n'
                          '\n'
                          '# Language for generated documentation.\n'
@@ -150,8 +149,8 @@ def init_config(project_root, project_name):
                          '    sources: ["configs", "readme"]\n'
                          '    sidebar_position: 3\n'
                          '\n'
-                         '# Auth: false = public docs, true = token required\n'
-                         '# Generate token: docforge token <name>\n'
+                         '# Auth: false = public docs, true = token required.\n'
+                         '# Generate a token: docforge token <name>\n'
                          'auth:\n'
                          '  enabled: false\n'
                          '  method: "token"\n'
@@ -298,7 +297,7 @@ def init_github_actions(project_root, config_path="docforge.yaml"):
                   '        id: cache\n'
                   '        uses: actions/cache@v4\n'
                   '        with:\n'
-                  '          path: %s\n'
+                  '          path: %s/docs\n'
                   '          key: docs-${{ hashFiles(\'src/**\', \'docforge.yaml\') }}\n'
                   '\n'
                   '      - name: Setup Python\n'
@@ -336,7 +335,7 @@ def init_github_actions(project_root, config_path="docforge.yaml"):
                   '      - uses: actions/deploy-pages@v4\n'
                   '        id: deployment\n'
               ) % (
-                  config.output_dir,
+                  config.docusaurus_dir,
                   config.docusaurus_dir,
                   config.docusaurus_dir,
                   config.docusaurus_dir,

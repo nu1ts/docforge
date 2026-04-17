@@ -295,10 +295,10 @@ def init(name):
     gitignore_path = os.path.join(root, ".gitignore")
     additions = (
         "\n# docforge\n"
-        "docs/_context/\n"
         "docs-site/node_modules/\n"
         "docs-site/build/\n"
         "docs-site/.docusaurus/\n"
+        "docs-site/_context/\n"
     )
     if os.path.exists(gitignore_path):
         with open(gitignore_path, "r", encoding="utf-8") as f:
@@ -364,7 +364,7 @@ def collect(config):
     cfg = ProjectConfig.from_file(os.path.join(str(root), str(config)))
     context = collect_all(cfg, root)
 
-    ctx_dir = os.path.join(str(root), "docs", "_context")
+    ctx_dir = os.path.join(str(root), str(cfg.docusaurus_dir), "_context")
     if not os.path.exists(ctx_dir):
         os.makedirs(ctx_dir)
 
