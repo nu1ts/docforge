@@ -79,7 +79,7 @@ def init_config(project_root, project_name):
                          'project_name: "%s"\n'
                          'description: ""\n'
                          'model: "gemini-3.1-flash-lite-preview"\n'
-                         'docusaurus_dir: "docs-site"\n'
+                         'docusaurus_dir: "docs"\n'
                          '\n'
                          '# Language for generated documentation.\n'
                          '# Supported: english, russian, german, french, spanish, portuguese,\n'
@@ -222,7 +222,7 @@ def init_docusaurus(project_root, config_path="docforge.yaml"):
     if os.path.exists(css_src):
         shutil.copy2(css_src, os.path.join(css_dir, "custom.css"))
 
-    docs_dir = os.path.join(site_dir, "docs")
+    docs_dir = os.path.join(site_dir, "_pages")
     os.makedirs(docs_dir)
 
     index_content = (
@@ -297,7 +297,7 @@ def init_github_actions(project_root, config_path="docforge.yaml"):
                   '        id: cache\n'
                   '        uses: actions/cache@v4\n'
                   '        with:\n'
-                  '          path: %s/docs\n'
+                  '          path: %s/_pages\n'
                   '          key: docs-${{ hashFiles(\'src/**\', \'docforge.yaml\') }}\n'
                   '\n'
                   '      - name: Setup Python\n'

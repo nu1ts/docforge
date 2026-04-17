@@ -295,10 +295,10 @@ def init(name):
     gitignore_path = os.path.join(root, ".gitignore")
     additions = (
         "\n# docforge\n"
-        "docs-site/node_modules/\n"
-        "docs-site/build/\n"
-        "docs-site/.docusaurus/\n"
-        "docs-site/_context/\n"
+        "docs/node_modules/\n"
+        "docs/build/\n"
+        "docs/.docusaurus/\n"
+        "docs/_context/\n"
     )
     if os.path.exists(gitignore_path):
         with open(gitignore_path, "r", encoding="utf-8") as f:

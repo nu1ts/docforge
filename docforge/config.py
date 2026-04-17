@@ -44,8 +44,8 @@ class SiteConfig:
 
 
 class ProjectConfig:
-    def __init__(self, project_name, description="", model="gemini-3.1-flash-lite-preview",
-                 docusaurus_dir="docs-site",
+    def __init__(self, project_name, description="", model="gemini-2.5-flash",
+                 docusaurus_dir="docs",
                  sources=None, docs=None, auth=None, site=None,
                  system_prompt="", language="english"):
         self.project_name = project_name
@@ -61,7 +61,7 @@ class ProjectConfig:
 
     @property
     def docs_dir(self):
-        return os.path.join(self.docusaurus_dir, "docs")
+        return os.path.join(self.docusaurus_dir, "_pages")
 
     @classmethod
     def from_file(cls, path):
@@ -94,7 +94,7 @@ class ProjectConfig:
             project_name=raw["project_name"],
             description=raw.get("description", ""),
             model=raw.get("model", "gemini-3.1-flash-lite-preview"),
-            docusaurus_dir=raw.get("docusaurus_dir", "docs-site"),
+            docusaurus_dir=raw.get("docusaurus_dir", "docs"),
             sources=sources,
             docs=docs,
             auth=auth,
