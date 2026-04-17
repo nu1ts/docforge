@@ -79,8 +79,7 @@ def init_config(project_root, project_name):
                          'project_name: "%s"\n'
                          'description: ""\n'
                          'model: "gemini-3.1-flash-lite-preview"\n'
-                         'output_dir: "docs-site/docs"\n'
-                         'docusaurus_dir: "docs-site"\n'
+                         'docusaurus_dir: "docs"\n'
                          '\n'
                          '# Language for generated documentation.\n'
                          '# Supported: english, russian, german, french, spanish, portuguese,\n'
@@ -150,8 +149,8 @@ def init_config(project_root, project_name):
                          '    sources: ["configs", "readme"]\n'
                          '    sidebar_position: 3\n'
                          '\n'
-                         '# Auth: false = public docs, true = token required\n'
-                         '# Generate token: docforge token <name>\n'
+                         '# Auth: false = public docs, true = token required.\n'
+                         '# Generate a token: docforge token <name>\n'
                          'auth:\n'
                          '  enabled: false\n'
                          '  method: "token"\n'
@@ -197,7 +196,7 @@ def init_docusaurus(project_root, config_path="docforge.yaml"):
 
     files_to_render = {
         "docusaurus.config.ts.j2": "docusaurus.config.ts",
-        "sidebars.js.j2": "sidebars.js",
+        "sidebars.js.j2": os.path.join("src", "js", "sidebars.js"),
         "package.json.j2": "package.json",
     }
 
@@ -205,6 +204,7 @@ def init_docusaurus(project_root, config_path="docforge.yaml"):
         template = env.get_template(template_name)
         content = template.render(**template_vars)
         output_path = os.path.join(site_dir, output_name)
+        os.makedirs(os.path.dirname(output_path), exist_ok=True)
         _write_file(output_path, content)
         _print_success("[cyan]%s[/]" % output_path)
 
@@ -223,8 +223,8 @@ def init_docusaurus(project_root, config_path="docforge.yaml"):
     if os.path.exists(css_src):
         shutil.copy2(css_src, os.path.join(css_dir, "custom.css"))
 
-    docs_dir = os.path.join(site_dir, "docs")
-    os.makedirs(docs_dir)
+    content_dir = os.path.join(site_dir, "content")
+    os.makedirs(content_dir)
 
     index_content = (
                         "---\n"
@@ -239,7 +239,7 @@ def init_docusaurus(project_root, config_path="docforge.yaml"):
                         "Run `docforge generate` to create docs.\n"
                     ) % config.project_name
 
-    index_path = os.path.join(docs_dir, "index.md")
+    index_path = os.path.join(content_dir, "index.md")
     _write_file(index_path, index_content)
     _print_success("[cyan]%s[/]" % index_path)
 
@@ -298,7 +298,7 @@ def init_github_actions(project_root, config_path="docforge.yaml"):
                   '        id: cache\n'
                   '        uses: actions/cache@v4\n'
                   '        with:\n'
-                  '          path: %s\n'
+                  '          path: %s/content\n'
                   '          key: docs-${{ hashFiles(\'src/**\', \'docforge.yaml\') }}\n'
                   '\n'
                   '      - name: Setup Python\n'
@@ -336,7 +336,7 @@ def init_github_actions(project_root, config_path="docforge.yaml"):
                   '      - uses: actions/deploy-pages@v4\n'
                   '        id: deployment\n'
               ) % (
-                  config.output_dir,
+                  config.docusaurus_dir,
                   config.docusaurus_dir,
                   config.docusaurus_dir,
                   config.docusaurus_dir,

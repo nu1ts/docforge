@@ -45,13 +45,12 @@ class SiteConfig:
 
 class ProjectConfig:
     def __init__(self, project_name, description="", model="gemini-2.5-flash",
-                 output_dir="docs/dev", docusaurus_dir="docs-site",
+                 docusaurus_dir="docs",
                  sources=None, docs=None, auth=None, site=None,
                  system_prompt="", language="english"):
         self.project_name = project_name
         self.description = description
         self.model = model
-        self.output_dir = output_dir
         self.docusaurus_dir = docusaurus_dir
         self.sources = sources if sources is not None else []
         self.docs = docs if docs is not None else []
@@ -59,6 +58,10 @@ class ProjectConfig:
         self.site = site if site is not None else SiteConfig()
         self.system_prompt = system_prompt
         self.language = language
+
+    @property
+    def docs_dir(self):
+        return os.path.join(self.docusaurus_dir, "content")
 
     @classmethod
     def from_file(cls, path):
@@ -90,9 +93,8 @@ class ProjectConfig:
         return cls(
             project_name=raw["project_name"],
             description=raw.get("description", ""),
-            model=raw.get("model", "gemini-2.5-flash"),
-            output_dir=raw.get("output_dir", "docs/dev"),
-            docusaurus_dir=raw.get("docusaurus_dir", "docs-site"),
+            model=raw.get("model", "gemini-3.1-flash-lite-preview"),
+            docusaurus_dir=raw.get("docusaurus_dir", "docs"),
             sources=sources,
             docs=docs,
             auth=auth,
