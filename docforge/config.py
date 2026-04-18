@@ -44,10 +44,12 @@ class SiteConfig:
 
 
 class ProjectConfig:
-    def __init__(self, project_name, description="", model="gemini-2.5-flash",
+    def __init__(self, project_name, description="", model="gemini-3.1-flash-lite-preview",
                  docusaurus_dir="docs",
                  sources=None, docs=None, auth=None, site=None,
-                 system_prompt="", language="english"):
+                 system_prompt="", language="english",
+                 algolia_app_id="ALGOLIA_APP_ID", algolia_api_key="ALGOLIA_SEARCH_API_KEY",
+                 algolia_index_name="docforge_docs"):
         self.project_name = project_name
         self.description = description
         self.model = model
@@ -58,6 +60,9 @@ class ProjectConfig:
         self.site = site if site is not None else SiteConfig()
         self.system_prompt = system_prompt
         self.language = language
+        self.algolia_app_id = algolia_app_id
+        self.algolia_api_key = algolia_api_key
+        self.algolia_index_name = algolia_index_name
 
     @property
     def docs_dir(self):
@@ -101,4 +106,7 @@ class ProjectConfig:
             site=site,
             system_prompt=raw.get("system_prompt", ""),
             language=raw.get("language", "english"),
+            algolia_app_id=raw.get("algolia_app_id", "ALGOLIA_APP_ID"),
+            algolia_api_key=raw.get("algolia_api_key", "ALGOLIA_SEARCH_API_KEY"),
+            algolia_index_name=raw.get("algolia_index_name", "docforge_docs"),
         )
