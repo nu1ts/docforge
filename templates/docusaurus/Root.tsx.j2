@@ -1,13 +1,9 @@
-﻿import React, {useState, useEffect} from 'react';
+﻿import React, {useState, useEffect, useCallback} from 'react';
+
 
 const TOKEN_KEY = 'docforge_token';
-
-async function sha256(message: string): Promise<string> {
-    const msgBuffer = new TextEncoder().encode(message);
-    const hashBuffer = await crypto.subtle.digest('SHA-256', msgBuffer);
-    const hashArray = Array.from(new Uint8Array(hashBuffer));
-    return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
-}
+const MAX_ATTEMPTS = 5;
+const LOCKOUT_MS = 60_000;
 
 const VALID_HASHES: string[] = [
     {% for hash in auth.token_hashes %}
@@ -15,19 +11,202 @@ const VALID_HASHES: string[] = [
     {% endfor %}
 ];
 
+
+async function sha256(message: string): Promise<string> {
+    const buf = await crypto.subtle.digest(
+        'SHA-256',
+        new TextEncoder().encode(message)
+    );
+    return Array.from(new Uint8Array(buf))
+        .map(b => b.toString(16).padStart(2, '0'))
+        .join('');
+}
+
+
+const styles = {
+    overlay: {
+        position: 'fixed' as const,
+        inset: 0,
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        background: 'var(--ifm-background-color, #0f0f13)',
+        zIndex: 9999,
+        padding: '20px',
+        fontFamily: 'var(--ifm-font-family-base, Inter, system-ui, sans-serif)',
+    },
+    card: {
+        width: '100%',
+        maxWidth: '420px',
+        background: 'var(--ifm-card-background-color, #1e1e28)',
+        border: '1px solid rgba(255,255,255,0.08)',
+        borderRadius: '20px',
+        padding: '48px 40px',
+        boxShadow: '0 24px 80px rgba(0,0,0,0.5), 0 0 0 1px rgba(255,255,255,0.04)',
+        display: 'flex',
+        flexDirection: 'column' as const,
+        alignItems: 'center',
+        gap: '0',
+    },
+    logoWrap: {
+        width: '60px',
+        height: '60px',
+        borderRadius: '16px',
+        background: 'linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%)',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        marginBottom: '24px',
+        boxShadow: '0 8px 24px rgba(99,102,241,0.4)',
+        fontSize: '28px',
+        lineHeight: 1,
+    },
+    title: {
+        fontSize: '1.375rem',
+        fontWeight: '700',
+        margin: '0 0 8px',
+        color: 'var(--ifm-font-color-base, #f3f4f6)',
+        letterSpacing: '-0.02em',
+        textAlign: 'center' as const,
+    },
+    subtitle: {
+        fontSize: '0.875rem',
+        color: 'rgba(156,163,175,0.9)',
+        margin: '0 0 32px',
+        lineHeight: '1.6',
+        textAlign: 'center' as const,
+    },
+    inputWrap: {
+        position: 'relative' as const,
+        width: '100%',
+        marginBottom: '12px',
+    },
+    input: {
+        width: '100%',
+        padding: '13px 48px 13px 18px',
+        fontSize: '0.9375rem',
+        fontFamily: 'var(--ifm-font-family-monospace, monospace)',
+        letterSpacing: '0.06em',
+        background: 'rgba(255,255,255,0.04)',
+        border: '1.5px solid rgba(255,255,255,0.1)',
+        borderRadius: '10px',
+        color: 'var(--ifm-font-color-base, #f3f4f6)',
+        outline: 'none',
+        boxSizing: 'border-box' as const,
+        transition: 'border-color 0.2s, box-shadow 0.2s',
+    },
+    inputFocus: {
+        borderColor: '#6366f1',
+        boxShadow: '0 0 0 3px rgba(99,102,241,0.18)',
+    },
+    inputError: {
+        borderColor: '#ef4444',
+        boxShadow: '0 0 0 3px rgba(239,68,68,0.15)',
+    },
+    eyeBtn: {
+        position: 'absolute' as const,
+        right: '14px',
+        top: '50%',
+        transform: 'translateY(-50%)',
+        background: 'none',
+        border: 'none',
+        cursor: 'pointer',
+        color: 'rgba(156,163,175,0.7)',
+        padding: '4px',
+        display: 'flex',
+        alignItems: 'center',
+        fontSize: '16px',
+    },
+    button: {
+        width: '100%',
+        padding: '13px',
+        fontSize: '0.9375rem',
+        fontWeight: '600',
+        background: 'linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%)',
+        border: 'none',
+        borderRadius: '10px',
+        color: 'white',
+        cursor: 'pointer',
+        marginTop: '8px',
+        letterSpacing: '0.01em',
+        boxShadow: '0 4px 16px rgba(99,102,241,0.35)',
+        transition: 'opacity 0.2s, transform 0.15s, box-shadow 0.2s',
+    },
+    buttonDisabled: {
+        opacity: 0.45,
+        cursor: 'not-allowed',
+        boxShadow: 'none',
+    },
+    error: {
+        display: 'flex',
+        alignItems: 'center',
+        gap: '8px',
+        width: '100%',
+        padding: '10px 14px',
+        background: 'rgba(239,68,68,0.1)',
+        border: '1px solid rgba(239,68,68,0.2)',
+        borderRadius: '8px',
+        color: '#f87171',
+        fontSize: '0.8125rem',
+        fontWeight: '500',
+        marginBottom: '4px',
+    },
+    lockout: {
+        display: 'flex',
+        alignItems: 'center',
+        gap: '8px',
+        width: '100%',
+        padding: '10px 14px',
+        background: 'rgba(245,158,11,0.1)',
+        border: '1px solid rgba(245,158,11,0.2)',
+        borderRadius: '8px',
+        color: '#fbbf24',
+        fontSize: '0.8125rem',
+        fontWeight: '500',
+        marginTop: '8px',
+    },
+    footer: {
+        marginTop: '28px',
+        fontSize: '0.75rem',
+        color: 'rgba(107,114,128,0.8)',
+        textAlign: 'center' as const,
+        lineHeight: '1.6',
+    },
+    footerLink: {
+        color: 'rgba(129,140,248,0.8)',
+        textDecoration: 'none',
+    },
+    spinner: {
+        width: '16px',
+        height: '16px',
+        border: '2px solid rgba(255,255,255,0.3)',
+        borderTop: '2px solid white',
+        borderRadius: '50%',
+        animation: 'spin 0.7s linear infinite',
+        display: 'inline-block',
+        marginRight: '8px',
+        verticalAlign: 'middle',
+    },
+};
+
+
 export default function Root({children}: {children: React.ReactNode}) {
-    const [authorized, setAuthorized] = useState(false);
-    const [checking, setChecking] = useState(true);
-    const [input, setInput] = useState('');
-    const [error, setError] = useState('');
+    const [authorized, setAuthorized]   = useState(false);
+    const [checking,   setChecking]     = useState(true);
+    const [input,      setInput]        = useState('');
+    const [showPass,   setShowPass]     = useState(false);
+    const [error,      setError]        = useState('');
+    const [loading,    setLoading]      = useState(false);
+    const [focused,    setFocused]      = useState(false);
+    const [attempts,   setAttempts]     = useState(0);
+    const [lockedUntil, setLockedUntil] = useState<number | null>(null);
+    const [timeLeft,   setTimeLeft]     = useState(0);
 
     useEffect(() => {
         const saved = localStorage.getItem(TOKEN_KEY);
         if (saved) {
             sha256(saved).then(hash => {
-                if (VALID_HASHES.includes(hash)) {
-                    setAuthorized(true);
-                }
+                if (VALID_HASHES.includes(hash)) setAuthorized(true);
                 setChecking(false);
             });
         } else {
@@ -35,36 +214,187 @@ export default function Root({children}: {children: React.ReactNode}) {
         }
     }, []);
 
-    if (checking) return null;
+    useEffect(() => {
+        if (!lockedUntil) return;
+        const interval = setInterval(() => {
+            const left = Math.ceil((lockedUntil - Date.now()) / 1000);
+            if (left <= 0) {
+                setLockedUntil(null);
+                setAttempts(0);
+                setTimeLeft(0);
+                clearInterval(interval);
+            } else {
+                setTimeLeft(left);
+            }
+        }, 500);
+        return () => clearInterval(interval);
+    }, [lockedUntil]);
 
-    if (!authorized) {
+    useEffect(() => {
+        const style = document.createElement('style');
+        style.textContent = `
+      @keyframes spin { to { transform: rotate(360deg); } }
+      @keyframes shake {
+        0%,100% { transform: translateX(0); }
+        25% { transform: translateX(-6px); }
+        75% { transform: translateX(6px); }
+      }
+      .df-shake { animation: shake 0.3s ease; }
+    `;
+        document.head.appendChild(style);
+        return () => {
+            document.head.removeChild(style);
+        };
+    }, []);
+
+    const handleSubmit = useCallback(async () => {
+        if (!input.trim() || loading || lockedUntil) return;
+
+        setLoading(true);
+        setError('');
+
+        const hash = await sha256(input.trim());
+
+        if (VALID_HASHES.includes(hash)) {
+            localStorage.setItem(TOKEN_KEY, input.trim());
+            setAuthorized(true);
+        } else {
+            const newAttempts = attempts + 1;
+            setAttempts(newAttempts);
+
+            if (newAttempts >= MAX_ATTEMPTS) {
+                setLockedUntil(Date.now() + LOCKOUT_MS);
+                setError('');
+            } else {
+                setError(
+                    newAttempts >= 3
+                        ? `Invalid token. ${MAX_ATTEMPTS - newAttempts} attempt(s) left.`
+                        : 'Invalid token. Please try again.'
+                );
+
+                const card = document.getElementById('df-auth-card');
+                if (card) {
+                    card.classList.add('df-shake');
+                    setTimeout(() => card.classList.remove('df-shake'), 350);
+                }
+            }
+            setInput('');
+        }
+
+        setLoading(false);
+    }, [input, loading, lockedUntil, attempts]);
+
+    if (checking) {
         return (
-            <div style={ {display:'flex',justifyContent:'center',alignItems:'center',minHeight:'100vh',fontFamily:'system-ui'} }>
-                <div style={ {textAlign:'center',maxWidth:400} }>
-                    <h2>Access Required</h2>
-                    <input
-                        type="password"
-                        placeholder="Enter token"
-                        value={input}
-                        onChange={e => setInput(e.target.value)}
-                        onKeyDown={async e => {
-                            if (e.key === 'Enter') {
-                                const hash = await sha256(input);
-                                if (VALID_HASHES.includes(hash)) {
-                                    localStorage.setItem(TOKEN_KEY, input);
-                                    setAuthorized(true);
-                                } else {
-                                    setError('Invalid token');
-                                }
-                            }
-                        }}
-                        style={ {padding:'8px 12px',fontSize:16,width:'100%',marginTop:16} }
-                    />
-                    {error && <p style={ {color:'red',marginTop:8} }>{error}</p>}
-                </div>
+            <div style={styles.overlay}>
+                <div style={styles.spinner} />
             </div>
         );
     }
 
-    return <>{children}</>;
+    if (authorized) return <>{children}</>;
+
+    const isLocked = !!lockedUntil;
+    const inputStyle = {
+        ...styles.input,
+        ...(focused && !error && !isLocked ? styles.inputFocus : {}),
+        ...(error ? styles.inputError : {}),
+        ...(isLocked ? {opacity: 0.5, cursor: 'not-allowed'} : {}),
+    };
+    const buttonStyle = {
+        ...styles.button,
+        ...(!input.trim() || loading || isLocked ? styles.buttonDisabled : {}),
+    };
+
+    return (
+        <div style={styles.overlay}>
+            <div id="df-auth-card" style={styles.card}>
+                <div style={styles.logoWrap}>
+                    🔒
+                </div>
+
+                <h1 style={styles.title}>Access Required</h1>
+                <p style={styles.subtitle}>
+                    This documentation is protected.<br/>
+                    Enter your developer token to continue.
+                </p>
+
+                <div style={styles.inputWrap}>
+                    <input
+                        id="df-token-input"
+                        type={showPass ? 'text' : 'password'}
+                        placeholder="docforge-••••••••"
+                        value={input}
+                        disabled={isLocked || loading}
+                        onChange={e => {
+                            setInput(e.target.value);
+                            if (error) setError('');
+                        }}
+                        onFocus={() => setFocused(true)}
+                        onBlur={() => setFocused(false)}
+                        onKeyDown={e => e.key === 'Enter' && handleSubmit()}
+                        autoComplete="off"
+                        autoFocus
+                        style={inputStyle}
+                    />
+                    <button
+                        type="button"
+                        onClick={() => setShowPass(v => !v)}
+                        style={styles.eyeBtn}
+                        tabIndex={-1}
+                        aria-label={showPass ? 'Hide token' : 'Show token'}
+                    >
+                        {showPass ? '🙈' : '👁️'}
+                    </button>
+                </div>
+
+                {error && (
+                    <div style={styles.error}>
+                        <span>⚠</span>
+                        {error}
+                    </div>
+                )}
+
+                {isLocked && (
+                    <div style={styles.lockout}>
+                        <span>🔒</span>
+                        Too many attempts. Try again in {timeLeft}s.
+                    </div>
+                )}
+
+                <button
+                    onClick={handleSubmit}
+                    disabled={!input.trim() || loading || isLocked}
+                    style={buttonStyle}
+                    onMouseEnter={e => {
+                        if (!(!input.trim() || loading || isLocked)) {
+                            (e.currentTarget as HTMLElement).style.opacity = '0.9';
+                            (e.currentTarget as HTMLElement).style.transform = 'translateY(-1px)';
+                        }
+                    }}
+                    onMouseLeave={e => {
+                        (e.currentTarget as HTMLElement).style.opacity = '1';
+                        (e.currentTarget as HTMLElement).style.transform = 'translateY(0)';
+                    }}
+                >
+                    {loading ? (
+                        <>
+                            <span style={styles.spinner} />
+                            Verifying…
+                        </>
+                    ) : (
+                        'Access Documentation →'
+                    )}
+                </button>
+
+                <p style={styles.footer}>
+                    Don't have a token? Contact your team lead.<br/>
+                    Built with{' '}
+                    <a href="https://github.com/nu1ts/docforge" style={styles.footerLink}>
+                        docforge
+                    </a>
+                </p>
+            </div>
+        </div>
+    );
 }

@@ -5,7 +5,7 @@ import subprocess
 
 from jinja2 import Environment, FileSystemLoader
 from rich.console import Console
-from rich.progress import Progress, SpinnerColumn, TextColumn, BarColumn, TaskProgressColumn
+from rich.progress import Progress, SpinnerColumn, TextColumn
 from rich.theme import Theme
 
 custom_theme = Theme({
@@ -64,6 +64,45 @@ def _write_file(path, content):
         content = content[1:]
     with open(path, "w", encoding="utf-8", newline="\n") as f:
         f.write(content)
+
+
+def _write_logo(site_dir: str) -> None:
+    img_dir = os.path.join(site_dir, "static", "img")
+    os.makedirs(img_dir, exist_ok=True)
+
+    logo_dark = (
+        '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">'
+        '<defs>'
+        '<linearGradient id="g" x1="0%" y1="0%" x2="100%" y2="100%">'
+        '<stop offset="0%" stop-color="#818cf8"/>'
+        '<stop offset="100%" stop-color="#a78bfa"/>'
+        '</linearGradient>'
+        '</defs>'
+        '<path d="M16 2L4 7v9c0 7 5.4 12.4 12 14 6.6-1.6 12-7 12-14V7L16 2z" '
+        'fill="url(#g)"/>'
+        '<path d="M11 16h10M11 12h6M11 20h8" stroke="white" '
+        'stroke-width="1.75" stroke-linecap="round"/>'
+        '</svg>'
+    )
+
+    logo_light = (
+        '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">'
+        '<defs>'
+        '<linearGradient id="g" x1="0%" y1="0%" x2="100%" y2="100%">'
+        '<stop offset="0%" stop-color="#4f46e5"/>'
+        '<stop offset="100%" stop-color="#7c3aed"/>'
+        '</linearGradient>'
+        '</defs>'
+        '<path d="M16 2L4 7v9c0 7 5.4 12.4 12 14 6.6-1.6 12-7 12-14V7L16 2z" '
+        'fill="url(#g)"/>'
+        '<path d="M11 16h10M11 12h6M11 20h8" stroke="white" '
+        'stroke-width="1.75" stroke-linecap="round"/>'
+        '</svg>'
+    )
+
+    _write_file(os.path.join(img_dir, "logo.svg"), logo_dark)
+    _write_file(os.path.join(img_dir, "logo-dark.svg"), logo_light)
+    _print_success("[cyan]static/img/logo.svg[/]")
 
 
 def init_config(project_root, project_name):
@@ -222,6 +261,8 @@ def init_docusaurus(project_root, config_path="docforge.yaml"):
     css_src = os.path.join(docusaurus_templates, "custom.css")
     if os.path.exists(css_src):
         shutil.copy2(css_src, os.path.join(css_dir, "custom.css"))
+
+    _write_logo(site_dir)
 
     content_dir = os.path.join(site_dir, "content")
     os.makedirs(content_dir)

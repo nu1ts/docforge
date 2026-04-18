@@ -1,22 +1,414 @@
-﻿:root {
-    --ifm-color-primary: #2e8555;
-    --ifm-color-primary-dark: #29784c;
-    --ifm-color-primary-darker: #277148;
-    --ifm-color-primary-darkest: #205d3b;
-    --ifm-color-primary-light: #33925d;
-    --ifm-color-primary-lighter: #359962;
-    --ifm-color-primary-lightest: #3cad6e;
-    --ifm-code-font-size: 95%;
-    --docusaurus-highlighted-code-line-bg: rgba(0, 0, 0, 0.1);
+﻿@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+
+
+:root {
+    --ifm-color-primary:            #6366f1;
+    --ifm-color-primary-dark:       #4f52e8;
+    --ifm-color-primary-darker:     #4346e3;
+    --ifm-color-primary-darkest:    #2d30d1;
+    --ifm-color-primary-light:      #777af4;
+    --ifm-color-primary-lighter:    #8385f5;
+    --ifm-color-primary-lightest:   #a5a7f8;
+
+    --ifm-font-family-base:         'Inter', system-ui, -apple-system, sans-serif;
+    --ifm-font-family-monospace:    'JetBrains Mono', 'Fira Code', monospace;
+    --ifm-font-size-base:           16px;
+    --ifm-line-height-base:         1.7;
+    --ifm-code-font-size:           90%;
+
+    --ifm-border-radius:            8px;
+    --ifm-button-border-radius:     8px;
+    --ifm-card-border-radius:       12px;
+    --ifm-code-border-radius:       6px;
+    --ifm-global-radius:            8px;
+
+    --ifm-global-shadow-lw:         0 2px 8px rgba(0, 0, 0, 0.08);
+    --ifm-global-shadow-md:         0 4px 20px rgba(0, 0, 0, 0.12);
+    --ifm-global-shadow-tl:         0 12px 40px rgba(0, 0, 0, 0.16);
+
+    --ifm-navbar-height:            60px;
+    --ifm-navbar-padding-vertical:  0;
+    --ifm-navbar-shadow:            0 1px 0 rgba(0, 0, 0, 0.08);
+
+    --ifm-sidebar-width:            280px;
+
+    --ifm-background-color:         #ffffff;
+    --ifm-background-surface-color: #f8f9fc;
+    --ifm-hover-overlay:            rgba(99, 102, 241, 0.06);
+
+    --docusaurus-highlighted-code-line-bg: rgba(99, 102, 241, 0.08);
+    
+    --df-gradient-primary:          linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+    --df-gradient-surface:          linear-gradient(135deg, #f8f9fc 0%, #f0f1ff 100%);
+    --df-border-color:              #e5e7eb;
+    --df-text-muted:                #6b7280;
+    --df-badge-bg:                  rgba(99, 102, 241, 0.1);
+    --df-badge-color:               #4f46e5;
 }
 
+
 [data-theme='dark'] {
-    --ifm-color-primary: #25c2a0;
-    --ifm-color-primary-dark: #21af90;
-    --ifm-color-primary-darker: #1fa588;
-    --ifm-color-primary-darkest: #1a8870;
-    --ifm-color-primary-light: #29d5b0;
-    --ifm-color-primary-lighter: #32d8b4;
-    --ifm-color-primary-lightest: #4fddbf;
-    --docusaurus-highlighted-code-line-bg: rgba(0, 0, 0, 0.3);
+    --ifm-color-primary:            #818cf8;
+    --ifm-color-primary-dark:       #6366f1;
+    --ifm-color-primary-darker:     #4f52e8;
+    --ifm-color-primary-darkest:    #3730a3;
+    --ifm-color-primary-light:      #a5b4fc;
+    --ifm-color-primary-lighter:    #c7d2fe;
+    --ifm-color-primary-lightest:   #e0e7ff;
+
+    --ifm-background-color:         #0f0f13;
+    --ifm-background-surface-color: #18181f;
+    --ifm-card-background-color:    #1e1e28;
+
+    --ifm-navbar-background-color:  rgba(15, 15, 19, 0.85);
+    --ifm-navbar-shadow:            0 1px 0 rgba(255, 255, 255, 0.06);
+
+    --ifm-toc-border-color:         rgba(255, 255, 255, 0.08);
+
+    --docusaurus-highlighted-code-line-bg: rgba(129, 140, 248, 0.12);
+
+    --df-gradient-primary:          linear-gradient(135deg, #818cf8 0%, #a78bfa 100%);
+    --df-gradient-surface:          linear-gradient(135deg, #18181f 0%, #1a1a2e 100%);
+    --df-border-color:              rgba(255, 255, 255, 0.08);
+    --df-text-muted:                #9ca3af;
+    --df-badge-bg:                  rgba(129, 140, 248, 0.15);
+    --df-badge-color:               #a5b4fc;
+}
+
+
+html {
+    scroll-behavior: smooth;
+}
+
+
+body {
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+}
+
+*,
+*::before,
+*::after {
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+
+.navbar {
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--df-border-color);
+    transition: background-color 0.2s ease;
+}
+
+[data-theme='dark'] .navbar {
+    background-color: rgba(15, 15, 19, 0.85) !important;
+}
+
+.navbar__brand {
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    font-size: 1.05rem;
+}
+
+.navbar__title {
+    background: var(--df-gradient-primary);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    font-weight: 700;
+}
+
+.navbar__link {
+    font-size: 0.875rem;
+    font-weight: 500;
+    transition: color 0.15s ease;
+}
+
+.navbar__link--active {
+    color: var(--ifm-color-primary);
+}
+
+.navbar__item.navbar__link[href*='github'] {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 14px;
+    border: 1px solid var(--df-border-color);
+    border-radius: 8px;
+    font-size: 0.8125rem;
+    font-weight: 500;
+    transition: all 0.2s ease;
+}
+
+.navbar__item.navbar__link[href*='github']:hover {
+    background: var(--ifm-color-primary);
+    border-color: var(--ifm-color-primary);
+    color: #ffffff;
+    text-decoration: none;
+}
+
+
+.theme-doc-sidebar-container {
+    border-right: 1px solid var(--df-border-color) !important;
+}
+
+.menu__link {
+    font-size: 0.875rem;
+    border-radius: 6px;
+    transition: all 0.15s ease;
+    font-weight: 400;
+    color: var(--df-text-muted);
+}
+
+.menu__link:hover {
+    background: var(--ifm-hover-overlay);
+    color: var(--ifm-color-primary);
+    text-decoration: none;
+}
+
+.menu__link--active {
+    font-weight: 600;
+    color: var(--ifm-color-primary) !important;
+    background: var(--df-badge-bg) !important;
+}
+
+.menu__caret::before {
+    background: var(--df-text-muted);
+}
+
+.menu__list-item-collapsible:hover {
+    background: var(--ifm-hover-overlay);
+}
+
+.menu__list-item-collapsible .menu__link {
+    font-size: 0.8125rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    font-weight: 600;
+    color: var(--df-text-muted);
+}
+
+
+.markdown {
+    --ifm-heading-color:    inherit;
+    --ifm-link-color:       var(--ifm-color-primary);
+    --ifm-link-hover-color: var(--ifm-color-primary-dark);
+}
+
+.markdown h1 {
+    font-size: 2rem;
+    font-weight: 700;
+    letter-spacing: -0.03em;
+    line-height: 1.2;
+    margin-bottom: 0.5rem;
+}
+
+.markdown h2 {
+    font-size: 1.375rem;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    margin-top: 2.5rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid var(--df-border-color);
+}
+
+.markdown h3 {
+    font-size: 1.125rem;
+    font-weight: 600;
+    margin-top: 2rem;
+}
+
+.markdown a {
+    text-decoration: none;
+    font-weight: 500;
+    transition: opacity 0.15s;
+}
+
+.markdown a:hover {
+    text-decoration: underline;
+    text-underline-offset: 3px;
+}
+
+.markdown p {
+    margin-bottom: 1.25rem;
+}
+
+
+.markdown table {
+    border-collapse: collapse;
+    width: 100%;
+    margin: 1.5rem 0;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: var(--ifm-global-shadow-lw);
+    border: 1px solid var(--df-border-color);
+}
+
+.markdown thead tr {
+    background: var(--df-gradient-primary);
+}
+
+.markdown thead th {
+    color: #ffffff;
+    font-weight: 600;
+    font-size: 0.8125rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    padding: 12px 16px;
+    border: none;
+}
+
+.markdown tbody tr {
+    transition: background-color 0.15s;
+}
+
+.markdown tbody tr:hover {
+    background: var(--ifm-hover-overlay);
+}
+
+.markdown tbody td {
+    padding: 10px 16px;
+    border-top: 1px solid var(--df-border-color);
+    font-size: 0.9rem;
+}
+
+
+.admonition {
+    border-left-width: 3px;
+    border-radius: 10px;
+    margin: 1.5rem 0;
+}
+
+.admonition-heading h5 {
+    font-size: 0.8125rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    font-weight: 700;
+}
+
+
+.table-of-contents__link {
+    font-size: 0.8125rem;
+    color: var(--df-text-muted);
+    transition: color 0.15s;
+}
+
+.table-of-contents__link:hover,
+.table-of-contents__link--active {
+    color: var(--ifm-color-primary);
+    font-weight: 500;
+}
+
+
+.pagination-nav__link {
+    border: 1px solid var(--df-border-color);
+    border-radius: 10px;
+    transition: all 0.2s;
+}
+
+.pagination-nav__link:hover {
+    border-color: var(--ifm-color-primary);
+    box-shadow: 0 0 0 3px var(--df-badge-bg);
+}
+
+.pagination-nav__sublabel {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--df-text-muted);
+}
+
+.pagination-nav__label {
+    font-size: 0.9375rem;
+    font-weight: 600;
+}
+
+
+.breadcrumbs__item {
+    font-size: 0.8125rem;
+}
+
+.breadcrumbs__link {
+    color: var(--df-text-muted);
+    border-radius: 4px;
+}
+
+
+code {
+    font-family: 'JetBrains Mono', 'Fira Code', monospace;
+    font-size: 0.875em;
+    font-weight: 500;
+    padding: 0.15em 0.4em;
+    border: 1px solid var(--df-border-color);
+    border-radius: var(--ifm-code-border-radius);
+}
+
+[data-theme='dark'] code {
+    background: rgba(129, 140, 248, 0.08);
+    border-color: rgba(129, 140, 248, 0.15);
+}
+
+.prism-code {
+    font-family: 'JetBrains Mono', 'Fira Code', monospace !important;
+    font-size: 0.875rem !important;
+    line-height: 1.6 !important;
+    border-radius: 10px !important;
+}
+
+[class*='codeBlockContainer'] {
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: var(--ifm-global-shadow-lw);
+}
+
+[class*='copyButton'] {
+    border-radius: 6px;
+}
+
+
+.footer {
+    border-top: 1px solid var(--df-border-color);
+    background: var(--ifm-background-surface-color) !important;
+}
+
+[data-theme='dark'] .footer {
+    background: #0c0c10 !important;
+}
+
+.footer__copyright {
+    font-size: 0.8125rem;
+    color: var(--df-text-muted);
+    margin-top: 1rem;
+}
+
+
+::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+}
+
+::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--df-border-color);
+    border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--ifm-color-primary);
+}
+
+
+.df-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 2px 10px;
+    border-radius: 100px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    background: var(--df-badge-bg);
+    color: var(--df-badge-color);
+    border: 1px solid rgba(99, 102, 241, 0.2);
 }

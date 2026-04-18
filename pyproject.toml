@@ -25,4 +25,4 @@ docforge = "docforge.cli:main"
 include = ["docforge*"]
 
 [tool.setuptools.package-data]
-docforge = ["../templates/**/*"]
+docforge = ["templates/**/*"]
