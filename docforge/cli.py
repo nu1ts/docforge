@@ -126,18 +126,38 @@ def _print_command_help(name):
 # ─────────────────────── executable resolution ───────────────────────
 
 def _get_node_exe():
-    return shutil.which("node")
+    try:
+        from docforge.deps import _get_node_exe as _deps_get_node
+        return _deps_get_node()
+    except Exception:
+        return shutil.which("node")
 
 
 def _get_npm_exe():
-    if _IS_WINDOWS:
-        exe = shutil.which("npm.cmd") or shutil.which("npm")
-        if not exe:
-            candidate = r"C:\Program Files\nodejs\npm.cmd"
-            if os.path.exists(candidate):
-                return candidate
-        return exe
-    return shutil.which("npm")
+    try:
+        from docforge.deps import _get_npm_exe as _deps_get_npm
+        return _deps_get_npm()
+    except Exception:
+        if _IS_WINDOWS:
+            exe = shutil.which("npm.cmd") or shutil.which("npm")
+            if not exe and os.path.exists(r"C:\Program Files\nodejs\npm.cmd"):
+                return r"C:\Program Files\nodejs\npm.cmd"
+            return exe
+        return shutil.which("npm")
+
+
+def _ensure_node_in_path():
+    if not _IS_WINDOWS:
+        return
+    try:
+        from docforge.deps import (
+            _refresh_path_windows,
+            _ensure_node_tools_in_path_windows,
+        )
+        _refresh_path_windows()
+        _ensure_node_tools_in_path_windows()
+    except Exception:
+        pass
 
 
 def _find_docusaurus_cli(site_dir):
@@ -165,6 +185,7 @@ def _get_docusaurus_cmd(site_dir, action):
         raise RuntimeError(
             "Neither node nor npm found in PATH.\n"
             "  Install Node.js from: https://nodejs.org\n"
+            "  After installation restart your IDE completely."
         )
 
     if action == "start":
@@ -441,6 +462,8 @@ def collect(config):
 def serve(config):
     _print_header("Starting dev server", "🌐")
 
+    _ensure_node_in_path()
+
     root = find_project_root()
 
     from docforge.config import ProjectConfig
@@ -477,6 +500,8 @@ def serve(config):
 @click.option("--config", default="docforge.yaml", help="Path to config file.")
 def build(config):
     _print_header("Building site", "🏗️")
+
+    _ensure_node_in_path()
 
     root = find_project_root()
 

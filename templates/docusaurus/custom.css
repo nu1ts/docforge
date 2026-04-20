@@ -1,192 +1,333 @@
-﻿@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+﻿/* ============================================================
+   DOCFORGE — "Cyber-Frosted Forge" Design System
+   Deep Space + Glassmorphism + Terminal Aesthetic
+   ============================================================ */
 
+@import url('https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&family=JetBrains+Mono:wght@400;500;600&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap');
+
+
+/* ============================================================
+   DESIGN TOKENS — LIGHT MODE
+   ============================================================ */
 
 :root {
-    --ifm-color-primary:            #6366f1;
-    --ifm-color-primary-dark:       #4f52e8;
-    --ifm-color-primary-darker:     #4346e3;
-    --ifm-color-primary-darkest:    #2d30d1;
-    --ifm-color-primary-light:      #777af4;
-    --ifm-color-primary-lighter:    #8385f5;
-    --ifm-color-primary-lightest:   #a5a7f8;
+    /* Brand */
+    --ifm-color-primary:            #4F46E5;
+    --ifm-color-primary-dark:       #4338CA;
+    --ifm-color-primary-darker:     #3730A3;
+    --ifm-color-primary-darkest:    #312E81;
+    --ifm-color-primary-light:      #6366F1;
+    --ifm-color-primary-lighter:    #818CF8;
+    --ifm-color-primary-lightest:   #A5B4FC;
 
-    --ifm-font-family-base:         'Inter', system-ui, -apple-system, sans-serif;
-    --ifm-font-family-monospace:    'JetBrains Mono', 'Fira Code', monospace;
-    --ifm-font-size-base:           16px;
-    --ifm-line-height-base:         1.7;
-    --ifm-code-font-size:           90%;
+    /* Forge Palette */
+    --df-indigo:                    #4F46E5;
+    --df-violet:                    #7C3AED;
+    --df-pink:                      #F472B6;
+    --df-cyan:                      #22D3EE;
 
-    --ifm-border-radius:            8px;
-    --ifm-button-border-radius:     8px;
-    --ifm-card-border-radius:       12px;
-    --ifm-code-border-radius:       6px;
-    --ifm-global-radius:            8px;
-
-    --ifm-global-shadow-lw:         0 2px 8px rgba(0, 0, 0, 0.08);
-    --ifm-global-shadow-md:         0 4px 20px rgba(0, 0, 0, 0.12);
-    --ifm-global-shadow-tl:         0 12px 40px rgba(0, 0, 0, 0.16);
-
-    --ifm-navbar-height:            60px;
-    --ifm-navbar-padding-vertical:  0;
-    --ifm-navbar-shadow:            0 1px 0 rgba(0, 0, 0, 0.08);
-
-    --ifm-sidebar-width:            280px;
-
-    --ifm-background-color:         #ffffff;
-    --ifm-background-surface-color: #f8f9fc;
-    --ifm-hover-overlay:            rgba(99, 102, 241, 0.06);
-
-    --docusaurus-highlighted-code-line-bg: rgba(99, 102, 241, 0.08);
-    
-    --df-gradient-primary:          linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+    /* Gradients */
+    --df-gradient-brand:            linear-gradient(135deg, #4F46E5 0%, #7C3AED 100%);
+    --df-gradient-brand-hover:      linear-gradient(135deg, #4338CA 0%, #6D28D9 100%);
     --df-gradient-surface:          linear-gradient(135deg, #f8f9fc 0%, #f0f1ff 100%);
-    --df-border-color:              #e5e7eb;
-    --df-text-muted:                #6b7280;
-    --df-badge-bg:                  rgba(99, 102, 241, 0.1);
-    --df-badge-color:               #4f46e5;
+    --df-gradient-glow:             linear-gradient(135deg, rgba(79,70,229,0.15) 0%, rgba(124,58,237,0.15) 100%);
+
+    /* Typography */
+    --ifm-font-family-base:         'Inter', system-ui, -apple-system, sans-serif;
+    --ifm-font-family-monospace:    'JetBrains Mono', 'Fira Code', 'Cascadia Code', monospace;
+    --df-font-heading:              'Plus Jakarta Sans', 'Inter', sans-serif;
+    --ifm-font-size-base:           15px;
+    --ifm-line-height-base:         1.75;
+    --ifm-code-font-size:           88%;
+    --ifm-heading-font-weight:      700;
+
+    /* Spacing & Radius */
+    --ifm-border-radius:            10px;
+    --ifm-button-border-radius:     10px;
+    --ifm-card-border-radius:       14px;
+    --ifm-code-border-radius:       8px;
+    --ifm-global-radius:            10px;
+    --df-radius-xl:                 16px;
+    --df-radius-2xl:                20px;
+
+    /* Shadows */
+    --ifm-global-shadow-lw:         0 2px 8px rgba(0,0,0,0.06);
+    --ifm-global-shadow-md:         0 4px 20px rgba(0,0,0,0.10);
+    --ifm-global-shadow-tl:         0 12px 40px rgba(0,0,0,0.14);
+    --df-shadow-brand:              0 4px 24px rgba(79,70,229,0.25);
+    --df-shadow-glow:               0 0 20px rgba(79,70,229,0.35);
+
+    /* Navbar */
+    --ifm-navbar-height:            62px;
+    --ifm-navbar-padding-vertical:  0;
+    --ifm-navbar-shadow:            none;
+    --ifm-navbar-background-color:  rgba(255,255,255,0.80);
+
+    /* Sidebar */
+    --ifm-sidebar-width:            272px;
+
+    /* Surfaces */
+    --ifm-background-color:         #F8F9FC;
+    --ifm-background-surface-color: #FFFFFF;
+    --ifm-card-background-color:    #FFFFFF;
+    --ifm-hover-overlay:            rgba(79,70,229,0.05);
+
+    /* Borders & Text */
+    --df-border-color:              #E5E7EB;
+    --df-border-subtle:             rgba(79,70,229,0.12);
+    --df-text-muted:                #6B7280;
+    --df-text-subtle:               #9CA3AF;
+
+    /* Badges */
+    --df-badge-bg:                  rgba(79,70,229,0.08);
+    --df-badge-color:               #4F46E5;
+    --df-badge-border:              rgba(79,70,229,0.18);
+
+    /* Code blocks */
+    --df-code-bg:                   #1E293B;
+    --df-code-bg-light:             #F1F5F9;
+
+    /* Glass */
+    --df-glass-bg:                  rgba(255,255,255,0.70);
+    --df-glass-border:              rgba(255,255,255,0.50);
+
+    --docusaurus-highlighted-code-line-bg: rgba(79,70,229,0.10);
 }
 
+
+/* ============================================================
+   DESIGN TOKENS — DARK MODE (Deep Space)
+   ============================================================ */
 
 [data-theme='dark'] {
-    --ifm-color-primary:            #818cf8;
-    --ifm-color-primary-dark:       #6366f1;
-    --ifm-color-primary-darker:     #4f52e8;
-    --ifm-color-primary-darkest:    #3730a3;
-    --ifm-color-primary-light:      #a5b4fc;
-    --ifm-color-primary-lighter:    #c7d2fe;
-    --ifm-color-primary-lightest:   #e0e7ff;
+    /* Brand — slightly lighter for dark bg */
+    --ifm-color-primary:            #818CF8;
+    --ifm-color-primary-dark:       #6366F1;
+    --ifm-color-primary-darker:     #4F52E8;
+    --ifm-color-primary-darkest:    #3730A3;
+    --ifm-color-primary-light:      #A5B4FC;
+    --ifm-color-primary-lighter:    #C7D2FE;
+    --ifm-color-primary-lightest:   #E0E7FF;
 
-    --ifm-background-color:         #0f0f13;
-    --ifm-background-surface-color: #18181f;
-    --ifm-card-background-color:    #1e1e28;
+    /* Gradients */
+    --df-gradient-brand:            linear-gradient(135deg, #6366F1 0%, #8B5CF6 100%);
+    --df-gradient-brand-hover:      linear-gradient(135deg, #4F46E5 0%, #7C3AED 100%);
+    --df-gradient-surface:          linear-gradient(135deg, #18181F 0%, #1A1A2E 100%);
+    --df-gradient-glow:             linear-gradient(135deg, rgba(99,102,241,0.15) 0%, rgba(139,92,246,0.15) 100%);
+    --df-shadow-brand:              0 4px 24px rgba(99,102,241,0.35);
+    --df-shadow-glow:               0 0 30px rgba(99,102,241,0.45);
 
-    --ifm-navbar-background-color:  rgba(15, 15, 19, 0.85);
-    --ifm-navbar-shadow:            0 1px 0 rgba(255, 255, 255, 0.06);
+    /* Deep Space Surfaces */
+    --ifm-background-color:         #0F172A;
+    --ifm-background-surface-color: #1E293B;
+    --ifm-card-background-color:    rgba(30,41,59,0.70);
 
-    --ifm-toc-border-color:         rgba(255, 255, 255, 0.08);
+    /* Navbar — frosted glass */
+    --ifm-navbar-background-color:  rgba(15,23,42,0.80);
+    --ifm-navbar-shadow:            none;
 
-    --docusaurus-highlighted-code-line-bg: rgba(129, 140, 248, 0.12);
+    /* Borders */
+    --ifm-toc-border-color:         rgba(255,255,255,0.07);
+    --df-border-color:              rgba(255,255,255,0.08);
+    --df-border-subtle:             rgba(129,140,248,0.20);
+    --df-glass-bg:                  rgba(30,41,59,0.70);
+    --df-glass-border:              rgba(255,255,255,0.08);
 
-    --df-gradient-primary:          linear-gradient(135deg, #818cf8 0%, #a78bfa 100%);
-    --df-gradient-surface:          linear-gradient(135deg, #18181f 0%, #1a1a2e 100%);
-    --df-border-color:              rgba(255, 255, 255, 0.08);
-    --df-text-muted:                #9ca3af;
-    --df-badge-bg:                  rgba(129, 140, 248, 0.15);
-    --df-badge-color:               #a5b4fc;
+    /* Text */
+    --df-text-muted:                #94A3B8;
+    --df-text-subtle:               #64748B;
+
+    /* Badges */
+    --df-badge-bg:                  rgba(129,140,248,0.12);
+    --df-badge-color:               #A5B4FC;
+    --df-badge-border:              rgba(129,140,248,0.25);
+
+    --df-code-bg:                   #0D1B2A;
+    --df-hover-overlay:             rgba(129,140,248,0.06);
+    --ifm-hover-overlay:            rgba(129,140,248,0.06);
+
+    --docusaurus-highlighted-code-line-bg: rgba(129,140,248,0.10);
 }
 
+
+/* ============================================================
+   BASE & TYPOGRAPHY
+   ============================================================ */
 
 html {
     scroll-behavior: smooth;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
 }
-
 
 body {
-    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    font-family: var(--ifm-font-family-base), 'Inter', system-ui, -apple-system, sans-serif;
 }
 
+/* Unified easing */
 *,
 *::before,
 *::after {
     transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
 }
 
+/* Headings — Jakarta Sans for punch */
+h1, h2, h3, h4, h5, h6 {
+    font-family: var(--df-font-heading), 'Plus Jakarta Sans', 'Inter', sans-serif;
+}
+
+
+/* ============================================================
+   NAVBAR — Glassmorphism Header
+   ============================================================ */
 
 .navbar {
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
+    backdrop-filter: blur(16px) saturate(180%);
+    -webkit-backdrop-filter: blur(16px) saturate(180%);
     border-bottom: 1px solid var(--df-border-color);
-    transition: background-color 0.2s ease;
+    transition: background-color 0.25s ease, border-color 0.25s ease;
+    height: var(--ifm-navbar-height);
 }
 
 [data-theme='dark'] .navbar {
-    background-color: rgba(15, 15, 19, 0.85) !important;
+    background-color: var(--ifm-navbar-background-color) !important;
 }
 
+/* Brand */
 .navbar__brand {
-    font-weight: 700;
-    letter-spacing: -0.02em;
-    font-size: 1.05rem;
+    gap: 10px;
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    font-size: 1.1rem;
 }
 
+/* "doc" white, "forge" gradient */
 .navbar__title {
-    background: var(--df-gradient-primary);
+    font-family: var(--df-font-heading), 'Plus Jakarta Sans', 'Inter', sans-serif;
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    background: var(--df-gradient-brand);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
-    font-weight: 700;
 }
 
+/* Logo drop-shadow glow */
+.navbar__logo img {
+    filter: drop-shadow(0 0 6px rgba(99,102,241,0.50));
+    transition: filter 0.3s ease;
+}
+
+.navbar__logo:hover img {
+    filter: drop-shadow(0 0 12px rgba(99,102,241,0.75));
+}
+
+/* Nav links */
 .navbar__link {
     font-size: 0.875rem;
     font-weight: 500;
     transition: color 0.15s ease;
+    position: relative;
+}
+
+.navbar__link:hover {
+    color: var(--ifm-color-primary);
 }
 
 .navbar__link--active {
     color: var(--ifm-color-primary);
+    font-weight: 600;
 }
 
-.navbar__item.navbar__link[href*='github'] {
+/* GitHub button — glass pill */
+.navbar__item.navbar__link[href*='github'],
+.navbar__item.navbar__link[href*='GitHub'] {
     display: flex;
     align-items: center;
     gap: 6px;
     padding: 6px 14px;
-    border: 1px solid var(--df-border-color);
+    background: rgba(79,70,229,0.08);
+    border: 1px solid var(--df-border-subtle);
     border-radius: 8px;
     font-size: 0.8125rem;
     font-weight: 500;
     transition: all 0.2s ease;
 }
 
-.navbar__item.navbar__link[href*='github']:hover {
-    background: var(--ifm-color-primary);
-    border-color: var(--ifm-color-primary);
-    color: #ffffff;
+.navbar__item.navbar__link[href*='github']:hover,
+.navbar__item.navbar__link[href*='GitHub']:hover {
+    background: var(--df-gradient-brand);
+    border-color: transparent;
+    color: #ffffff !important;
+    box-shadow: var(--df-shadow-brand);
     text-decoration: none;
+    -webkit-text-fill-color: #ffffff;
 }
 
+
+/* ============================================================
+   SIDEBAR — Refined Navigation
+   ============================================================ */
 
 .theme-doc-sidebar-container {
     border-right: 1px solid var(--df-border-color) !important;
+    background: var(--ifm-background-surface-color);
 }
 
+.theme-doc-sidebar-menu {
+    padding: 12px 8px;
+}
+
+/* Menu items */
 .menu__link {
     font-size: 0.875rem;
-    border-radius: 6px;
+    border-radius: 8px;
     transition: all 0.15s ease;
     font-weight: 400;
     color: var(--df-text-muted);
+    padding: 6px 12px;
 }
 
 .menu__link:hover {
     background: var(--ifm-hover-overlay);
     color: var(--ifm-color-primary);
     text-decoration: none;
+    padding-left: 16px;
 }
 
+/* Active link — glass highlight */
 .menu__link--active {
     font-weight: 600;
     color: var(--ifm-color-primary) !important;
     background: var(--df-badge-bg) !important;
+    border-left: 2px solid var(--ifm-color-primary);
+    padding-left: 14px !important;
 }
 
-.menu__caret::before {
-    background: var(--df-text-muted);
+/* Category labels */
+.menu__list-item-collapsible .menu__link {
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    font-weight: 700;
+    color: var(--df-text-subtle);
+    font-family: 'JetBrains Mono', 'Fira Code', 'Cascadia Code', monospace;
+    font-size: 0.75rem;
 }
 
 .menu__list-item-collapsible:hover {
     background: var(--ifm-hover-overlay);
+    border-radius: 8px;
 }
 
-.menu__list-item-collapsible .menu__link {
-    font-size: 0.8125rem;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    font-weight: 600;
-    color: var(--df-text-muted);
+.menu__caret::before {
+    background-color: var(--df-text-muted);
 }
 
+
+/* ============================================================
+   CONTENT AREA — Markdown Styling
+   ============================================================ */
 
 .markdown {
     --ifm-heading-color:    inherit;
@@ -194,71 +335,145 @@ body {
     --ifm-link-hover-color: var(--ifm-color-primary-dark);
 }
 
+/* h1 — cinematic */
 .markdown h1 {
-    font-size: 2rem;
-    font-weight: 700;
-    letter-spacing: -0.03em;
-    line-height: 1.2;
-    margin-bottom: 0.5rem;
+    font-size: 2.25rem;
+    font-weight: 800;
+    letter-spacing: -0.04em;
+    line-height: 1.15;
+    margin-bottom: 0.75rem;
+    background: var(--df-gradient-brand);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
 }
 
+[data-theme='light'] .markdown h1 {
+    background: var(--df-gradient-brand);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+/* h2 — section divider */
 .markdown h2 {
-    font-size: 1.375rem;
-    font-weight: 600;
-    letter-spacing: -0.02em;
-    margin-top: 2.5rem;
-    padding-bottom: 0.5rem;
+    font-size: 1.5rem;
+    font-weight: 700;
+    letter-spacing: -0.025em;
+    margin-top: 3rem;
+    padding-bottom: 0.625rem;
     border-bottom: 1px solid var(--df-border-color);
+    position: relative;
+}
+
+/* h2 accent bar */
+.markdown h2::before {
+    content: '';
+    display: inline-block;
+    width: 4px;
+    height: 1.1em;
+    background: var(--df-gradient-brand);
+    border-radius: 2px;
+    margin-right: 10px;
+    vertical-align: middle;
+    position: relative;
+    top: -1px;
 }
 
 .markdown h3 {
-    font-size: 1.125rem;
-    font-weight: 600;
-    margin-top: 2rem;
+    font-size: 1.1875rem;
+    font-weight: 700;
+    margin-top: 2.25rem;
+    letter-spacing: -0.015em;
 }
 
+.markdown h4 {
+    font-size: 0.8125rem;
+    font-weight: 600;
+    margin-top: 1.75rem;
+    color: var(--df-text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    font-family: 'JetBrains Mono', 'Fira Code', 'Cascadia Code', monospace;
+}
+
+/* Links */
 .markdown a {
     text-decoration: none;
     font-weight: 500;
-    transition: opacity 0.15s;
+    color: var(--ifm-color-primary);
+    transition: opacity 0.15s, text-shadow 0.2s;
 }
 
 .markdown a:hover {
     text-decoration: underline;
     text-underline-offset: 3px;
+    opacity: 0.85;
 }
 
 .markdown p {
-    margin-bottom: 1.25rem;
+    margin-bottom: 1.375rem;
+}
+
+/* Strong */
+.markdown strong {
+    font-weight: 700;
+    color: inherit;
+}
+
+/* Blockquote — frosted */
+.markdown blockquote {
+    border-left: 3px solid var(--ifm-color-primary);
+    background: var(--df-badge-bg);
+    border-radius: 0 10px 10px 0;
+    margin: 1.5rem 0;
+    padding: 1rem 1.25rem;
+    font-style: normal;
+}
+
+.markdown blockquote p {
+    margin: 0;
+    color: var(--df-text-muted);
+    font-size: 0.9375rem;
 }
 
 
+/* ============================================================
+   TABLES — Forge-style Data Grid
+   ============================================================ */
+
 .markdown table {
-    border-collapse: collapse;
+    border-collapse: separate;
+    border-spacing: 0;
     width: 100%;
-    margin: 1.5rem 0;
-    border-radius: 10px;
+    margin: 1.75rem 0;
+    border-radius: var(--df-radius-xl);
     overflow: hidden;
-    box-shadow: var(--ifm-global-shadow-lw);
     border: 1px solid var(--df-border-color);
+    box-shadow: var(--ifm-global-shadow-lw);
 }
 
 .markdown thead tr {
-    background: var(--df-gradient-primary);
+    background: var(--df-gradient-brand);
 }
 
 .markdown thead th {
     color: #ffffff;
+    font-family: 'JetBrains Mono', 'Fira Code', 'Cascadia Code', monospace;
     font-weight: 600;
-    font-size: 0.8125rem;
+    font-size: 0.75rem;
     text-transform: uppercase;
-    letter-spacing: 0.05em;
-    padding: 12px 16px;
-    border: none;
+    letter-spacing: 0.07em;
+    padding: 13px 18px;
+    border: none !important;
 }
 
 .markdown tbody tr {
     transition: background-color 0.15s;
+}
+
+.markdown tbody tr:nth-child(even) {
+    background: var(--df-badge-bg);
 }
 
 .markdown tbody tr:hover {
@@ -266,124 +481,305 @@ body {
 }
 
 .markdown tbody td {
-    padding: 10px 16px;
-    border-top: 1px solid var(--df-border-color);
+    padding: 11px 18px;
+    border: none !important;
+    border-top: 1px solid var(--df-border-color) !important;
     font-size: 0.9rem;
+    vertical-align: middle;
 }
 
+
+/* ============================================================
+   ADMONITIONS — Hot Metal Alerts
+   ============================================================ */
 
 .admonition {
     border-left-width: 3px;
-    border-radius: 10px;
-    margin: 1.5rem 0;
+    border-radius: var(--ifm-card-border-radius);
+    margin: 1.75rem 0;
+    backdrop-filter: blur(4px);
 }
+
 
 .admonition-heading h5 {
-    font-size: 0.8125rem;
+    font-size: 0.75rem;
     text-transform: uppercase;
-    letter-spacing: 0.06em;
+    letter-spacing: 0.08em;
     font-weight: 700;
+    font-family: 'JetBrains Mono', 'Fira Code', 'Cascadia Code', monospace;
+}
+
+/* Note — Indigo */
+.admonition-note {
+    background: rgba(79,70,229,0.06);
+    border-color: var(--df-indigo);
+}
+
+/* Warning — Hot Metal Pink */
+.admonition-caution,
+.admonition-warning {
+    background: rgba(244,114,182,0.06);
+    border-color: var(--df-pink);
+}
+
+/* Tip — Cyan */
+.admonition-tip {
+    background: rgba(34,211,238,0.06);
+    border-color: var(--df-cyan);
+}
+
+/* Danger */
+.admonition-danger {
+    background: rgba(239,68,68,0.06);
+    border-color: #EF4444;
 }
 
 
-.table-of-contents__link {
+/* ============================================================
+   CODE BLOCKS — Terminal Aesthetic
+   ============================================================ */
+
+/* Inline code */
+code {
+    font-family: var(--ifm-font-family-monospace), 'JetBrains Mono', 'Fira Code', 'Cascadia Code', monospace;
+    font-size: 0.875em;
+    font-weight: 500;
+    padding: 0.15em 0.45em;
+    border: 1px solid var(--df-border-color);
+    border-radius: 5px;
+    background: var(--df-code-bg-light);
+}
+
+[data-theme='dark'] code {
+    background: rgba(129,140,248,0.08);
+    border-color: rgba(129,140,248,0.15);
+    color: #A5B4FC;
+}
+
+/* Block code */
+.prism-code {
+    font-family: var(--ifm-font-family-monospace), 'JetBrains Mono', 'Fira Code', 'Cascadia Code', monospace !important;
+    font-size: 0.875rem !important;
+    line-height: 1.65 !important;
+    border-radius: 10px !important;
+}
+
+[data-theme='dark'] .prism-code {
+    background: var(--df-code-bg) !important;
+}
+
+/* Code block container */
+[class*='codeBlockContainer'] {
+    border-radius: 12px !important;
+    overflow: hidden;
+    border: 1px solid var(--df-border-color);
+    box-shadow: var(--ifm-global-shadow-lw);
+}
+
+[data-theme='dark'] [class*='codeBlockContainer'] {
+    border-color: rgba(255,255,255,0.07);
+    box-shadow:
+        var(--ifm-global-shadow-md),
+        0 0 0 1px rgba(129,140,248,0.08);
+}
+
+/* Code block title bar */
+
+[class*='codeBlockTitle'] {
+    font-family: 'JetBrains Mono', 'Fira Code', 'Cascadia Code', monospace;
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    background: var(--df-gradient-brand) !important;
+    color: rgba(255,255,255,0.85) !important;
+    border-bottom: 1px solid rgba(255,255,255,0.10);
+    padding: 8px 16px;
+}
+
+/* Copy button */
+[class*='copyButton'] {
+    border-radius: 6px;
+    transition: all 0.2s ease;
+}
+
+[class*='copyButton']:hover {
+    background: rgba(129,140,248,0.20) !important;
+}
+
+/* Line numbers */
+[class*='lineNumber'] {
+    color: var(--df-text-subtle) !important;
+    opacity: 0.5;
+}
+
+/* Shell prompt prefix — terminal feel */
+[class*='language-bash'] .token.function,
+[class*='language-shell'] .token.function {
+    color: var(--df-cyan) !important;
+}
+
+
+/* ============================================================
+   TOC — Table of Contents
+   ============================================================ */
+
+.table-of-contents {
     font-size: 0.8125rem;
+    padding: 0;
+}
+
+.table-of-contents__link {
     color: var(--df-text-muted);
-    transition: color 0.15s;
+    transition: color 0.15s, padding-left 0.15s;
+    display: block;
+    padding: 3px 0;
+    border-left: 2px solid transparent;
 }
 
 .table-of-contents__link:hover,
 .table-of-contents__link--active {
     color: var(--ifm-color-primary);
     font-weight: 500;
+    border-left-color: var(--ifm-color-primary);
+    padding-left: 8px;
+    text-decoration: none;
 }
 
 
+/* ============================================================
+   PAGINATION NAV
+   ============================================================ */
+
 .pagination-nav__link {
     border: 1px solid var(--df-border-color);
-    border-radius: 10px;
-    transition: all 0.2s;
+    border-radius: var(--df-radius-xl);
+    transition: all 0.2s ease;
+    backdrop-filter: blur(4px);
 }
 
 .pagination-nav__link:hover {
     border-color: var(--ifm-color-primary);
-    box-shadow: 0 0 0 3px var(--df-badge-bg);
+    box-shadow:
+        0 0 0 3px var(--df-badge-bg),
+        var(--df-shadow-brand);
+    text-decoration: none;
+    transform: translateY(-1px);
 }
 
+
 .pagination-nav__sublabel {
-    font-size: 0.75rem;
+    font-family: 'JetBrains Mono', 'Fira Code', 'Cascadia Code', monospace;
+    font-size: 0.6875rem;
     text-transform: uppercase;
-    letter-spacing: 0.05em;
-    color: var(--df-text-muted);
+    letter-spacing: 0.07em;
+    color: var(--df-text-subtle);
+    margin-bottom: 4px;
 }
 
 .pagination-nav__label {
     font-size: 0.9375rem;
-    font-weight: 600;
+    font-weight: 700;
+    letter-spacing: -0.01em;
 }
+
+
+/* ============================================================
+   BREADCRUMBS
+   ============================================================ */
 
 
 .breadcrumbs__item {
     font-size: 0.8125rem;
+    font-family: 'JetBrains Mono', 'Fira Code', 'Cascadia Code', monospace;
 }
 
 .breadcrumbs__link {
     color: var(--df-text-muted);
     border-radius: 4px;
+    padding: 2px 6px;
+    transition: all 0.15s;
+}
+
+.breadcrumbs__link:hover {
+    color: var(--ifm-color-primary);
+    background: var(--df-badge-bg);
+    text-decoration: none;
 }
 
 
-code {
-    font-family: 'JetBrains Mono', 'Fira Code', monospace;
-    font-size: 0.875em;
-    font-weight: 500;
-    padding: 0.15em 0.4em;
-    border: 1px solid var(--df-border-color);
-    border-radius: var(--ifm-code-border-radius);
-}
-
-[data-theme='dark'] code {
-    background: rgba(129, 140, 248, 0.08);
-    border-color: rgba(129, 140, 248, 0.15);
-}
-
-.prism-code {
-    font-family: 'JetBrains Mono', 'Fira Code', monospace !important;
-    font-size: 0.875rem !important;
-    line-height: 1.6 !important;
-    border-radius: 10px !important;
-}
-
-[class*='codeBlockContainer'] {
-    border-radius: 10px;
-    overflow: hidden;
-    box-shadow: var(--ifm-global-shadow-lw);
-}
-
-[class*='copyButton'] {
-    border-radius: 6px;
-}
-
+/* ============================================================
+   FOOTER — Deep Space
+   ============================================================ */
 
 .footer {
     border-top: 1px solid var(--df-border-color);
     background: var(--ifm-background-surface-color) !important;
+    position: relative;
+}
+
+/* Subtle top glow line */
+.footer::before {
+    content: '';
+    position: absolute;
+    top: -1px;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: var(--df-gradient-brand);
+    opacity: 0.5;
 }
 
 [data-theme='dark'] .footer {
-    background: #0c0c10 !important;
+    background: #080D1A !important;
 }
+
+
+.footer__title {
+    font-family: 'JetBrains Mono', 'Fira Code', 'Cascadia Code', monospace;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--df-text-subtle);
+}
+
+.footer__link-item {
+    font-size: 0.875rem;
+    color: var(--df-text-muted);
+    transition: color 0.15s;
+}
+
+.footer__link-item:hover {
+    color: var(--ifm-color-primary);
+    text-decoration: none;
+}
+
 
 .footer__copyright {
     font-size: 0.8125rem;
-    color: var(--df-text-muted);
-    margin-top: 1rem;
+    color: var(--df-text-subtle);
+    margin-top: 1.25rem;
+    font-family: 'JetBrains Mono', 'Fira Code', 'Cascadia Code', monospace;
+}
+
+.footer__copyright a {
+    color: var(--ifm-color-primary);
+    font-weight: 600;
+    text-decoration: none;
+}
+
+.footer__copyright a:hover {
+    text-decoration: underline;
 }
 
 
+/* ============================================================
+   CUSTOM SCROLLBAR
+   ============================================================ */
+
 ::-webkit-scrollbar {
-    width: 6px;
-    height: 6px;
+    width: 5px;
+    height: 5px;
 }
 
 ::-webkit-scrollbar-track {
@@ -392,23 +788,285 @@ code {
 
 ::-webkit-scrollbar-thumb {
     background: var(--df-border-color);
-    border-radius: 3px;
+    border-radius: 10px;
+    transition: background 0.2s;
 }
 
 ::-webkit-scrollbar-thumb:hover {
     background: var(--ifm-color-primary);
 }
 
+::-webkit-scrollbar-corner {
+    background: transparent;
+}
+
+
+/* ============================================================
+   BUTTONS — Forge Glass Style
+   ============================================================ */
+
+.button {
+    font-weight: 600;
+    letter-spacing: 0.01em;
+    transition: all 0.2s ease !important;
+    position: relative;
+    overflow: hidden;
+}
+
+.button--primary {
+    background: var(--df-gradient-brand) !important;
+    border: none !important;
+    box-shadow: var(--df-shadow-brand);
+}
+
+.button--primary:hover {
+    background: var(--df-gradient-brand-hover) !important;
+    box-shadow: var(--df-shadow-glow);
+    transform: translateY(-1px);
+}
+
+/* Ghost / outline button */
+.button--secondary {
+    background: rgba(79,70,229,0.08) !important;
+    border: 1px solid var(--df-border-subtle) !important;
+    color: var(--ifm-color-primary) !important;
+    backdrop-filter: blur(4px);
+}
+
+.button--secondary:hover {
+    background: rgba(79,70,229,0.16) !important;
+    box-shadow: 0 0 15px rgba(79,70,229,0.30);
+    border-color: var(--ifm-color-primary) !important;
+}
+
+
+/* ============================================================
+   UTILITY — Forge Components
+   ============================================================ */
+
+/* Glass card */
+.df-card {
+    background: var(--df-glass-bg);
+    border: 1px solid var(--df-glass-border);
+    border-radius: var(--df-radius-2xl);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    box-shadow: var(--ifm-global-shadow-md);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.df-card:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--ifm-global-shadow-tl);
+}
+
+/* Badge */
 
 .df-badge {
     display: inline-flex;
     align-items: center;
-    gap: 4px;
-    padding: 2px 10px;
+    gap: 5px;
+    padding: 3px 10px;
     border-radius: 100px;
-    font-size: 0.75rem;
-    font-weight: 600;
+    font-size: 0.6875rem;
+    font-weight: 700;
+    font-family: 'JetBrains Mono', 'Fira Code', 'Cascadia Code', monospace;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
     background: var(--df-badge-bg);
     color: var(--df-badge-color);
-    border: 1px solid rgba(99, 102, 241, 0.2);
+    border: 1px solid var(--df-badge-border);
+}
+
+/* "Deployed via docforge" corner badge */
+
+.df-deploy-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 12px 4px 8px;
+    background: var(--df-glass-bg);
+    border: 1px solid var(--df-glass-border);
+    border-radius: 100px;
+    font-size: 0.6875rem;
+    font-weight: 600;
+    font-family: 'JetBrains Mono', 'Fira Code', 'Cascadia Code', monospace;
+    color: var(--df-text-muted);
+    backdrop-filter: blur(8px);
+    text-decoration: none;
+    transition: all 0.2s;
+}
+
+.df-deploy-badge:hover {
+    border-color: var(--ifm-color-primary);
+    color: var(--ifm-color-primary);
+    box-shadow: 0 0 12px rgba(99,102,241,0.25);
+}
+
+.df-deploy-badge::before {
+    content: '⚡';
+    font-size: 0.75rem;
+}
+
+/* Terminal input — for token auth pages */
+
+.df-terminal-input {
+    font-family: 'JetBrains Mono', 'Fira Code', 'Cascadia Code', monospace;
+    font-size: 0.9375rem;
+    letter-spacing: 0.05em;
+    background: rgba(15,23,42,0.60);
+    border: 1px solid rgba(129,140,248,0.25);
+    border-radius: 10px;
+    color: #E2E8F0;
+    caret-color: var(--ifm-color-primary);
+    padding: 12px 16px;
+    width: 100%;
+    outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.df-terminal-input:focus {
+    border-color: var(--ifm-color-primary);
+    box-shadow: 0 0 0 3px rgba(129,140,248,0.15);
+}
+
+/* Blinking cursor effect on inputs */
+.df-terminal-input::placeholder {
+    color: rgba(148,163,184,0.50);
+    animation: df-blink 1.2s step-end infinite;
+}
+
+@keyframes df-blink {
+    0%, 100% { opacity: 1; }
+    50%       { opacity: 0; }
+}
+
+/* Glow text — for key terms */
+.df-glow {
+    color: var(--ifm-color-primary);
+    text-shadow: 0 0 16px rgba(99,102,241,0.50);
+}
+
+/* Gradient text utility */
+.df-gradient-text {
+    background: var(--df-gradient-brand);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+
+/* ============================================================
+   LAST-UPDATED & EDIT LINKS
+   ============================================================ */
+
+
+.theme-last-updated {
+    font-family: 'JetBrains Mono', 'Fira Code', 'Cascadia Code', monospace;
+    font-size: 0.75rem;
+    color: var(--df-text-subtle);
+    opacity: 0.8;
+}
+
+.theme-edit-this-page {
+    font-size: 0.8125rem;
+    color: var(--df-text-muted);
+    transition: color 0.15s;
+}
+
+.theme-edit-this-page:hover {
+    color: var(--ifm-color-primary);
+    text-decoration: none;
+}
+
+
+/* ============================================================
+   SEARCH BAR (Algolia DocSearch)
+   ============================================================ */
+
+
+.navbar__search-input {
+    font-family: 'JetBrains Mono', 'Fira Code', 'Cascadia Code', monospace;
+    background: var(--df-badge-bg);
+    border: 1px solid var(--df-border-subtle);
+    border-radius: 8px;
+    font-size: 0.875rem;
+    transition: all 0.2s;
+}
+
+.navbar__search-input:focus {
+    border-color: var(--ifm-color-primary);
+    box-shadow: 0 0 0 3px rgba(79,70,229,0.12);
+}
+
+.DocSearch-Button {
+    background: var(--df-badge-bg) !important;
+    border: 1px solid var(--df-border-subtle) !important;
+    border-radius: 8px !important;
+    transition: all 0.2s !important;
+}
+
+.DocSearch-Button:hover {
+    border-color: var(--ifm-color-primary) !important;
+    box-shadow: 0 0 0 3px rgba(79,70,229,0.12) !important;
+}
+
+.DocSearch-Button-Placeholder,
+.DocSearch-Button-Keys {
+    font-family: 'JetBrains Mono', 'Fira Code', 'Cascadia Code', monospace !important;
+    font-size: 0.8125rem !important;
+}
+
+
+/* ============================================================
+   RESPONSIVE — Mobile
+   ============================================================ */
+
+@media (max-width: 768px) {
+    .markdown h1 {
+        font-size: 1.75rem;
+    }
+
+    .markdown h2 {
+        font-size: 1.25rem;
+    }
+
+    .navbar__brand {
+        font-size: 1rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .markdown h1 {
+        font-size: 1.5rem;
+    }
+
+    [class*='codeBlockContainer'] {
+        border-radius: 8px !important;
+    }
+}
+
+
+/* ============================================================
+   ANIMATIONS
+   ============================================================ */
+
+@keyframes df-fade-in {
+    from { opacity: 0; transform: translateY(8px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes df-pulse-glow {
+    0%, 100% { box-shadow: 0 0 8px rgba(99,102,241,0.30); }
+    50%       { box-shadow: 0 0 20px rgba(99,102,241,0.60); }
+}
+
+/* Entrance animation for main content */
+.main-wrapper {
+    animation: df-fade-in 0.35s ease both;
+}
+
+/* Pulsing glow for active/important elements */
+.df-pulse {
+    animation: df-pulse-glow 2.5s ease-in-out infinite;
 }
