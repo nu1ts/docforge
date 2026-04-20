@@ -13,11 +13,11 @@ from rich.theme import Theme
 from docforge import __version__
 
 custom_theme = Theme({
-    "info": "bold cyan",
-    "success": "bold green",
-    "warning": "bold yellow",
-    "error": "bold red",
-    "dim": "dim white",
+    "info":      "bold cyan",
+    "success":   "bold green",
+    "warning":   "bold yellow",
+    "error":     "bold red",
+    "dim":       "dim white",
     "highlight": "bold white",
 })
 
@@ -41,9 +41,9 @@ _COMMAND_META = {
         "Generate documentation from source code using Gemini AI.",
         "docforge generate [--only ID] [--config FILE]",
         [
-            ("--only ID",    "Generate only a specific doc by its ID."),
+            ("--only ID",     "Generate only a specific doc by its ID."),
             ("--config FILE", "Path to config file.  [default: docforge.yaml]"),
-            ("--help",       "Show this message and exit."),
+            ("--help",        "Show this message and exit."),
         ],
         [],
     ),
@@ -101,7 +101,7 @@ def _print_command_help(name):
         "%s docforge %s" % (emoji, name),
         style="bold blue",
         padding=(0, 2),
-        ))
+    ))
     console.print()
     console.print("  %s" % desc)
     console.print()
@@ -123,6 +123,23 @@ def _print_command_help(name):
     console.print()
 
 
+# ─────────────────────── executable resolution ───────────────────────
+
+def _get_node_exe():
+    return shutil.which("node")
+
+
+def _get_npm_exe():
+    if _IS_WINDOWS:
+        exe = shutil.which("npm.cmd") or shutil.which("npm")
+        if not exe:
+            candidate = r"C:\Program Files\nodejs\npm.cmd"
+            if os.path.exists(candidate):
+                return candidate
+        return exe
+    return shutil.which("npm")
+
+
 def _find_docusaurus_cli(site_dir):
     candidates = [
         os.path.join(site_dir, "node_modules", "@docusaurus", "core", "bin", "docusaurus.mjs"),
@@ -136,25 +153,31 @@ def _find_docusaurus_cli(site_dir):
 
 
 def _get_docusaurus_cmd(site_dir, action):
-    node = shutil.which("node")
+    node = _get_node_exe()
     cli = _find_docusaurus_cli(site_dir)
 
     if node and cli:
         return [node, cli, action]
 
+    npm = _get_npm_exe()
+    if not npm:
+        console.print()
+        raise RuntimeError(
+            "Neither node nor npm found in PATH.\n"
+            "  Install Node.js from: https://nodejs.org\n"
+        )
+
     if action == "start":
-        return ["npm", "start"]
+        return [npm, "start"]
     if action == "build":
-        return ["npm", "run", "build"]
+        return [npm, "run", "build"]
 
-    raise ValueError("Unknown docusaurus action: %s" % action)
+    raise ValueError("Unknown Docusaurus action: %s" % action)
 
+
+# ─────────────────────── subprocess helpers ───────────────────────
 
 def _run(cmd, cwd=None):
-    exe = shutil.which(cmd[0])
-    if exe:
-        cmd = [exe] + cmd[1:]
-
     proc = subprocess.Popen(cmd, cwd=cwd)
 
     try:
@@ -196,13 +219,11 @@ def find_project_root():
     return current
 
 
+# ─────────────────────── rich helpers ───────────────────────
+
 def _print_header(text, emoji=""):
     content = "%s  %s" % (emoji, text) if emoji else text
-    console.print(Panel(
-        content,
-        style="bold blue",
-        padding=(0, 2),
-    ))
+    console.print(Panel(content, style="bold blue", padding=(0, 2)))
 
 
 def _print_step(text):
@@ -246,14 +267,12 @@ def _print_help():
         ("generate", "🤖 ", "Generate docs from source code using Gemini AI"),
         ("collect",  "📦 ", "Collect source context into docs/_context/"),
         ("serve",    "🌐 ", "Start Docusaurus local dev server"),
-        ("build",    "🏗️", "Build Docusaurus site for production"),
+        ("build",    "🏗️",  "Build Docusaurus site for production"),
         ("token",    "🔑 ", "Generate a new developer access token"),
     ]
 
     for cmd, emoji, desc in commands:
-        console.print(
-            "  %s  [cyan]%-10s[/]  [dim]%s[/]" % (emoji, cmd, desc)
-        )
+        console.print("  %s  [cyan]%-10s[/]  [dim]%s[/]" % (emoji, cmd, desc))
 
     console.print()
     console.print(
@@ -286,6 +305,8 @@ def main(ctx):
         console.print()
 
 
+# ── init ──────────────────────────────────────────────────────────────
+
 @main.command(cls=RichCommand)
 @click.option("--name", default=None, help="Name of the project.")
 def init(name):
@@ -315,7 +336,6 @@ def init(name):
         from docforge.deps import check_and_install_all
         deps = check_and_install_all(need_node=True, need_git=False)
         npm_exe = deps.get("npm")
-
         init_docusaurus(root, npm_exe=npm_exe)
 
     console.print()
@@ -358,8 +378,10 @@ def init(name):
     _print_success("Initialization complete 🎉")
 
 
+# ── generate ──────────────────────────────────────────────────────────
+
 @main.command(cls=RichCommand)
-@click.option("--only", default=None, help="Generate only a specific doc by its ID.")
+@click.option("--only",   default=None,           help="Generate only a specific doc by its ID.")
 @click.option("--config", default="docforge.yaml", help="Path to config file.")
 def generate(only, config):
     _print_header("Generating documentation", "🤖")
@@ -382,6 +404,8 @@ def generate(only, config):
     console.print()
     _print_success("Generated [highlight]%d[/] document(s)" % count)
 
+
+# ── collect ───────────────────────────────────────────────────────────
 
 @main.command(cls=RichCommand)
 @click.option("--config", default="docforge.yaml", help="Path to config file.")
@@ -410,6 +434,8 @@ def collect(config):
     _print_success("Context saved to [cyan]%s[/]" % ctx_dir)
 
 
+# ── serve ─────────────────────────────────────────────────────────────
+
 @main.command(cls=RichCommand)
 @click.option("--config", default="docforge.yaml", help="Path to config file.")
 def serve(config):
@@ -426,12 +452,26 @@ def serve(config):
         _print_step("Run: [cyan]docforge init[/]")
         sys.exit(1)
 
+    node_modules = os.path.join(site_dir, "node_modules")
+    if not os.path.exists(node_modules):
+        _print_warning("node_modules not found — running npm install first...")
+        from docforge.scaffold import _run_npm
+        _run_npm(["install"], cwd=site_dir, description="Installing dependencies...")
+
+    try:
+        cmd = _get_docusaurus_cmd(str(site_dir), "start")
+    except RuntimeError as exc:
+        _print_error(str(exc))
+        sys.exit(1)
+
     console.print("  [dim]URL:[/] [cyan]http://localhost:3000[/]")
     console.print("  [dim]Dir:[/] [cyan]%s[/]" % site_dir)
     console.print()
 
-    _run(_get_docusaurus_cmd(str(site_dir), "start"), cwd=str(site_dir))
+    _run(cmd, cwd=str(site_dir))
 
+
+# ── build ─────────────────────────────────────────────────────────────
 
 @main.command(cls=RichCommand)
 @click.option("--config", default="docforge.yaml", help="Path to config file.")
@@ -446,10 +486,22 @@ def build(config):
     site_dir = os.path.join(str(root), str(cfg.docusaurus_dir))
     build_dir = os.path.join(site_dir, "build")
 
+    node_modules = os.path.join(site_dir, "node_modules")
+    if not os.path.exists(node_modules):
+        _print_warning("node_modules not found — running npm install first...")
+        from docforge.scaffold import _run_npm
+        _run_npm(["install"], cwd=site_dir, description="Installing dependencies...")
+
+    try:
+        cmd = _get_docusaurus_cmd(str(site_dir), "build")
+    except RuntimeError as exc:
+        _print_error(str(exc))
+        sys.exit(1)
+
     console.print("  [dim]Dir:[/] [cyan]%s[/]" % site_dir)
     console.print()
 
-    code = _run(_get_docusaurus_cmd(str(site_dir), "build"), cwd=str(site_dir))
+    code = _run(cmd, cwd=str(site_dir))
 
     if code == 0:
         _print_success("Built to [cyan]%s[/]" % build_dir)
@@ -457,6 +509,8 @@ def build(config):
         _print_error("Build failed (exit code %d)" % code)
         sys.exit(code)
 
+
+# ── token ─────────────────────────────────────────────────────────────
 
 @main.command(cls=RichCommand)
 @click.argument("developer_name")
