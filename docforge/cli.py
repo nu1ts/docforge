@@ -312,10 +312,16 @@ def init(name):
 
     console.print()
     if _confirm("Initialize Docusaurus site?"):
-        init_docusaurus(root)
+        from docforge.deps import check_and_install_all
+        deps = check_and_install_all(need_node=True, need_git=False)
+        npm_exe = deps.get("npm")
+
+        init_docusaurus(root, npm_exe=npm_exe)
 
     console.print()
     if _confirm("Create GitHub Actions workflow?"):
+        from docforge.deps import ensure_git
+        ensure_git()
         init_github_actions(root)
 
     gitignore_path = os.path.join(root, ".gitignore")
@@ -341,7 +347,7 @@ def init(name):
     console.print()
     console.print(Panel(
         "  [dim]1.[/] Edit [cyan]docforge.yaml[/]\n"
-        "  [dim]2.[/] export [cyan]GEMINI_API_KEY[/]='...'\n"
+        "  [dim]2.[/] Set [cyan]GEMINI_API_KEY[/]='...'\n"
         "  [dim]3.[/] Run [cyan]docforge generate[/]\n"
         "  [dim]4.[/] Run [cyan]docforge serve[/]",
         title="[dim]Next steps[/]",

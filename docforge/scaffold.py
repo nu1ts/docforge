@@ -9,11 +9,11 @@ from rich.progress import Progress, SpinnerColumn, TextColumn
 from rich.theme import Theme
 
 custom_theme = Theme({
-    "info": "bold cyan",
-    "success": "bold green",
-    "warning": "bold yellow",
-    "error": "bold red",
-    "dim": "dim white",
+    "info":      "bold cyan",
+    "success":   "bold green",
+    "warning":   "bold yellow",
+    "error":     "bold red",
+    "dim":       "dim white",
     "highlight": "bold white",
 })
 
@@ -25,7 +25,6 @@ TEMPLATES_DIR = os.path.join(
 )
 
 _IS_WINDOWS = platform.system() == "Windows"
-_SHELL = _IS_WINDOWS
 
 
 def _print_step(text):
@@ -40,8 +39,26 @@ def _print_warning(text):
     console.print("[warning]  ⚠[/]  %s" % text)
 
 
-def _run_npm(args, cwd, description="Running npm..."):
-    cmd = ["npm"] + args
+def _get_npm_exe():
+    if _IS_WINDOWS:
+        exe = shutil.which("npm.cmd") or shutil.which("npm")
+        if not exe and os.path.exists(r"C:\Program Files\nodejs\npm.cmd"):
+            exe = r"C:\Program Files\nodejs\npm.cmd"
+        return exe
+    return shutil.which("npm")
+
+
+def _run_npm(args, cwd, description="Running npm...", npm_exe=None):
+    exe = npm_exe or _get_npm_exe()
+
+    if not exe:
+        raise RuntimeError(
+            "npm not found in PATH.\n"
+            "Run: docforge init  (Node.js will be installed automatically)"
+        )
+
+    cmd = [exe] + args
+
     with Progress(
             TextColumn("  "),
             SpinnerColumn(spinner_name="dots", style="bold green"),
@@ -50,13 +67,25 @@ def _run_npm(args, cwd, description="Running npm..."):
             transient=True,
     ) as progress:
         progress.add_task(description, total=None)
-        result = subprocess.call(
-            cmd, cwd=cwd, shell=_SHELL,
-            stdout=subprocess.DEVNULL,
-            stderr=subprocess.DEVNULL,
+        result = subprocess.run(
+            cmd,
+            cwd=cwd,
+            shell=False,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            text=True,
         )
-    if result != 0:
-        raise subprocess.CalledProcessError(result, cmd)
+
+    if result.returncode != 0:
+        console.print(
+            "[error]  ✖  npm %s failed (exit code %d):[/]"
+            % (" ".join(args), result.returncode)
+        )
+        error_out = result.stderr or result.stdout or ""
+        for line in error_out.splitlines()[-30:]:
+            if line.strip():
+                console.print("     [dim]%s[/]" % line)
+        raise subprocess.CalledProcessError(result.returncode, cmd)
 
 
 def _write_file(path, content):
@@ -77,9 +106,13 @@ def _write_logo(site_dir: str) -> None:
         '<stop offset="0%" stop-color="#818cf8"/>'
         '<stop offset="100%" stop-color="#a78bfa"/>'
         '</linearGradient>'
+        '<filter id="glow" x="-30%" y="-30%" width="160%" height="160%">'
+        '<feGaussianBlur stdDeviation="1.5" result="blur"/>'
+        '<feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>'
+        '</filter>'
         '</defs>'
         '<path d="M16 2L4 7v9c0 7 5.4 12.4 12 14 6.6-1.6 12-7 12-14V7L16 2z" '
-        'fill="url(#g)"/>'
+        'fill="url(#g)" filter="url(#glow)"/>'
         '<path d="M11 16h10M11 12h6M11 20h8" stroke="white" '
         'stroke-width="1.75" stroke-linecap="round"/>'
         '</svg>'
@@ -100,9 +133,24 @@ def _write_logo(site_dir: str) -> None:
         '</svg>'
     )
 
-    _write_file(os.path.join(img_dir, "logo.svg"), logo_dark)
-    _write_file(os.path.join(img_dir, "logo-dark.svg"), logo_light)
-    _print_success("[cyan]static/img/logo.svg[/]")
+    favicon = (
+        '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">'
+        '<defs>'
+        '<linearGradient id="g" x1="0%" y1="0%" x2="100%" y2="100%">'
+        '<stop offset="0%" stop-color="#4f46e5"/>'
+        '<stop offset="100%" stop-color="#7c3aed"/>'
+        '</linearGradient>'
+        '</defs>'
+        '<rect width="32" height="32" rx="8" fill="url(#g)"/>'
+        '<path d="M9 16h14M9 11h9M9 21h12" stroke="white" '
+        'stroke-width="2" stroke-linecap="round"/>'
+        '</svg>'
+    )
+
+    _write_file(os.path.join(img_dir, "logo.svg"),       logo_dark)
+    _write_file(os.path.join(img_dir, "logo-dark.svg"),  logo_light)
+    _write_file(os.path.join(img_dir, "favicon.svg"),    favicon)
+    _print_success("[cyan]static/img/logo.svg + favicon.svg[/]")
 
 
 def init_config(project_root, project_name):
@@ -220,7 +268,7 @@ def init_config(project_root, project_name):
     _print_step("Edit it to match your project structure")
 
 
-def init_docusaurus(project_root, config_path="docforge.yaml"):
+def init_docusaurus(project_root, config_path="docforge.yaml", npm_exe=None):
     from docforge.config import ProjectConfig
     config = ProjectConfig.from_file(
         os.path.join(str(project_root), str(config_path))
@@ -238,14 +286,14 @@ def init_docusaurus(project_root, config_path="docforge.yaml"):
 
     template_vars = {
         "config": config,
-        "site": config.site,
-        "auth": config.auth,
+        "site":   config.site,
+        "auth":   config.auth,
     }
 
     files_to_render = {
         "docusaurus.config.ts.j2": "docusaurus.config.ts",
-        "sidebars.js.j2": os.path.join("src", "js", "sidebars.js"),
-        "package.json.j2": "package.json",
+        "sidebars.js.j2":          os.path.join("src", "js", "sidebars.js"),
+        "package.json.j2":         "package.json",
     }
 
     for template_name, output_name in files_to_render.items():
@@ -277,17 +325,14 @@ def init_docusaurus(project_root, config_path="docforge.yaml"):
     os.makedirs(content_dir)
 
     index_content = (
-                        "---\n"
-                        "slug: /\n"
-                        "sidebar_position: 0\n"
-                        "---\n"
-                        "\n"
-                        "# %s\n"
-                        "\n"
-                        "Documentation will be generated here.\n"
-                        "\n"
-                        "Run `docforge generate` to create docs.\n"
-                    ) % config.project_name
+        "---\n"
+        "slug: /\n"
+        "sidebar_position: 0\n"
+        "---\n\n"
+        "# %s\n\n"
+        "Documentation will be generated here.\n\n"
+        "Run `docforge generate` to create docs.\n"
+    ) % config.project_name
 
     index_path = os.path.join(content_dir, "index.md")
     _write_file(index_path, index_content)
@@ -298,6 +343,7 @@ def init_docusaurus(project_root, config_path="docforge.yaml"):
         ["install"],
         cwd=site_dir,
         description="Installing Docusaurus dependencies...",
+        npm_exe=npm_exe,
     )
     _print_success("Docusaurus initialized in [cyan]%s[/]" % site_dir)
 
