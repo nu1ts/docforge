@@ -72,8 +72,9 @@
                 {% if site.github_user and site.repo_name %}
                 {
                     href: 'https://github.com/{{ site.github_user }}/{{ site.repo_name }}',
-                    label: 'GitHub',
                     position: 'right',
+                    className: 'navbar-github-link',
+                    'aria-label': 'GitHub repository',
                 },
                 {% endif %}
             ],
