@@ -203,7 +203,8 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .navbar__items--right {
-    gap: 12px;
+    --df-navbar-icons-gap: 20px;
+    gap: var(--df-navbar-icons-gap);
 }
 
 [data-theme='dark'] .navbar {
@@ -340,8 +341,7 @@ h1, h2, h3, h4, h5, h6 {
    NAVBAR — GitHub Icon Button
    ============================================================ */
 
-.navbar__item.navbar__link[href*='github'],
-.navbar__item.navbar__link[href*='GitHub'] {
+.navbar-github-link {
     display: inline-flex !important;
     align-items: center !important;
     justify-content: center !important;
@@ -349,15 +349,14 @@ h1, h2, h3, h4, h5, h6 {
     height: 36px;
     padding: 0 !important;
     font-size: 0;
-    color: transparent;
+    color: transparent !important;
     background: transparent !important;
     border: none !important;
     box-shadow: none !important;
-    transition: transform 0.15s ease, opacity 0.15s ease !important;
+    position: relative;
 }
 
-.navbar__item.navbar__link[href*='github']::before,
-.navbar__item.navbar__link[href*='GitHub']::before {
+.navbar-github-link::before {
     content: '';
     display: block;
     width: 24px;
@@ -375,30 +374,55 @@ h1, h2, h3, h4, h5, h6 {
     transition: background-color 0.2s ease;
 }
 
-/* Hover */
-.navbar__item.navbar__link[href*='github']:hover,
-.navbar__item.navbar__link[href*='GitHub']:hover {
+.navbar-github-link:hover {
     background: transparent !important;
     border: none !important;
     box-shadow: none !important;
-    opacity: 1 !important;
     text-decoration: none !important;
 }
 
-.navbar__item.navbar__link[href*='github']:hover::before,
-.navbar__item.navbar__link[href*='GitHub']:hover::before {
+.navbar-github-link:hover::before {
     background-color: var(--ifm-color-primary-light);
 }
 
-/* Dark mode */
-[data-theme='dark'] .navbar__item.navbar__link[href*='github']::before,
-[data-theme='dark'] .navbar__item.navbar__link[href*='GitHub']::before {
+[data-theme='dark'] .navbar-github-link::before {
     background-color: #ffffff;
 }
 
-[data-theme='dark'] .navbar__item.navbar__link[href*='github']:hover::before,
-[data-theme='dark'] .navbar__item.navbar__link[href*='GitHub']:hover::before {
+[data-theme='dark'] .navbar-github-link:hover::before {
     background-color: var(--ifm-color-primary-light);
+}
+
+/* ============================================================
+   NAVBAR — Right items: order + separator
+   ============================================================ */
+
+.navbar__items--right .df-toggle {
+    order: 0;
+}
+
+.navbar__items--right .navbar-github-link {
+    order: 1;
+}
+
+/* Separator between toggle and GitHub */
+.navbar-github-link::after {
+    content: '';
+    position: absolute;
+    left: calc(var(--df-navbar-icons-gap) / -2);
+    top: 50%;
+    transform: translateY(-50%);
+    width: 1px;
+    height: 20px;
+    background: var(--df-border-color);
+    opacity: 0.6;
+    border-radius: 1px;
+    pointer-events: none;
+}
+
+[data-theme='dark'] .navbar-github-link::after {
+    background: rgba(255,255,255,0.12);
+    opacity: 1;
 }
 
 
