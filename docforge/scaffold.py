@@ -41,27 +41,12 @@ def _print_warning(text):
 
 def _display_path(path, project_root=None):
     display = str(path)
-
     if project_root:
         try:
             display = os.path.relpath(str(path), str(project_root))
         except ValueError:
             display = str(path)
-
     return display.replace("\\", "/")
-
-
-def _announce_file(path, project_root=None, action="created"):
-    display = _display_path(path, project_root)
-
-    if action == "created":
-        _print_success("[cyan]%s[/]" % display)
-    elif action == "updated":
-        _print_step("Updated [cyan]%s[/]" % display)
-    elif action == "removed":
-        _print_step("Removed [cyan]%s[/]" % display)
-    else:
-        _print_step("[cyan]%s[/]" % display)
 
 
 def _get_npm_exe():
@@ -120,7 +105,7 @@ def _write_file(path, content):
         f.write(content)
 
 
-def _write_logo(site_dir, project_root=None, action="created"):
+def _write_logo(site_dir, project_root=None):
     img_dir = os.path.join(site_dir, "static", "img")
     os.makedirs(img_dir, exist_ok=True)
 
@@ -172,20 +157,18 @@ def _write_logo(site_dir, project_root=None, action="created"):
         '</svg>'
     )
 
-    logo_path = os.path.join(img_dir, "logo.svg")
-    logo_dark_path = os.path.join(img_dir, "logo-dark.svg")
-    favicon_path = os.path.join(img_dir, "favicon.svg")
+    _write_file(os.path.join(img_dir, "logo.svg"), logo_dark)
+    _write_file(os.path.join(img_dir, "logo-dark.svg"), logo_light)
+    _write_file(os.path.join(img_dir, "favicon.svg"), favicon)
 
-    _write_file(logo_path, logo_dark)
-    _write_file(logo_dark_path, logo_light)
-    _write_file(favicon_path, favicon)
-
-    _announce_file(logo_path, project_root, action)
-    _announce_file(logo_dark_path, project_root, action)
-    _announce_file(favicon_path, project_root, action)
+    _print_success("[cyan]%s[/]" % _display_path(os.path.join(img_dir, "logo.svg"), project_root))
+    _print_success("[cyan]%s[/]" % _display_path(os.path.join(img_dir, "logo-dark.svg"), project_root))
+    _print_success("[cyan]%s[/]" % _display_path(os.path.join(img_dir, "favicon.svg"), project_root))
 
 
-def sync_docusaurus_config(project_root, config, action="updated"):
+# ─────────────────────── sync ───────────────────────
+
+def sync_docusaurus_config(project_root, config):
     site_dir = os.path.join(str(project_root), str(config.docusaurus_dir))
     if not os.path.exists(site_dir):
         return
@@ -212,7 +195,6 @@ def sync_docusaurus_config(project_root, config, action="updated"):
         output_path = os.path.join(site_dir, output_name)
         os.makedirs(os.path.dirname(output_path), exist_ok=True)
         _write_file(output_path, content)
-        _announce_file(output_path, project_root, action)
 
     theme_dir = os.path.join(site_dir, "src", "theme")
     root_tsx_path = os.path.join(theme_dir, "Root.tsx")
@@ -222,11 +204,11 @@ def sync_docusaurus_config(project_root, config, action="updated"):
         template = env.get_template("Root.tsx.j2")
         content = template.render(**template_vars)
         _write_file(root_tsx_path, content)
-        _announce_file(root_tsx_path, project_root, action)
     elif os.path.exists(root_tsx_path):
         os.remove(root_tsx_path)
-        _announce_file(root_tsx_path, project_root, "removed")
 
+
+# ─────────────────────── init ───────────────────────
 
 def init_config(project_root, project_name):
     config_path = os.path.join(str(project_root), "docforge.yaml")
@@ -339,7 +321,7 @@ def init_config(project_root, project_name):
                      ) % (project_name, project_name, project_name, project_name)
 
     _write_file(config_path, config_content)
-    _print_success("Created [cyan]%s[/]" % config_path)
+    _print_success("Created [cyan]docforge.yaml[/]")
     _print_step("Edit it to match your project structure")
 
 
@@ -378,7 +360,7 @@ def init_docusaurus(project_root, config_path="docforge.yaml", npm_exe=None):
         output_path = os.path.join(site_dir, output_name)
         os.makedirs(os.path.dirname(output_path), exist_ok=True)
         _write_file(output_path, content)
-        _announce_file(output_path, project_root, "created")
+        _print_success("[cyan]%s[/]" % _display_path(output_path, project_root))
 
     if config.auth.enabled:
         theme_dir = os.path.join(site_dir, "src", "theme")
@@ -387,7 +369,7 @@ def init_docusaurus(project_root, config_path="docforge.yaml", npm_exe=None):
         content = template.render(**template_vars)
         root_tsx_path = os.path.join(theme_dir, "Root.tsx")
         _write_file(root_tsx_path, content)
-        _announce_file(root_tsx_path, project_root, "created")
+        _print_success("[cyan]%s[/]" % _display_path(root_tsx_path, project_root))
 
     css_dir = os.path.join(site_dir, "src", "css")
     os.makedirs(css_dir, exist_ok=True)
@@ -395,9 +377,9 @@ def init_docusaurus(project_root, config_path="docforge.yaml", npm_exe=None):
     if os.path.exists(css_src):
         css_dst = os.path.join(css_dir, "custom.css")
         shutil.copy2(css_src, css_dst)
-        _announce_file(css_dst, project_root, "created")
+        _print_success("[cyan]%s[/]" % _display_path(css_dst, project_root))
 
-    _write_logo(site_dir, project_root=project_root, action="created")
+    _write_logo(site_dir, project_root=project_root)
 
     content_dir = os.path.join(site_dir, "content")
     os.makedirs(content_dir)
@@ -414,7 +396,7 @@ def init_docusaurus(project_root, config_path="docforge.yaml", npm_exe=None):
 
     index_path = os.path.join(content_dir, "index.md")
     _write_file(index_path, index_content)
-    _announce_file(index_path, project_root, "created")
+    _print_success("[cyan]%s[/]" % _display_path(index_path, project_root))
 
     console.print()
     _run_npm(
@@ -517,4 +499,4 @@ def init_github_actions(project_root, config_path="docforge.yaml"):
               )
 
     _write_file(workflow_path, content)
-    _print_success("Created [cyan]%s[/]" % workflow_path)
+    _print_success("Created [cyan]%s[/]" % _display_path(workflow_path, project_root))

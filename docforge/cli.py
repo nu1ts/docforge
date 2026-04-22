@@ -181,7 +181,6 @@ def _get_docusaurus_cmd(site_dir, action):
 
     npm = _get_npm_exe()
     if not npm:
-        console.print()
         raise RuntimeError(
             "Neither node nor npm found in PATH.\n"
             "  Install Node.js from: https://nodejs.org\n"
@@ -375,8 +374,8 @@ def init(name):
     )
     if os.path.exists(gitignore_path):
         with open(gitignore_path, "r", encoding="utf-8") as f:
-            content = f.read()
-        if "docforge" not in content:
+            existing = f.read()
+        if "docforge" not in existing:
             with open(gitignore_path, "a", encoding="utf-8") as f:
                 f.write(additions)
             _print_success("Updated [cyan].gitignore[/]")
@@ -402,7 +401,7 @@ def init(name):
 # ── generate ──────────────────────────────────────────────────────────
 
 @main.command(cls=RichCommand)
-@click.option("--only",   default=None,           help="Generate only a specific doc by its ID.")
+@click.option("--only", default=None, help="Generate only a specific doc by its ID.")
 @click.option("--config", default="docforge.yaml", help="Path to config file.")
 def generate(only, config):
     _print_header("Generating documentation", "🤖")
@@ -417,6 +416,7 @@ def generate(only, config):
     cfg = ProjectConfig.from_file(os.path.join(str(root), str(config)))
 
     sync_docusaurus_config(root, cfg)
+    _print_success("Config synced [dim](%s)[/]" % cfg.docusaurus_dir)
 
     console.print()
     console.print("  [info]📦 Collecting context...[/]")
@@ -475,6 +475,7 @@ def serve(config):
     cfg = ProjectConfig.from_file(os.path.join(str(root), str(config)))
 
     sync_docusaurus_config(root, cfg)
+    _print_success("Config synced [dim](%s)[/]" % cfg.docusaurus_dir)
 
     site_dir = os.path.join(str(root), str(cfg.docusaurus_dir))
     if not os.path.exists(site_dir):
@@ -494,6 +495,7 @@ def serve(config):
         _print_error(str(exc))
         sys.exit(1)
 
+    console.print()
     console.print("  [dim]URL:[/] [cyan]http://localhost:3000[/]")
     console.print("  [dim]Dir:[/] [cyan]%s[/]" % site_dir)
     console.print()
@@ -518,6 +520,7 @@ def build(config):
     cfg = ProjectConfig.from_file(os.path.join(str(root), str(config)))
 
     sync_docusaurus_config(root, cfg)
+    _print_success("Config synced [dim](%s)[/]" % cfg.docusaurus_dir)
 
     site_dir = os.path.join(str(root), str(cfg.docusaurus_dir))
     build_dir = os.path.join(site_dir, "build")
@@ -534,6 +537,7 @@ def build(config):
         _print_error(str(exc))
         sys.exit(1)
 
+    console.print()
     console.print("  [dim]Dir:[/] [cyan]%s[/]" % site_dir)
     console.print()
 
