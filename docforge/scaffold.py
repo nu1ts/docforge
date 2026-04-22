@@ -292,8 +292,9 @@ def init_docusaurus(project_root, config_path="docforge.yaml", npm_exe=None):
 
     files_to_render = {
         "docusaurus.config.ts.j2": "docusaurus.config.ts",
-        "sidebars.js.j2":          os.path.join("src", "js", "sidebars.js"),
-        "package.json.j2":         "package.json",
+        "sidebars.js.j2": os.path.join("src", "js", "sidebars.js"),
+        "package.json.j2": "package.json",
+        "ColorModeToggle.tsx.j2": os.path.join("src", "theme", "ColorModeToggle", "index.tsx"),
     }
 
     for template_name, output_name in files_to_render.items():

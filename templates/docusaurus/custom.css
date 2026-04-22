@@ -253,6 +253,90 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 /* ============================================================
+   THEME TOGGLE — Forge Ember (icon swap)
+   ============================================================ */
+
+.df-toggle {
+    width: 36px;
+    height: 36px;
+    padding: 0 !important;
+    border: 0 !important;
+    background: transparent !important;
+    border-radius: 50%;
+    cursor: pointer;
+    display: grid;
+    place-items: center;
+    flex: 0 0 auto;
+}
+
+.df-toggle--placeholder {
+    opacity: 0;
+    pointer-events: none;
+}
+
+/* ── Icons ── */
+.df-toggle__icon {
+    grid-column: 1 / 1;
+    grid-row: 1 / 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.45s cubic-bezier(0.4, 0, 0.2, 1);
+    line-height: 0;
+}
+
+.df-toggle__icon svg {
+    display: block;
+    width: 20px;
+    height: 20px;
+}
+
+/* ── Moon ── */
+.df-toggle__icon--moon {
+    color: #A8A29E;
+    transition-delay: 0.15s;
+}
+
+[data-theme='dark'] .df-toggle__icon--moon {
+    color: #FDBA74;
+}
+
+/* ── Sun ── */
+.df-toggle__icon--sun {
+    color: #F97316;
+    transform: scale(0) rotate(-180deg);
+}
+
+/* ── Dark mode: show moon, hide sun ── */
+.df-toggle[data-mode='dark'] .df-toggle__icon--moon {
+    transform: scale(1) rotate(0deg);
+    transition-delay: 0.15s;
+}
+
+.df-toggle[data-mode='dark'] .df-toggle__icon--sun {
+    transform: scale(0) rotate(-180deg);
+    transition-delay: 0s;
+}
+
+/* ── Light mode: show sun, hide moon ── */
+.df-toggle[data-mode='light'] .df-toggle__icon--moon {
+    transform: scale(0) rotate(360deg);
+    transition-delay: 0s;
+}
+
+.df-toggle[data-mode='light'] .df-toggle__icon--sun {
+    transform: scale(1) rotate(360deg);
+    transition-delay: 0.15s;
+}
+
+/* ── Focus ── */
+.df-toggle:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(249,115,22,0.25);
+    border-radius: 50%;
+}
+
+/* ============================================================
    NAVBAR — GitHub Icon Button
    ============================================================ */
 
