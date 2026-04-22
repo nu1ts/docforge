@@ -211,6 +211,10 @@ h1, h2, h3, h4, h5, h6 {
     background-color: var(--ifm-navbar-background-color) !important;
 }
 
+[data-theme='light'] .navbar {
+    background-color: var(--ifm-navbar-background-color) !important;
+}
+
 .navbar__brand {
     gap: 10px;
     font-weight: 800;
