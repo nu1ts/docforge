@@ -254,7 +254,7 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 /* ============================================================
-   THEME TOGGLE — Forge Ember (icon swap)
+   THEME TOGGLE — Warm neutral / theme-aligned
    ============================================================ */
 
 .df-toggle {
@@ -268,6 +268,7 @@ h1, h2, h3, h4, h5, h6 {
     display: grid;
     place-items: center;
     flex: 0 0 auto;
+    position: relative;
 }
 
 .df-toggle--placeholder {
@@ -282,8 +283,12 @@ h1, h2, h3, h4, h5, h6 {
     display: flex;
     align-items: center;
     justify-content: center;
-    transition: transform 0.45s cubic-bezier(0.4, 0, 0.2, 1);
+    transition:
+        transform 0.45s cubic-bezier(0.4, 0, 0.2, 1),
+        color 0.2s ease;
     line-height: 0;
+    position: relative;
+    z-index: 1;
 }
 
 .df-toggle__icon svg {
@@ -292,20 +297,24 @@ h1, h2, h3, h4, h5, h6 {
     height: 20px;
 }
 
-/* ── Moon ── */
+/* ── Moon — warm stone ── */
 .df-toggle__icon--moon {
     color: #A8A29E;
     transition-delay: 0.15s;
 }
 
 [data-theme='dark'] .df-toggle__icon--moon {
-    color: #FDBA74;
+    color: #E7E5E4;
 }
 
-/* ── Sun ── */
+/* ── Sun — muted sand / warm stone ── */
 .df-toggle__icon--sun {
-    color: #F97316;
+    color: #A8A29E;
     transform: scale(0) rotate(-180deg);
+}
+
+[data-theme='light'] .df-toggle__icon--sun {
+    color: #57534E;
 }
 
 /* ── Dark mode: show moon, hide sun ── */
@@ -333,8 +342,57 @@ h1, h2, h3, h4, h5, h6 {
 /* ── Focus ── */
 .df-toggle:focus-visible {
     outline: none;
-    box-shadow: 0 0 0 2px rgba(249,115,22,0.25);
+    box-shadow: 0 0 0 2px rgba(168,162,158,0.30);
     border-radius: 50%;
+}
+
+/* ── Hover ring ── */
+.df-toggle::before {
+    content: '';
+    position: absolute;
+    inset: 4px;
+    border-radius: 50%;
+    opacity: 0;
+    transform: scale(0.86);
+    border: 1px solid transparent;
+    background: transparent;
+    pointer-events: none;
+    transition:
+        opacity 0.22s ease,
+        transform 0.22s ease,
+        border-color 0.22s ease,
+        background-color 0.22s ease,
+        box-shadow 0.22s ease;
+}
+
+@media (hover: hover) {
+    .df-toggle[data-mode='light']:hover::before {
+        opacity: 1;
+        transform: scale(1);
+        background: rgba(120,113,108,0.06);
+        border-color: rgba(120,113,108,0.18);
+        box-shadow:
+            0 0 0 1px rgba(120,113,108,0.06),
+            0 0 12px rgba(120,113,108,0.12);
+    }
+
+    .df-toggle[data-mode='dark']:hover::before {
+        opacity: 1;
+        transform: scale(1);
+        background: rgba(231,229,228,0.04);
+        border-color: rgba(231,229,228,0.14);
+        box-shadow:
+            0 0 0 1px rgba(231,229,228,0.05),
+            0 0 14px rgba(231,229,228,0.10);
+    }
+
+    .df-toggle[data-mode='light']:hover .df-toggle__icon--sun {
+        color: #44403C;
+    }
+
+    .df-toggle[data-mode='dark']:hover .df-toggle__icon--moon {
+        color: #F5F5F4;
+    }
 }
 
 /* ============================================================
