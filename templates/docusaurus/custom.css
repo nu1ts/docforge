@@ -272,6 +272,7 @@ h1, h2, h3, h4, h5, h6 {
     display: grid;
     place-items: center;
     flex: 0 0 auto;
+    position: relative;
 }
 
 .df-toggle--placeholder {
@@ -415,18 +416,44 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 /* ============================================================
-   NAVBAR — Right items: order + separator
+   NAVBAR — Right items: order + separators
    ============================================================ */
 
-.navbar__items--right .df-toggle {
+.navbar__items--right .navbar-locale-dropdown {
     order: 0;
+    position: relative;
+}
+
+.navbar__items--right .df-toggle {
+    order: 1;
+    position: relative;
 }
 
 .navbar__items--right .navbar-github-link {
-    order: 1;
+    order: 2;
 }
 
-/* Separator between toggle and GitHub */
+/* Separator: between locale and toggle */
+.df-toggle::before {
+    content: '';
+    position: absolute;
+    left: calc(var(--df-navbar-icons-gap) / -2);
+    top: 50%;
+    transform: translateY(-50%);
+    width: 1px;
+    height: 20px;
+    background: var(--df-border-color);
+    opacity: 0.6;
+    border-radius: 1px;
+    pointer-events: none;
+}
+
+[data-theme='dark'] .df-toggle::before {
+    background: rgba(255,255,255,0.22);
+    opacity: 1;
+}
+
+/* Separator: between toggle and GitHub */
 .navbar-github-link::after {
     content: '';
     position: absolute;
@@ -444,6 +471,11 @@ h1, h2, h3, h4, h5, h6 {
 [data-theme='dark'] .navbar-github-link::after {
     background: rgba(255,255,255,0.22);
     opacity: 1;
+}
+
+/* Hide locale separator when locale dropdown is absent */
+.navbar__items--right .df-toggle:first-child::before {
+    display: none;
 }
 
 /* ============================================================
