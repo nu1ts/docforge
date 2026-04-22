@@ -474,9 +474,6 @@ def serve(config):
 
     cfg = ProjectConfig.from_file(os.path.join(str(root), str(config)))
 
-    sync_docusaurus_config(root, cfg)
-    _print_success("Config synced [dim](%s)[/]" % cfg.docusaurus_dir)
-
     site_dir = os.path.join(str(root), str(cfg.docusaurus_dir))
     if not os.path.exists(site_dir):
         _print_error("Docusaurus not initialized.")
@@ -498,6 +495,10 @@ def serve(config):
     console.print()
     console.print("  [dim]URL:[/] [cyan]http://localhost:3000[/]")
     console.print("  [dim]Dir:[/] [cyan]%s[/]" % site_dir)
+    console.print()
+
+    sync_docusaurus_config(root, cfg)
+    _print_success("Config synced [dim](%s)[/]" % cfg.docusaurus_dir)
     console.print()
 
     _run(cmd, cwd=str(site_dir))
