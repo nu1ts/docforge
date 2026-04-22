@@ -39,6 +39,31 @@ def _print_warning(text):
     console.print("[warning]  ⚠[/]  %s" % text)
 
 
+def _display_path(path, project_root=None):
+    display = str(path)
+
+    if project_root:
+        try:
+            display = os.path.relpath(str(path), str(project_root))
+        except ValueError:
+            display = str(path)
+
+    return display.replace("\\", "/")
+
+
+def _announce_file(path, project_root=None, action="created"):
+    display = _display_path(path, project_root)
+
+    if action == "created":
+        _print_success("[cyan]%s[/]" % display)
+    elif action == "updated":
+        _print_step("Updated [cyan]%s[/]" % display)
+    elif action == "removed":
+        _print_step("Removed [cyan]%s[/]" % display)
+    else:
+        _print_step("[cyan]%s[/]" % display)
+
+
 def _get_npm_exe():
     if _IS_WINDOWS:
         exe = shutil.which("npm.cmd") or shutil.which("npm")
@@ -95,7 +120,7 @@ def _write_file(path, content):
         f.write(content)
 
 
-def _write_logo(site_dir: str) -> None:
+def _write_logo(site_dir, project_root=None, action="created"):
     img_dir = os.path.join(site_dir, "static", "img")
     os.makedirs(img_dir, exist_ok=True)
 
@@ -147,15 +172,20 @@ def _write_logo(site_dir: str) -> None:
         '</svg>'
     )
 
-    _write_file(os.path.join(img_dir, "logo.svg"),       logo_dark)
-    _write_file(os.path.join(img_dir, "logo-dark.svg"),  logo_light)
-    _write_file(os.path.join(img_dir, "favicon.svg"),    favicon)
-    _print_success("[cyan]static/img/logo.svg + favicon.svg[/]")
+    logo_path = os.path.join(img_dir, "logo.svg")
+    logo_dark_path = os.path.join(img_dir, "logo-dark.svg")
+    favicon_path = os.path.join(img_dir, "favicon.svg")
+
+    _write_file(logo_path, logo_dark)
+    _write_file(logo_dark_path, logo_light)
+    _write_file(favicon_path, favicon)
+
+    _announce_file(logo_path, project_root, action)
+    _announce_file(logo_dark_path, project_root, action)
+    _announce_file(favicon_path, project_root, action)
 
 
-# ─────────────────────── sync ───────────────────────
-
-def sync_docusaurus_config(project_root, config):
+def sync_docusaurus_config(project_root, config, action="updated"):
     site_dir = os.path.join(str(project_root), str(config.docusaurus_dir))
     if not os.path.exists(site_dir):
         return
@@ -171,11 +201,9 @@ def sync_docusaurus_config(project_root, config):
 
     files_to_sync = {
         "docusaurus.config.ts.j2": "docusaurus.config.ts",
-        "sidebars.js.j2":          os.path.join("src", "js", "sidebars.js"),
-        "package.json.j2":         "package.json",
-        "ColorModeToggle.tsx.j2":  os.path.join(
-            "src", "theme", "ColorModeToggle", "index.tsx"
-        ),
+        "sidebars.js.j2": os.path.join("src", "js", "sidebars.js"),
+        "package.json.j2": "package.json",
+        "ColorModeToggle.tsx.j2": os.path.join("src", "theme", "ColorModeToggle", "index.tsx"),
     }
 
     for template_name, output_name in files_to_sync.items():
@@ -184,7 +212,7 @@ def sync_docusaurus_config(project_root, config):
         output_path = os.path.join(site_dir, output_name)
         os.makedirs(os.path.dirname(output_path), exist_ok=True)
         _write_file(output_path, content)
-        _print_step(" Updated [cyan]%s[/]" % output_name)
+        _announce_file(output_path, project_root, action)
 
     theme_dir = os.path.join(site_dir, "src", "theme")
     root_tsx_path = os.path.join(theme_dir, "Root.tsx")
@@ -194,13 +222,11 @@ def sync_docusaurus_config(project_root, config):
         template = env.get_template("Root.tsx.j2")
         content = template.render(**template_vars)
         _write_file(root_tsx_path, content)
-        _print_step(" Updated [cyan]src/theme/Root.tsx[/]")
+        _announce_file(root_tsx_path, project_root, action)
     elif os.path.exists(root_tsx_path):
         os.remove(root_tsx_path)
-        _print_step(" Removed [cyan]src/theme/Root.tsx[/] (auth disabled)")
+        _announce_file(root_tsx_path, project_root, "removed")
 
-
-# ─────────────────────── init ───────────────────────
 
 def init_config(project_root, project_name):
     config_path = os.path.join(str(project_root), "docforge.yaml")
@@ -330,19 +356,51 @@ def init_docusaurus(project_root, config_path="docforge.yaml", npm_exe=None):
 
     os.makedirs(site_dir)
 
-    sync_docusaurus_config(project_root, config)
+    docusaurus_templates = os.path.join(TEMPLATES_DIR, "docusaurus")
+    env = Environment(loader=FileSystemLoader(docusaurus_templates))
+
+    template_vars = {
+        "config": config,
+        "site":   config.site,
+        "auth":   config.auth,
+    }
+
+    files_to_render = {
+        "docusaurus.config.ts.j2": "docusaurus.config.ts",
+        "sidebars.js.j2": os.path.join("src", "js", "sidebars.js"),
+        "package.json.j2": "package.json",
+        "ColorModeToggle.tsx.j2": os.path.join("src", "theme", "ColorModeToggle", "index.tsx"),
+    }
+
+    for template_name, output_name in files_to_render.items():
+        template = env.get_template(template_name)
+        content = template.render(**template_vars)
+        output_path = os.path.join(site_dir, output_name)
+        os.makedirs(os.path.dirname(output_path), exist_ok=True)
+        _write_file(output_path, content)
+        _announce_file(output_path, project_root, "created")
+
+    if config.auth.enabled:
+        theme_dir = os.path.join(site_dir, "src", "theme")
+        os.makedirs(theme_dir, exist_ok=True)
+        template = env.get_template("Root.tsx.j2")
+        content = template.render(**template_vars)
+        root_tsx_path = os.path.join(theme_dir, "Root.tsx")
+        _write_file(root_tsx_path, content)
+        _announce_file(root_tsx_path, project_root, "created")
 
     css_dir = os.path.join(site_dir, "src", "css")
     os.makedirs(css_dir, exist_ok=True)
-    docusaurus_templates = os.path.join(TEMPLATES_DIR, "docusaurus")
     css_src = os.path.join(docusaurus_templates, "custom.css")
     if os.path.exists(css_src):
-        shutil.copy2(css_src, os.path.join(css_dir, "custom.css"))
+        css_dst = os.path.join(css_dir, "custom.css")
+        shutil.copy2(css_src, css_dst)
+        _announce_file(css_dst, project_root, "created")
 
-    _write_logo(site_dir)
+    _write_logo(site_dir, project_root=project_root, action="created")
 
     content_dir = os.path.join(site_dir, "content")
-    os.makedirs(content_dir, exist_ok=True)
+    os.makedirs(content_dir)
 
     index_content = (
         "---\n"
@@ -356,7 +414,7 @@ def init_docusaurus(project_root, config_path="docforge.yaml", npm_exe=None):
 
     index_path = os.path.join(content_dir, "index.md")
     _write_file(index_path, index_content)
-    _print_success("[cyan]%s[/]" % index_path)
+    _announce_file(index_path, project_root, "created")
 
     console.print()
     _run_npm(
