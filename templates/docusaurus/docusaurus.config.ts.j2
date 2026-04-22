@@ -23,7 +23,12 @@
 
     i18n: {
         defaultLocale: '{{ site.locale }}',
-        locales: ['{{ site.locale }}'],
+        locales: [{{ site.locales | map("tojson") | join(", ") }}],
+        localeConfigs: {
+            {% for loc in site.locales %}
+            '{{ loc }}': { label: '{{ loc | upper }}' },
+            {% endfor %}
+        },
     },
 
     presets: [
@@ -68,6 +73,13 @@
                     position: 'left',
                     label: 'Docs',
                 },
+                {% if site.locales | length > 1 %}
+                {
+                    type: 'localeDropdown',
+                    position: 'right',
+                    className: 'navbar-locale-dropdown',
+                },
+                {% endif %}
                 {% if site.github_user and site.repo_name %}
                 {
                     href: 'https://github.com/{{ site.github_user }}/{{ site.repo_name }}',

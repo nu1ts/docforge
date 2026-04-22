@@ -317,6 +317,7 @@ def init_config(project_root, project_name):
                          '  github_user: "YOUR_USER"\n'
                          '  repo_name: "%s"\n'
                          '  locale: "en"\n'
+                         '  locales: ["en"]\n'
                          '  no_index: true\n'
                      ) % (project_name, project_name, project_name, project_name)
 

@@ -446,6 +446,80 @@ h1, h2, h3, h4, h5, h6 {
     opacity: 1;
 }
 
+/* ============================================================
+   NAVBAR — Locale Dropdown
+   ============================================================ */
+
+.navbar-locale-dropdown {
+    font-size: 0.8125rem !important;
+    font-weight: 500 !important;
+    font-family: 'JetBrains Mono', monospace !important;
+    letter-spacing: 0.03em;
+    color: #57534E !important;
+    padding: 4px 8px !important;
+    transition: color 0.15s ease !important;
+}
+
+[data-theme='dark'] .navbar-locale-dropdown {
+    color: #E7E5E4 !important;
+}
+
+.navbar-locale-dropdown:hover {
+    color: var(--ifm-color-primary) !important;
+}
+
+/* Dropdown panel */
+.navbar-locale-dropdown .dropdown__menu {
+    min-width: 80px;
+    border: 1px solid var(--df-border-color);
+    border-radius: 8px;
+    box-shadow: var(--ifm-global-shadow-md);
+    background: var(--ifm-background-surface-color);
+    backdrop-filter: blur(12px);
+    padding: 4px;
+}
+
+[data-theme='dark'] .navbar-locale-dropdown .dropdown__menu {
+    background: rgba(28,25,23,0.95);
+    border-color: rgba(255,255,255,0.10);
+}
+
+/* Dropdown items */
+.navbar-locale-dropdown .dropdown__link {
+    font-size: 0.8125rem;
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 500;
+    padding: 6px 12px;
+    border-radius: 6px;
+    color: var(--df-text-muted);
+    transition: all 0.15s ease;
+}
+
+.navbar-locale-dropdown .dropdown__link:hover {
+    background: var(--ifm-hover-overlay);
+    color: var(--ifm-color-primary);
+    text-decoration: none;
+}
+
+.navbar-locale-dropdown .dropdown__link--active {
+    color: var(--ifm-color-primary) !important;
+    font-weight: 600;
+    background: var(--df-badge-bg);
+}
+
+/* Order: locale → toggle → separator → github */
+.navbar__items--right .navbar-locale-dropdown {
+    order: 0;
+}
+
+.navbar__items--right .df-toggle {
+    order: 1;
+}
+
+.navbar__items--right .navbar-github-link {
+    order: 2;
+}
+
 
 /* ============================================================
    SIDEBAR

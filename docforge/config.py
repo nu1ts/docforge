@@ -33,13 +33,15 @@ class AuthConfig:
 
 class SiteConfig:
     def __init__(self, title="Dev Docs", url="", base_url="/",
-                 github_user="", repo_name="", locale="en", no_index=True):
+                 github_user="", repo_name="", locale="en",
+                 locales=None, no_index=True):
         self.title = title
         self.url = url
         self.base_url = base_url
         self.github_user = github_user
         self.repo_name = repo_name
         self.locale = locale
+        self.locales = locales if locales is not None else [locale]
         self.no_index = no_index
 
 
