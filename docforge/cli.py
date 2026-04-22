@@ -412,8 +412,11 @@ def generate(only, config):
     from docforge.config import ProjectConfig
     from docforge.collector import collect_all
     from docforge.generator import generate_all
+    from docforge.scaffold import sync_docusaurus_config
 
     cfg = ProjectConfig.from_file(os.path.join(str(root), str(config)))
+
+    sync_docusaurus_config(root, cfg)
 
     console.print()
     console.print("  [info]📦 Collecting context...[/]")
@@ -467,7 +470,11 @@ def serve(config):
     root = find_project_root()
 
     from docforge.config import ProjectConfig
+    from docforge.scaffold import sync_docusaurus_config
+
     cfg = ProjectConfig.from_file(os.path.join(str(root), str(config)))
+
+    sync_docusaurus_config(root, cfg)
 
     site_dir = os.path.join(str(root), str(cfg.docusaurus_dir))
     if not os.path.exists(site_dir):
@@ -506,7 +513,11 @@ def build(config):
     root = find_project_root()
 
     from docforge.config import ProjectConfig
+    from docforge.scaffold import sync_docusaurus_config
+
     cfg = ProjectConfig.from_file(os.path.join(str(root), str(config)))
+
+    sync_docusaurus_config(root, cfg)
 
     site_dir = os.path.join(str(root), str(cfg.docusaurus_dir))
     build_dir = os.path.join(site_dir, "build")

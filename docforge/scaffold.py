@@ -153,6 +153,55 @@ def _write_logo(site_dir: str) -> None:
     _print_success("[cyan]static/img/logo.svg + favicon.svg[/]")
 
 
+# ─────────────────────── sync ───────────────────────
+
+def sync_docusaurus_config(project_root, config):
+    site_dir = os.path.join(str(project_root), str(config.docusaurus_dir))
+    if not os.path.exists(site_dir):
+        return
+
+    docusaurus_templates = os.path.join(TEMPLATES_DIR, "docusaurus")
+    env = Environment(loader=FileSystemLoader(docusaurus_templates))
+
+    template_vars = {
+        "config": config,
+        "site":   config.site,
+        "auth":   config.auth,
+    }
+
+    files_to_sync = {
+        "docusaurus.config.ts.j2": "docusaurus.config.ts",
+        "sidebars.js.j2":          os.path.join("src", "js", "sidebars.js"),
+        "package.json.j2":         "package.json",
+        "ColorModeToggle.tsx.j2":  os.path.join(
+            "src", "theme", "ColorModeToggle", "index.tsx"
+        ),
+    }
+
+    for template_name, output_name in files_to_sync.items():
+        template = env.get_template(template_name)
+        content = template.render(**template_vars)
+        output_path = os.path.join(site_dir, output_name)
+        os.makedirs(os.path.dirname(output_path), exist_ok=True)
+        _write_file(output_path, content)
+        _print_step(" Updated [cyan]%s[/]" % output_name)
+
+    theme_dir = os.path.join(site_dir, "src", "theme")
+    root_tsx_path = os.path.join(theme_dir, "Root.tsx")
+
+    if config.auth.enabled:
+        os.makedirs(theme_dir, exist_ok=True)
+        template = env.get_template("Root.tsx.j2")
+        content = template.render(**template_vars)
+        _write_file(root_tsx_path, content)
+        _print_step(" Updated [cyan]src/theme/Root.tsx[/]")
+    elif os.path.exists(root_tsx_path):
+        os.remove(root_tsx_path)
+        _print_step(" Removed [cyan]src/theme/Root.tsx[/] (auth disabled)")
+
+
+# ─────────────────────── init ───────────────────────
+
 def init_config(project_root, project_name):
     config_path = os.path.join(str(project_root), "docforge.yaml")
     if os.path.exists(config_path):
@@ -281,41 +330,11 @@ def init_docusaurus(project_root, config_path="docforge.yaml", npm_exe=None):
 
     os.makedirs(site_dir)
 
-    docusaurus_templates = os.path.join(TEMPLATES_DIR, "docusaurus")
-    env = Environment(loader=FileSystemLoader(docusaurus_templates))
-
-    template_vars = {
-        "config": config,
-        "site":   config.site,
-        "auth":   config.auth,
-    }
-
-    files_to_render = {
-        "docusaurus.config.ts.j2": "docusaurus.config.ts",
-        "sidebars.js.j2": os.path.join("src", "js", "sidebars.js"),
-        "package.json.j2": "package.json",
-        "ColorModeToggle.tsx.j2": os.path.join("src", "theme", "ColorModeToggle", "index.tsx"),
-    }
-
-    for template_name, output_name in files_to_render.items():
-        template = env.get_template(template_name)
-        content = template.render(**template_vars)
-        output_path = os.path.join(site_dir, output_name)
-        os.makedirs(os.path.dirname(output_path), exist_ok=True)
-        _write_file(output_path, content)
-        _print_success("[cyan]%s[/]" % output_path)
-
-    if config.auth.enabled:
-        theme_dir = os.path.join(site_dir, "src", "theme")
-        os.makedirs(theme_dir)
-        template = env.get_template("Root.tsx.j2")
-        content = template.render(**template_vars)
-        root_tsx_path = os.path.join(theme_dir, "Root.tsx")
-        _write_file(root_tsx_path, content)
-        _print_success("[cyan]%s[/]" % root_tsx_path)
+    sync_docusaurus_config(project_root, config)
 
     css_dir = os.path.join(site_dir, "src", "css")
-    os.makedirs(css_dir)
+    os.makedirs(css_dir, exist_ok=True)
+    docusaurus_templates = os.path.join(TEMPLATES_DIR, "docusaurus")
     css_src = os.path.join(docusaurus_templates, "custom.css")
     if os.path.exists(css_src):
         shutil.copy2(css_src, os.path.join(css_dir, "custom.css"))
@@ -323,7 +342,7 @@ def init_docusaurus(project_root, config_path="docforge.yaml", npm_exe=None):
     _write_logo(site_dir)
 
     content_dir = os.path.join(site_dir, "content")
-    os.makedirs(content_dir)
+    os.makedirs(content_dir, exist_ok=True)
 
     index_content = (
         "---\n"
