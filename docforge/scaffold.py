@@ -187,6 +187,8 @@ def sync_docusaurus_config(project_root, config):
         "sidebars.js.j2": os.path.join("src", "js", "sidebars.js"),
         "package.json.j2": "package.json",
         "ColorModeToggle.tsx.j2": os.path.join("src", "theme", "ColorModeToggle", "index.tsx"),
+        "LocaleDropdown.tsx.j2": os.path.join("src", "theme", "LocaleDropdown", "index.tsx"),
+        "NavbarComponentTypes.tsx.j2": os.path.join("src", "theme", "NavbarItem", "ComponentTypes.tsx"),
     }
 
     for template_name, output_name in files_to_sync.items():
@@ -353,6 +355,8 @@ def init_docusaurus(project_root, config_path="docforge.yaml", npm_exe=None):
         "sidebars.js.j2": os.path.join("src", "js", "sidebars.js"),
         "package.json.j2": "package.json",
         "ColorModeToggle.tsx.j2": os.path.join("src", "theme", "ColorModeToggle", "index.tsx"),
+        "LocaleDropdown.tsx.j2": os.path.join("src", "theme", "LocaleDropdown", "index.tsx"),
+        "NavbarComponentTypes.tsx.j2": os.path.join("src", "theme", "NavbarItem", "ComponentTypes.tsx"),
     }
 
     for template_name, output_name in files_to_render.items():

@@ -419,22 +419,12 @@ h1, h2, h3, h4, h5, h6 {
    NAVBAR — Right items: order + separators
    ============================================================ */
 
-.navbar__items--right .navbar-locale-dropdown {
-    order: 0;
-    position: relative;
-}
-
-.navbar__items--right .df-toggle {
-    order: 1;
-    position: relative;
-}
-
-.navbar__items--right .navbar-github-link {
-    order: 2;
-}
+.navbar__items--right .df-locale { order: 0; position: relative; }
+.navbar__items--right .df-toggle { order: 1; position: relative; }
+.navbar__items--right .navbar-github-link { order: 2; }
 
 /* Separator: between locale and toggle */
-.df-toggle::before {
+.navbar__items--right .df-locale ~ .df-toggle::before {
     content: '';
     position: absolute;
     left: calc(var(--df-navbar-icons-gap) / -2);
@@ -448,7 +438,7 @@ h1, h2, h3, h4, h5, h6 {
     pointer-events: none;
 }
 
-[data-theme='dark'] .df-toggle::before {
+[data-theme='dark'] .navbar__items--right .df-locale ~ .df-toggle::before {
     background: rgba(255,255,255,0.22);
     opacity: 1;
 }
@@ -473,83 +463,57 @@ h1, h2, h3, h4, h5, h6 {
     opacity: 1;
 }
 
-/* Hide locale separator when locale dropdown is absent */
-.navbar__items--right .df-toggle:first-child::before {
-    display: none;
+.navbar-github-link {
+    position: relative;
 }
 
 /* ============================================================
    NAVBAR — Locale Dropdown
    ============================================================ */
 
-.navbar-locale-dropdown {
-    font-size: 0.8125rem !important;
-    font-weight: 500 !important;
-    font-family: 'JetBrains Mono', monospace !important;
-    letter-spacing: 0.03em;
-    color: #57534E !important;
-    padding: 4px 8px !important;
-    transition: color 0.15s ease !important;
+.df-locale__btn {
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    color: #57534E;
+    transition: color 0.2s ease;
+    cursor: pointer;
 }
 
-[data-theme='dark'] .navbar-locale-dropdown {
-    color: #E7E5E4 !important;
-}
+[data-theme='dark'] .df-locale__btn { color: #E7E5E4; }
 
-.navbar-locale-dropdown:hover {
-    color: var(--ifm-color-primary) !important;
-}
+.df-locale__btn:hover { color: var(--ifm-color-primary); }
 
-/* Dropdown panel */
-.navbar-locale-dropdown .dropdown__menu {
-    min-width: 80px;
+.df-locale__menu {
+    position: absolute;
+    top: calc(100% + 8px);
+    right: 0;
+    background: var(--ifm-background-surface-color);
     border: 1px solid var(--df-border-color);
     border-radius: 8px;
-    box-shadow: var(--ifm-global-shadow-md);
-    background: var(--ifm-background-surface-color);
-    backdrop-filter: blur(12px);
     padding: 4px;
+    list-style: none;
+    box-shadow: var(--ifm-global-shadow-md);
+    min-width: 90px;
 }
 
-[data-theme='dark'] .navbar-locale-dropdown .dropdown__menu {
-    background: rgba(28,25,23,0.95);
-    border-color: rgba(255,255,255,0.10);
-}
-
-/* Dropdown items */
-.navbar-locale-dropdown .dropdown__link {
-    font-size: 0.8125rem;
-    font-family: 'JetBrains Mono', monospace;
-    font-weight: 500;
+.df-locale__item {
+    display: block;
     padding: 6px 12px;
-    border-radius: 6px;
+    font-family: var(--ifm-font-family-monospace), monospace;
+    font-size: 0.8rem;
     color: var(--df-text-muted);
-    transition: all 0.15s ease;
+    text-decoration: none;
+    border-radius: 4px;
 }
 
-.navbar-locale-dropdown .dropdown__link:hover {
+.df-locale__item:hover {
     background: var(--ifm-hover-overlay);
     color: var(--ifm-color-primary);
     text-decoration: none;
-}
-
-.navbar-locale-dropdown .dropdown__link--active {
-    color: var(--ifm-color-primary) !important;
-    font-weight: 600;
-    background: var(--df-badge-bg);
-}
-
-/* Order: locale → toggle → separator → github */
-.navbar__items--right .navbar-locale-dropdown {
-    order: 0;
-}
-
-.navbar__items--right .df-toggle {
-    order: 1;
-}
-
-.navbar__items--right .navbar-github-link {
-    order: 2;
 }
 
 
