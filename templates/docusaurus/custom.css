@@ -471,33 +471,100 @@ h1, h2, h3, h4, h5, h6 {
    NAVBAR — Locale Dropdown
    ============================================================ */
 
+.df-locale {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex: 0 0 auto;
+}
+
 .df-locale__btn {
     width: 36px;
     height: 36px;
-    display: flex;
+    padding: 0 !important;
+    border: 0 !important;
+    background: transparent !important;
+    border-radius: 50%;
+    display: inline-flex;
     align-items: center;
     justify-content: center;
-    border-radius: 50%;
+    cursor: pointer;
     color: #57534E;
     transition: color 0.2s ease;
-    cursor: pointer;
 }
 
-[data-theme='dark'] .df-locale__btn { color: #E7E5E4; }
+.df-locale__icon {
+    width: 20px;
+    height: 20px;
+    display: block;
+}
 
-.df-locale__btn:hover { color: var(--ifm-color-primary); }
+[data-theme='dark'] .df-locale__btn {
+    color: #E7E5E4;
+}
+
+@media (hover: hover) {
+    .df-locale:hover .df-locale__btn {
+        color: var(--ifm-color-primary);
+    }
+
+    [data-theme='dark'] .df-locale:hover .df-locale__btn {
+        color: var(--ifm-color-primary-light);
+    }
+}
+
+.df-locale__btn:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(168,162,158,0.30);
+    border-radius: 50%;
+}
 
 .df-locale__menu {
     position: absolute;
     top: calc(100% + 8px);
     right: 0;
+    min-width: 160px;
+    margin: 0;
+    padding: 4px;
+    list-style: none;
     background: var(--ifm-background-surface-color);
     border: 1px solid var(--df-border-color);
     border-radius: 8px;
-    padding: 4px;
-    list-style: none;
     box-shadow: var(--ifm-global-shadow-md);
-    min-width: 90px;
+    backdrop-filter: blur(12px);
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-4px);
+    pointer-events: none;
+    transition:
+        opacity 0.18s ease,
+        transform 0.18s ease,
+        visibility 0.18s ease;
+    z-index: 100;
+}
+
+.df-locale__menu::before {
+    content: '';
+    position: absolute;
+    top: -8px;
+    left: 0;
+    right: 0;
+    height: 8px;
+    background: transparent;
+}
+
+.df-locale:hover .df-locale__menu,
+.df-locale:focus-within .df-locale__menu {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+    pointer-events: auto;
+}
+
+[data-theme='dark'] .df-locale__menu {
+    background: rgba(28,25,23,0.95);
+    border-color: rgba(255,255,255,0.10);
 }
 
 .df-locale__item {
@@ -508,12 +575,20 @@ h1, h2, h3, h4, h5, h6 {
     color: var(--df-text-muted);
     text-decoration: none;
     border-radius: 4px;
+    transition: all 0.15s ease;
+    white-space: nowrap;
 }
 
 .df-locale__item:hover {
     background: var(--ifm-hover-overlay);
     color: var(--ifm-color-primary);
     text-decoration: none;
+}
+
+.df-locale__item--active {
+    color: var(--ifm-color-primary) !important;
+    background: var(--df-badge-bg);
+    font-weight: 600;
 }
 
 
