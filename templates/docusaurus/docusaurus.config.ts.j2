@@ -73,6 +73,12 @@
                     position: 'left',
                     label: 'Docs',
                 },
+                {% if site.versions | length > 0 %}
+                {
+                    type: 'custom-version',
+                    position: 'right',
+                },
+                {% endif %}
                 {% if site.locales | length > 1 %}
                 {
                     type: 'custom-locale',

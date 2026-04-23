@@ -1,0 +1,72 @@
+import React from 'react';
+
+interface VersionItem {
+  label: string;
+  url: string;
+  isCurrent: boolean;
+}
+
+const VERSIONS: VersionItem[] = [
+  {% for v in site.versions %}
+  { label: '{{ v.label }}', url: '{{ v.url }}', isCurrent: {{ 'true' if v.is_current else 'false' }} },
+  {% endfor %}
+];
+
+export default function VersionDropdown(): JSX.Element | null {
+  if (VERSIONS.length === 0) {
+    return null;
+  }
+
+  const current = VERSIONS.find((v) => v.isCurrent) || VERSIONS[0];
+
+  return (
+    <div className="df-version">
+      <button
+        className="df-version__btn"
+        aria-label="Select documentation version"
+        aria-haspopup="listbox"
+      >
+        <svg
+          className="df-version__icon"
+          viewBox="0 0 20 20"
+          fill="currentColor"
+          aria-hidden="true"
+        >
+          <path
+            fillRule="evenodd"
+            d="M17.707 4.293a1 1 0 0 1 0 1.414l-5 5a1 1 0 0 1-1.414 0l-5-5A1 1 0 0 1 7.707 4.293L11 7.586l3.293-3.293a1 1 0 0 1 1.414 0zM6 10a1 1 0 0 0 0 2h8a1 1 0 1 0 0-2H6zm-1 5a1 1 0 0 1 1-1h8a1 1 0 1 1 0 2H6a1 1 0 0 1-1-1z"
+            clipRule="evenodd"
+          />
+        </svg>
+        <span className="df-version__label">{current.label}</span>
+        <svg
+          className="df-version__chevron"
+          viewBox="0 0 20 20"
+          fill="currentColor"
+          aria-hidden="true"
+        >
+          <path
+            fillRule="evenodd"
+            d="M5.23 7.21a.75.75 0 0 1 1.06.02L10 11.168l3.71-3.938a.75.75 0 1 1 1.08 1.04l-4.25 4.5a.75.75 0 0 1-1.08 0l-4.25-4.5a.75.75 0 0 1 .02-1.06z"
+            clipRule="evenodd"
+          />
+        </svg>
+      </button>
+      <ul className="df-version__menu" role="listbox">
+        {VERSIONS.map((v) => (
+          <li key={v.label} role="option" aria-selected={v.isCurrent}>
+            <a
+              href={v.url}
+              className={
+                'df-version__item' +
+                (v.isCurrent ? ' df-version__item--active' : '')
+              }
+            >
+              {v.label}
+            </a>
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+}

@@ -188,6 +188,7 @@ def sync_docusaurus_config(project_root, config):
         "package.json.j2": "package.json",
         "ColorModeToggle.tsx.j2": os.path.join("src", "theme", "ColorModeToggle", "index.tsx"),
         "LocaleDropdown.tsx.j2": os.path.join("src", "theme", "LocaleDropdown", "index.tsx"),
+        "VersionDropdown.tsx.j2": os.path.join("src", "theme", "VersionDropdown", "index.tsx"),
         "NavbarComponentTypes.tsx.j2": os.path.join("src", "theme", "NavbarItem", "ComponentTypes.tsx"),
     }
 
@@ -321,6 +322,18 @@ def init_config(project_root, project_name):
                          '  locale: "en"\n'
                          '  locales: ["en"]\n'
                          '  no_index: true\n'
+                         '\n'
+                         '  # Documentation versions.\n'
+                         '  # The dropdown appears in the navbar when at least one version is defined.\n'
+                         '  # Mark exactly one version with is_current: true.\n'
+                         '  # url can be absolute (https://...) or a relative path (/).\n'
+                         '  # versions:\n'
+                         '  #   - label: "v2.0"\n'
+                         '  #     url: "/"\n'
+                         '  #     is_current: true\n'
+                         '  #   - label: "v1.0"\n'
+                         '  #     url: "https://v1.example.com/docs"\n'
+                         '  versions: []\n'
                      ) % (project_name, project_name, project_name, project_name)
 
     _write_file(config_path, config_content)
@@ -356,6 +369,7 @@ def init_docusaurus(project_root, config_path="docforge.yaml", npm_exe=None):
         "package.json.j2": "package.json",
         "ColorModeToggle.tsx.j2": os.path.join("src", "theme", "ColorModeToggle", "index.tsx"),
         "LocaleDropdown.tsx.j2": os.path.join("src", "theme", "LocaleDropdown", "index.tsx"),
+        "VersionDropdown.tsx.j2": os.path.join("src", "theme", "VersionDropdown", "index.tsx"),
         "NavbarComponentTypes.tsx.j2": os.path.join("src", "theme", "NavbarItem", "ComponentTypes.tsx"),
     }
 

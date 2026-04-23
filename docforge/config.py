@@ -31,10 +31,17 @@ class AuthConfig:
         self.token_hashes = token_hashes if token_hashes is not None else []
 
 
+class VersionConfig:
+    def __init__(self, label, url, is_current=False):
+        self.label = label
+        self.url = url
+        self.is_current = is_current
+
+
 class SiteConfig:
     def __init__(self, title="Dev Docs", url="", base_url="/",
                  github_user="", repo_name="", locale="en",
-                 locales=None, no_index=True):
+                 locales=None, no_index=True, versions=None):
         self.title = title
         self.url = url
         self.base_url = base_url
@@ -43,6 +50,7 @@ class SiteConfig:
         self.locale = locale
         self.locales = locales if locales is not None else [locale]
         self.no_index = no_index
+        self.versions = versions if versions is not None else []
 
 
 class ProjectConfig:
@@ -95,7 +103,13 @@ class ProjectConfig:
             docs.append(DocConfig(**doc_data))
 
         auth = AuthConfig(**raw.get("auth", {}))
-        site = SiteConfig(**raw.get("site", {}))
+
+        site_raw = raw.get("site", {})
+        versions_raw = site_raw.pop("versions", [])
+        site = SiteConfig(**site_raw)
+        site.versions = [
+            VersionConfig(**v) for v in versions_raw
+        ]
 
         return cls(
             project_name=raw["project_name"],

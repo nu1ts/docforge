@@ -482,9 +482,12 @@ def serve(config):
 
     node_modules = os.path.join(site_dir, "node_modules")
     if not os.path.exists(node_modules):
+        console.print()
         _print_warning("node_modules not found — running npm install first...")
+        console.print()
         from docforge.scaffold import _run_npm
         _run_npm(["install"], cwd=site_dir, description="Installing dependencies...")
+        console.print()
 
     try:
         cmd = _get_docusaurus_cmd(str(site_dir), "start")
@@ -528,9 +531,12 @@ def build(config):
 
     node_modules = os.path.join(site_dir, "node_modules")
     if not os.path.exists(node_modules):
+        console.print()
         _print_warning("node_modules not found — running npm install first...")
+        console.print()
         from docforge.scaffold import _run_npm
         _run_npm(["install"], cwd=site_dir, description="Installing dependencies...")
+        console.print()
 
     try:
         cmd = _get_docusaurus_cmd(str(site_dir), "build")
