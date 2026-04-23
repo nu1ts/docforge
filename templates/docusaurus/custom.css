@@ -663,14 +663,14 @@ h1, h2, h3, h4, h5, h6 {
 
 .df-version__btn {
     height: 36px;
-    padding: 0 6px 0 10px !important;
+    padding: 0 4px 0 12px !important;
     border: 0 !important;
     background: transparent !important;
     border-radius: 10px;
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    gap: 6px;
+    gap: 4px;
     cursor: pointer;
     color: #57534E;
     transition: color 0.2s ease;
