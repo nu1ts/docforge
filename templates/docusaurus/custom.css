@@ -670,7 +670,7 @@ h1, h2, h3, h4, h5, h6 {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    gap: 4px;
+    gap: 8px;
     cursor: pointer;
     color: #57534E;
     transition: color 0.2s ease;
