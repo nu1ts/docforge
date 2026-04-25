@@ -1,0 +1,277 @@
+/* ============================================================
+   CONTENT AREA — Markdown
+   ============================================================ */
+
+.markdown {
+    --ifm-heading-color:    inherit;
+    --ifm-link-color:       var(--ifm-color-primary);
+    --ifm-link-hover-color: var(--ifm-color-primary-dark);
+}
+
+.markdown h1 {
+    font-size: 2.25rem;
+    font-weight: 800;
+    letter-spacing: -0.04em;
+    line-height: 1.15;
+    margin-bottom: 0.75rem;
+    background: var(--df-gradient-brand);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+[data-theme='light'] .markdown h1 {
+    background: var(--df-gradient-brand);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.markdown h2 {
+    font-size: 1.5rem;
+    font-weight: 700;
+    letter-spacing: -0.025em;
+    margin-top: 3rem;
+    padding-bottom: 0.625rem;
+    border-bottom: 1px solid var(--df-border-color);
+    position: relative;
+}
+
+.markdown h2::before {
+    content: '';
+    display: inline-block;
+    width: 4px;
+    height: 1.1em;
+    background: var(--df-gradient-brand);
+    border-radius: 2px;
+    margin-right: 10px;
+    vertical-align: middle;
+    position: relative;
+    top: -1px;
+}
+
+.markdown h3 {
+    font-size: 1.1875rem;
+    font-weight: 700;
+    margin-top: 2.25rem;
+    letter-spacing: -0.015em;
+}
+
+.markdown h4 {
+    font-size: 0.8125rem;
+    font-weight: 600;
+    margin-top: 1.75rem;
+    color: var(--df-text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    font-family: 'JetBrains Mono', 'Fira Code', 'Cascadia Code', monospace;
+}
+
+.markdown a {
+    text-decoration: none;
+    font-weight: 500;
+    color: var(--ifm-color-primary);
+    transition: opacity 0.15s, text-shadow 0.2s;
+}
+
+.markdown a:hover {
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    opacity: 0.85;
+}
+
+.markdown p {
+    margin-bottom: 1.375rem;
+}
+
+.markdown strong {
+    font-weight: 700;
+    color: inherit;
+}
+
+.markdown blockquote {
+    border-left: 3px solid var(--df-amber);
+    background: rgba(245,158,11,0.06);
+    border-radius: 0 10px 10px 0;
+    margin: 1.5rem 0;
+    padding: 1rem 1.25rem;
+    font-style: normal;
+}
+
+.markdown blockquote p {
+    margin: 0;
+    color: var(--df-text-muted);
+    font-size: 0.9375rem;
+}
+
+
+/* ============================================================
+   TABLES
+   ============================================================ */
+
+.markdown table {
+    border-collapse: separate;
+    border-spacing: 0;
+    width: 100%;
+    margin: 1.75rem 0;
+    border-radius: var(--df-radius-xl);
+    overflow: hidden;
+    border: 1px solid var(--df-border-color);
+    box-shadow: var(--ifm-global-shadow-lw);
+}
+
+.markdown thead tr {
+    background: var(--df-gradient-brand);
+}
+
+.markdown thead th {
+    color: #ffffff;
+    font-family: 'JetBrains Mono', 'Fira Code', 'Cascadia Code', monospace;
+    font-weight: 600;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    padding: 13px 18px;
+    border: none !important;
+}
+
+.markdown tbody tr {
+    transition: background-color 0.15s;
+}
+
+.markdown tbody tr:nth-child(even) {
+    background: var(--df-badge-bg);
+}
+
+.markdown tbody tr:hover {
+    background: var(--ifm-hover-overlay);
+}
+
+.markdown tbody td {
+    padding: 11px 18px;
+    border: none !important;
+    border-top: 1px solid var(--df-border-color) !important;
+    font-size: 0.9rem;
+    vertical-align: middle;
+}
+
+
+/* ============================================================
+   ADMONITIONS
+   ============================================================ */
+
+.admonition {
+    border-left-width: 3px;
+    border-radius: var(--ifm-card-border-radius);
+    margin: 1.75rem 0;
+    backdrop-filter: blur(4px);
+}
+
+.admonition-heading h5 {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    font-weight: 700;
+    font-family: 'JetBrains Mono', 'Fira Code', 'Cascadia Code', monospace;
+}
+
+/* Note — AI Cyan (Gemini color) */
+.admonition-note {
+    background: rgba(6,182,212,0.06);
+    border-color: var(--df-cyan);
+}
+
+.admonition-tip {
+    background: rgba(16,185,129,0.06);
+    border-color: var(--df-green);
+}
+
+.admonition-caution,
+.admonition-warning {
+    background: rgba(245,158,11,0.06);
+    border-color: var(--df-amber);
+}
+
+.admonition-danger {
+    background: rgba(239,68,68,0.06);
+    border-color: var(--df-red);
+}
+
+/* ============================================================
+   BREADCRUMBS
+   ============================================================ */
+
+.breadcrumbs__item {
+    font-size: 0.8125rem;
+    font-family: 'JetBrains Mono', 'Fira Code', 'Cascadia Code', monospace;
+}
+
+.breadcrumbs__link {
+    color: var(--df-text-muted);
+    border-radius: 4px;
+    padding: 2px 6px;
+    transition: all 0.15s;
+}
+
+.breadcrumbs__link:hover {
+    color: var(--ifm-color-primary);
+    background: var(--df-badge-bg);
+    text-decoration: none;
+}
+
+/* ============================================================
+   PAGINATION NAV
+   ============================================================ */
+
+.pagination-nav__link {
+    border: 1px solid var(--df-border-color);
+    border-radius: var(--df-radius-xl);
+    transition: all 0.2s ease;
+    backdrop-filter: blur(4px);
+}
+
+.pagination-nav__link:hover {
+    border-color: var(--ifm-color-primary);
+    box-shadow:
+        0 0 0 3px var(--df-badge-bg),
+        var(--df-shadow-brand);
+    text-decoration: none;
+    transform: translateY(-1px);
+}
+
+.pagination-nav__sublabel {
+    font-family: 'JetBrains Mono', 'Fira Code', 'Cascadia Code', monospace;
+    font-size: 0.6875rem;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    color: var(--df-text-subtle);
+    margin-bottom: 4px;
+}
+
+.pagination-nav__label {
+    font-size: 0.9375rem;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+}
+
+/* ============================================================
+   LAST-UPDATED & EDIT LINKS
+   ============================================================ */
+
+.theme-last-updated {
+    font-family: 'JetBrains Mono', 'Fira Code', 'Cascadia Code', monospace;
+    font-size: 0.75rem;
+    color: var(--df-text-subtle);
+    opacity: 0.8;
+}
+
+.theme-edit-this-page {
+    font-size: 0.8125rem;
+    color: var(--df-text-muted);
+    transition: color 0.15s;
+}
+
+.theme-edit-this-page:hover {
+    color: var(--ifm-color-primary);
+    text-decoration: none;
+}

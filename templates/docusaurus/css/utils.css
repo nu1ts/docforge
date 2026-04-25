@@ -1,0 +1,175 @@
+/* ============================================================
+   BUTTONS
+   ============================================================ */
+
+.button {
+    font-weight: 600;
+    letter-spacing: 0.01em;
+    transition: all 0.2s ease !important;
+    position: relative;
+    overflow: hidden;
+}
+
+/* Primary — forge fire */
+.button--primary {
+    background: var(--df-gradient-brand) !important;
+    border: none !important;
+    box-shadow: var(--df-shadow-brand);
+    color: #ffffff !important;
+}
+
+.button--primary:hover {
+    background: var(--df-gradient-brand-hover) !important;
+    box-shadow: var(--df-shadow-glow);
+    transform: translateY(-1px);
+}
+
+/* Secondary — glass */
+.button--secondary {
+    background: rgba(234,88,12,0.08) !important;
+    border: 1px solid var(--df-border-subtle) !important;
+    color: var(--ifm-color-primary) !important;
+    backdrop-filter: blur(4px);
+}
+
+.button--secondary:hover {
+    background: rgba(234,88,12,0.15) !important;
+    box-shadow: 0 0 15px rgba(234,88,12,0.25);
+    border-color: var(--ifm-color-primary) !important;
+}
+
+
+/* ============================================================
+   UTILITY — Forge Components
+   ============================================================ */
+
+.df-card {
+    background: var(--df-glass-bg);
+    border: 1px solid var(--df-glass-border);
+    border-radius: var(--df-radius-2xl);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    box-shadow: var(--ifm-global-shadow-md);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.df-card:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--ifm-global-shadow-tl);
+}
+
+/* Forge badge — янтарный */
+.df-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 3px 10px;
+    border-radius: 100px;
+    font-size: 0.6875rem;
+    font-weight: 700;
+    font-family: 'JetBrains Mono', 'Fira Code', 'Cascadia Code', monospace;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    background: var(--df-badge-bg);
+    color: var(--df-badge-color);
+    border: 1px solid var(--df-badge-border);
+}
+
+/* AI badge — cyan (Gemini) */
+.df-ai-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 3px 10px;
+    border-radius: 100px;
+    font-size: 0.6875rem;
+    font-weight: 700;
+    font-family: 'JetBrains Mono', 'Fira Code', 'Cascadia Code', monospace;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    background: var(--df-ai-badge-bg);
+    color: var(--df-ai-badge-color);
+    border: 1px solid var(--df-ai-badge-border);
+}
+
+/* Deploy badge */
+.df-deploy-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 12px 4px 8px;
+    background: var(--df-glass-bg);
+    border: 1px solid var(--df-glass-border);
+    border-radius: 100px;
+    font-size: 0.6875rem;
+    font-weight: 600;
+    font-family: 'JetBrains Mono', 'Fira Code', 'Cascadia Code', monospace;
+    color: var(--df-text-muted);
+    backdrop-filter: blur(8px);
+    text-decoration: none;
+    transition: all 0.2s;
+}
+
+.df-deploy-badge:hover {
+    border-color: var(--ifm-color-primary);
+    color: var(--ifm-color-primary);
+    box-shadow: 0 0 12px rgba(234,88,12,0.25);
+}
+
+.df-deploy-badge::before {
+    content: '⚡';
+    font-size: 0.75rem;
+}
+
+/* Terminal input */
+.df-terminal-input {
+    font-family: 'JetBrains Mono', 'Fira Code', 'Cascadia Code', monospace;
+    font-size: 0.9375rem;
+    letter-spacing: 0.05em;
+    background: rgba(12,10,9,0.70);
+    border: 1px solid rgba(249,115,22,0.20);
+    border-radius: 10px;
+    color: #E7E5E4;
+    caret-color: var(--ifm-color-primary);
+    padding: 12px 16px;
+    width: 100%;
+    outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.df-terminal-input:focus {
+    border-color: var(--ifm-color-primary);
+    box-shadow: 0 0 0 3px rgba(249,115,22,0.15);
+}
+
+.df-terminal-input::placeholder {
+    color: rgba(168,162,158,0.50);
+    animation: df-blink 1.2s step-end infinite;
+}
+
+@keyframes df-blink {
+    0%, 100% { opacity: 1; }
+    50%       { opacity: 0; }
+}
+
+/* Glow text */
+.df-glow {
+    color: var(--ifm-color-primary);
+    text-shadow: 0 0 16px rgba(234,88,12,0.55);
+}
+
+/* Gradient text */
+.df-gradient-text {
+    background: var(--df-gradient-brand);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+/* AI gradient text — cyan */
+.df-gradient-ai {
+    background: var(--df-gradient-ai);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}

@@ -1,0 +1,618 @@
+/* ============================================================
+   NAVBAR — Glassmorphism Header
+   ============================================================ */
+
+.navbar {
+    backdrop-filter: blur(16px) saturate(180%);
+    -webkit-backdrop-filter: blur(16px) saturate(180%);
+    border-bottom: 1px solid var(--df-border-color);
+    transition: background-color 0.25s ease, border-color 0.25s ease;
+    height: var(--ifm-navbar-height);
+}
+
+.navbar__items--right {
+    --df-navbar-icons-gap: 30px;
+    gap: 0;
+}
+
+.navbar__items--right > * + * {
+    margin-left: var(--df-navbar-icons-gap);
+}
+
+.navbar__items--right .navbar__search {
+    margin-left: 0;
+}
+
+.navbar__items--right .navbar__search + .df-version {
+    margin-left: 0;
+}
+
+[data-theme='dark'] .navbar {
+    background-color: var(--ifm-navbar-background-color) !important;
+}
+
+[data-theme='light'] .navbar {
+    background-color: var(--ifm-navbar-background-color) !important;
+}
+
+.navbar__brand {
+    gap: 10px;
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    font-size: 1.1rem;
+}
+
+.navbar__title {
+    font-family: var(--df-font-heading), 'Plus Jakarta Sans', 'Inter', sans-serif;
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    background: var(--df-gradient-brand);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.navbar__logo img {
+    filter: drop-shadow(0 0 6px rgba(234,88,12,0.55));
+    transition: filter 0.3s ease;
+}
+
+.navbar__logo:hover img {
+    filter: drop-shadow(0 0 12px rgba(234,88,12,0.80));
+}
+
+.navbar__link {
+    font-size: 0.875rem;
+    font-weight: 500;
+    transition: color 0.15s ease;
+    position: relative;
+}
+
+.navbar__link:hover {
+    color: var(--ifm-color-primary);
+}
+
+.navbar__link--active {
+    color: var(--ifm-color-primary);
+    font-weight: 600;
+}
+
+/* ============================================================
+   THEME TOGGLE
+   ============================================================ */
+
+.df-toggle {
+    width: 36px;
+    height: 36px;
+    padding: 0 !important;
+    border: 0 !important;
+    background: transparent !important;
+    border-radius: 50%;
+    cursor: pointer;
+    display: grid;
+    place-items: center;
+    flex: 0 0 auto;
+    position: relative;
+}
+
+.df-toggle--placeholder {
+    opacity: 0;
+    pointer-events: none;
+}
+
+/* ── Icons ── */
+.df-toggle__icon {
+    grid-column: 1 / 1;
+    grid-row: 1 / 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition:
+        transform 0.45s cubic-bezier(0.4, 0, 0.2, 1),
+        color 0.2s ease;
+    line-height: 0;
+}
+
+.df-toggle__icon svg {
+    display: block;
+    width: 20px;
+    height: 20px;
+}
+
+/* ── Moon ── */
+.df-toggle__icon--moon {
+    color: #A8A29E;
+    transition-delay: 0.15s;
+}
+
+[data-theme='dark'] .df-toggle__icon--moon {
+    color: #E7E5E4;
+}
+
+/* ── Sun ── */
+.df-toggle__icon--sun {
+    color: #A8A29E;
+    transform: scale(0) rotate(-180deg);
+}
+
+[data-theme='light'] .df-toggle__icon--sun {
+    color: #57534E;
+}
+
+/* ── Dark mode: show moon, hide sun ── */
+.df-toggle[data-mode='dark'] .df-toggle__icon--moon {
+    transform: scale(1) rotate(0deg);
+    transition-delay: 0.15s;
+}
+
+.df-toggle[data-mode='dark'] .df-toggle__icon--sun {
+    transform: scale(0) rotate(-180deg);
+    transition-delay: 0s;
+}
+
+/* ── Light mode: show sun, hide moon ── */
+.df-toggle[data-mode='light'] .df-toggle__icon--moon {
+    transform: scale(0) rotate(360deg);
+    transition-delay: 0s;
+}
+
+.df-toggle[data-mode='light'] .df-toggle__icon--sun {
+    transform: scale(1) rotate(360deg);
+    transition-delay: 0.15s;
+}
+
+/* ── Focus ── */
+.df-toggle:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(168,162,158,0.30);
+    border-radius: 50%;
+}
+
+/* ── Hover: icon contour glow ── */
+@media (hover: hover) {
+    .df-toggle[data-mode='dark']:hover .df-toggle__icon--moon {
+        color: var(--ifm-color-primary-light);
+    }
+
+    .df-toggle[data-mode='light']:hover .df-toggle__icon--sun {
+        color: var(--ifm-color-primary);
+    }
+}
+
+/* ============================================================
+   NAVBAR — GitHub Icon Button
+   ============================================================ */
+
+.navbar-github-link {
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    width: 36px;
+    height: 36px;
+    padding: 0 !important;
+    font-size: 0;
+    color: transparent !important;
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+    position: relative;
+}
+
+.navbar-github-link::before {
+    content: '';
+    display: block;
+    width: 24px;
+    height: 24px;
+    flex-shrink: 0;
+    background-color: #57534E;
+    mask-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M12 2C6.477 2 2 6.477 2 12c0 4.42 2.865 8.17 6.839 9.49.5.092.682-.217.682-.482 0-.237-.008-.866-.013-1.7-2.782.604-3.369-1.34-3.369-1.34-.454-1.156-1.11-1.464-1.11-1.464-.908-.62.069-.608.069-.608 1.003.07 1.531 1.03 1.531 1.03.892 1.529 2.341 1.087 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.11-4.555-4.943 0-1.091.39-1.984 1.029-2.683-.103-.253-.446-1.27.098-2.647 0 0 .84-.269 2.75 1.025A9.578 9.578 0 0 1 12 6.836c.85.004 1.705.114 2.504.336 1.909-1.294 2.747-1.025 2.747-1.025.546 1.377.203 2.394.1 2.647.64.699 1.028 1.592 1.028 2.683 0 3.842-2.339 4.687-4.566 4.935.359.309.678.919.678 1.852 0 1.336-.012 2.415-.012 2.741 0 .267.18.578.688.48C19.138 20.167 22 16.418 22 12c0-5.523-4.477-10-10-10z'/%3E%3C/svg%3E");
+    -webkit-mask-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M12 2C6.477 2 2 6.477 2 12c0 4.42 2.865 8.17 6.839 9.49.5.092.682-.217.682-.482 0-.237-.008-.866-.013-1.7-2.782.604-3.369-1.34-3.369-1.34-.454-1.156-1.11-1.464-1.11-1.464-.908-.62.069-.608.069-.608 1.003.07 1.531 1.03 1.531 1.03.892 1.529 2.341 1.087 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.11-4.555-4.943 0-1.091.39-1.984 1.029-2.683-.103-.253-.446-1.27.098-2.647 0 0 .84-.269 2.75 1.025A9.578 9.578 0 0 1 12 6.836c.85.004 1.705.114 2.504.336 1.909-1.294 2.747-1.025 2.747-1.025.546 1.377.203 2.394.1 2.647.64.699 1.028 1.592 1.028 2.683 0 3.842-2.339 4.687-4.566 4.935.359.309.678.919.678 1.852 0 1.336-.012 2.415-.012 2.741 0 .267.18.578.688.48C19.138 20.167 22 16.418 22 12c0-5.523-4.477-10-10-10z'/%3E%3C/svg%3E");
+    mask-repeat: no-repeat;
+    mask-position: center;
+    mask-size: contain;
+    -webkit-mask-repeat: no-repeat;
+    -webkit-mask-position: center;
+    -webkit-mask-size: contain;
+    transition: background-color 0.2s ease;
+}
+
+.navbar-github-link:hover {
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+    text-decoration: none !important;
+}
+
+.navbar-github-link:hover::before {
+    background-color: var(--ifm-color-primary);
+}
+
+[data-theme='dark'] .navbar-github-link::before {
+    background-color: #E7E5E4;
+}
+
+[data-theme='dark'] .navbar-github-link:hover::before {
+    background-color: var(--ifm-color-primary-light);
+}
+
+/* ============================================================
+   NAVBAR — Right items: order + separators
+   ============================================================ */
+
+.navbar__items--right .df-version { order: -1; position: relative; }
+.navbar__items--right .df-locale  { order: 0; position: relative; }
+.navbar__items--right .df-toggle  { order: 1; position: relative; }
+.navbar__items--right .navbar-github-link { order: 2; }
+
+/* Separator: between version and locale (when both exist) */
+.navbar__items--right .df-version ~ .df-locale::before {
+    content: '';
+    position: absolute;
+    left: calc(var(--df-navbar-icons-gap) / -2);
+    top: 50%;
+    transform: translateY(-50%);
+    width: 1px;
+    height: 20px;
+    background: var(--df-border-color);
+    opacity: 0.6;
+    border-radius: 1px;
+    pointer-events: none;
+}
+
+[data-theme='dark'] .navbar__items--right .df-version ~ .df-locale::before {
+    background: rgba(255,255,255,0.22);
+    opacity: 1;
+}
+
+/* Separator: between version and toggle (when locale is absent) */
+.navbar__items--right .df-version ~ .df-toggle::before {
+    content: '';
+    position: absolute;
+    left: calc(var(--df-navbar-icons-gap) / -2);
+    top: 50%;
+    transform: translateY(-50%);
+    width: 1px;
+    height: 20px;
+    background: var(--df-border-color);
+    opacity: 0.6;
+    border-radius: 1px;
+    pointer-events: none;
+}
+
+[data-theme='dark'] .navbar__items--right .df-version ~ .df-toggle::before {
+    background: rgba(255,255,255,0.22);
+    opacity: 1;
+}
+
+/* Separator: between locale and toggle */
+.navbar__items--right .df-locale ~ .df-toggle::before {
+    content: '';
+    position: absolute;
+    left: calc(var(--df-navbar-icons-gap) / -2);
+    top: 50%;
+    transform: translateY(-50%);
+    width: 1px;
+    height: 20px;
+    background: var(--df-border-color);
+    opacity: 0.6;
+    border-radius: 1px;
+    pointer-events: none;
+}
+
+[data-theme='dark'] .navbar__items--right .df-locale ~ .df-toggle::before {
+    background: rgba(255,255,255,0.22);
+    opacity: 1;
+}
+
+/* Separator: between toggle and GitHub */
+.navbar-github-link::after {
+    content: '';
+    position: absolute;
+    left: calc(var(--df-navbar-icons-gap) / -2);
+    top: 50%;
+    transform: translateY(-50%);
+    width: 1px;
+    height: 20px;
+    background: var(--df-border-color);
+    opacity: 0.6;
+    border-radius: 1px;
+    pointer-events: none;
+}
+
+[data-theme='dark'] .navbar-github-link::after {
+    background: rgba(255,255,255,0.22);
+    opacity: 1;
+}
+
+.navbar-github-link {
+    position: relative;
+}
+
+/* ============================================================
+   NAVBAR — Locale Dropdown
+   ============================================================ */
+
+.df-locale {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex: 0 0 auto;
+}
+
+.df-locale__btn {
+    height: 36px;
+    padding: 0 6px 0 8px !important;
+    border: 0 !important;
+    background: transparent !important;
+    border-radius: 10px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    cursor: pointer;
+    color: #57534E;
+    transition: color 0.2s Tril;
+}
+
+.df-locale__icon {
+    width: 20px;
+    height: 20px;
+    display: block;
+    flex-shrink: 0;
+}
+
+.df-locale__chevron {
+    width: 16px;
+    height: 16px;
+    display: block;
+    flex-shrink: 0;
+    color: currentColor;
+    opacity: 0.5;
+    transition: opacity 0.2s ease;
+}
+
+.df-locale:hover .df-locale__chevron,
+.df-locale:focus-within .df-locale__chevron {
+    opacity: 1;
+}
+
+[data-theme='dark'] .df-locale__btn {
+    color: #E7E5E4;
+}
+
+@media (hover: hover) {
+    .df-locale:hover .df-locale__btn {
+        color: var(--ifm-color-primary);
+    }
+
+    [data-theme='dark'] .df-locale:hover .df-locale__btn {
+        color: var(--ifm-color-primary-light);
+    }
+}
+
+.df-locale__btn:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(168,162,158,0.30);
+    border-radius: 10px;
+}
+
+.df-locale__menu {
+    position: absolute;
+    top: calc(100% + 8px);
+    right: 0;
+    min-width: 160px;
+    margin: 0;
+    padding: 4px;
+    list-style: none;
+    background: var(--ifm-background-surface-color);
+    border: 1px solid var(--df-border-color);
+    border-radius: 8px;
+    box-shadow: var(--ifm-global-shadow-md);
+    backdrop-filter: blur(12px);
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-4px);
+    pointer-events: none;
+    transition:
+        opacity 0.18s ease,
+        transform 0.18s ease,
+        visibility 0.18s ease;
+    z-index: 100;
+}
+
+.df-locale__menu::before {
+    content: '';
+    position: absolute;
+    top: -8px;
+    left: 0;
+    right: 0;
+    height: 8px;
+    background: transparent;
+}
+
+.df-locale:hover .df-locale__menu,
+.df-locale:focus-within .df-locale__menu {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+    pointer-events: auto;
+}
+
+[data-theme='dark'] .df-locale__menu {
+    background: rgba(28,25,23,0.95);
+    border-color: rgba(255,255,255,0.10);
+}
+
+.df-locale__item {
+    display: block;
+    padding: 6px 12px;
+    font-family: var(--ifm-font-family-monospace), monospace;
+    font-size: 0.8rem;
+    color: var(--df-text-muted);
+    text-decoration: none;
+    border-radius: 4px;
+    transition: all 0.15s ease;
+    white-space: nowrap;
+}
+
+.df-locale__item:hover {
+    background: var(--ifm-hover-overlay);
+    color: var(--ifm-color-primary);
+    text-decoration: none;
+}
+
+.df-locale__item--active {
+    color: var(--ifm-color-primary) !important;
+    background: var(--df-badge-bg);
+    font-weight: 600;
+}
+
+
+/* ============================================================
+   NAVBAR — Version Dropdown
+   ============================================================ */
+
+.df-version {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex: 0 0 auto;
+}
+
+.df-version__btn {
+    height: 36px;
+    padding: 0 4px 0 12px !important;
+    border: 0 !important;
+    background: transparent !important;
+    border-radius: 10px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    cursor: pointer;
+    color: #57534E;
+    transition: color 0.2s ease;
+}
+
+.df-version__icon {
+    width: 18px;
+    height: 18px;
+    display: block;
+    flex-shrink: 0;
+}
+
+.df-version__label {
+    font-family: var(--ifm-font-family-monospace), monospace;
+    font-size: 0.8rem;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    white-space: nowrap;
+}
+
+.df-version__chevron {
+    width: 16px;
+    height: 16px;
+    display: block;
+    flex-shrink: 0;
+    color: currentColor;
+    opacity: 0.5;
+    transition: opacity 0.2s ease;
+}
+
+.df-version:hover .df-version__chevron,
+.df-version:focus-within .df-version__chevron {
+    opacity: 1;
+}
+
+[data-theme='dark'] .df-version__btn {
+    color: #E7E5E4;
+}
+
+@media (hover: hover) {
+    .df-version:hover .df-version__btn {
+        color: var(--ifm-color-primary);
+    }
+
+    [data-theme='dark'] .df-version:hover .df-version__btn {
+        color: var(--ifm-color-primary-light);
+    }
+}
+
+.df-version__btn:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(168,162,158,0.30);
+    border-radius: 10px;
+}
+
+.df-version__menu {
+    position: absolute;
+    top: calc(100% + 8px);
+    right: 0;
+    min-width: 140px;
+    margin: 0;
+    padding: 4px;
+    list-style: none;
+    background: var(--ifm-background-surface-color);
+    border: 1px solid var(--df-border-color);
+    border-radius: 8px;
+    box-shadow: var(--ifm-global-shadow-md);
+    backdrop-filter: blur(12px);
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-4px);
+    pointer-events: none;
+    transition:
+        opacity 0.18s ease,
+        transform 0.18s ease,
+        visibility 0.18s ease;
+    z-index: 100;
+}
+
+.df-version__menu::before {
+    content: '';
+    position: absolute;
+    top: -8px;
+    left: 0;
+    right: 0;
+    height: 8px;
+    background: transparent;
+}
+
+.df-version:hover .df-version__menu,
+.df-version:focus-within .df-version__menu {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+    pointer-events: auto;
+}
+
+[data-theme='dark'] .df-version__menu {
+    background: rgba(28,25,23,0.95);
+    border-color: rgba(255,255,255,0.10);
+}
+
+.df-version__item {
+    display: block;
+    padding: 6px 12px;
+    font-family: var(--ifm-font-family-monospace), monospace;
+    font-size: 0.8rem;
+    color: var(--df-text-muted);
+    text-decoration: none;
+    border-radius: 4px;
+    transition: all 0.15s ease;
+    white-space: nowrap;
+}
+
+.df-version__item:hover {
+    background: var(--ifm-hover-overlay);
+    color: var(--ifm-color-primary);
+    text-decoration: none;
+}
+
+.df-version__item--active {
+    color: var(--ifm-color-primary) !important;
+    background: var(--df-badge-bg);
+    font-weight: 600;
+}

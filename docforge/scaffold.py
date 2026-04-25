@@ -400,9 +400,21 @@ def init_docusaurus(project_root, config_path="docforge.yaml", npm_exe=None):
     os.makedirs(css_dir, exist_ok=True)
     css_src = os.path.join(docusaurus_templates, "custom.css")
     if os.path.exists(css_src):
-        css_dst = os.path.join(css_dir, "custom.css")
-        shutil.copy2(css_src, css_dst)
-        _print_success("[cyan]%s[/]" % _display_path(css_dst, project_root))
+        shutil.copy2(css_src, os.path.join(css_dir, "custom.css"))
+        _print_success("[cyan]%s[/]" % _display_path(os.path.join(css_dir, "custom.css"), project_root))
+
+    css_mod_src = os.path.join(docusaurus_templates, "css")
+    if os.path.exists(css_mod_src):
+        for item in os.listdir(css_mod_src):
+            s = os.path.join(css_mod_src, item)
+            d = os.path.join(css_dir, item)
+            if os.path.isdir(s):
+                if os.path.exists(d):
+                    shutil.rmtree(d)
+                shutil.copytree(s, d)
+            else:
+                shutil.copy2(s, d)
+        _print_success("[cyan]%s/[/]" % _display_path(css_dir, project_root))
 
     _write_logo(site_dir, project_root=project_root)
 

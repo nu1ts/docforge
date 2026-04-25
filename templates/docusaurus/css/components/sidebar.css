@@ -1,0 +1,97 @@
+/* ============================================================
+   SIDEBAR
+   ============================================================ */
+
+.theme-doc-sidebar-container {
+    border-right: 1px solid var(--df-border-color) !important;
+    background: var(--ifm-background-surface-color);
+}
+
+.theme-doc-sidebar-menu {
+    padding: 12px 8px;
+}
+
+.menu__link {
+    font-size: 0.875rem;
+    border-radius: 8px;
+    transition: all 0.15s ease;
+    font-weight: 400;
+    color: var(--df-text-muted);
+    padding: 6px 12px;
+}
+
+.menu__link:hover {
+    background: var(--ifm-hover-overlay);
+    color: var(--ifm-color-primary);
+    text-decoration: none;
+    padding-left: 16px;
+}
+
+.menu__link--active {
+    font-weight: 600;
+    color: var(--ifm-color-primary) !important;
+    background: var(--df-badge-bg) !important;
+    border-left: 2px solid var(--ifm-color-primary);
+    padding-left: 14px !important;
+}
+
+.menu__list-item-collapsible .menu__link {
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    font-weight: 700;
+    color: var(--df-text-subtle);
+    font-family: 'JetBrains Mono', 'Fira Code', 'Cascadia Code', monospace;
+    font-size: 0.75rem;
+}
+
+.menu__list-item-collapsible:hover {
+    background: var(--ifm-hover-overlay);
+    border-radius: 8px;
+}
+
+.menu__caret::before {
+    background-color: var(--df-text-muted);
+}
+
+
+/* ============================================================
+   TOC
+   ============================================================ */
+
+.table-of-contents {
+    font-size: 0.8rem;
+    padding: 0;
+}
+
+.table-of-contents li {
+    margin: 0;
+    line-height: 1;
+}
+
+.table-of-contents__link {
+    color: var(--df-text-subtle);
+    transition: color 0.15s, border-color 0.15s;
+    display: block;
+    padding: 6px 0 6px 12px;
+    border-left: 1px solid var(--df-border-color);
+    margin-left: 0;
+    line-height: 1.5;
+    font-weight: 400;
+}
+
+.table-of-contents__link:hover {
+    color: var(--ifm-color-primary);
+    border-left-color: var(--ifm-color-primary);
+    text-decoration: none;
+}
+
+.table-of-contents__link--active {
+    color: var(--ifm-color-primary);
+    font-weight: 500;
+    border-left-color: var(--ifm-color-primary);
+    text-decoration: none;
+}
+
+.table-of-contents .table-of-contents {
+    padding-left: 12px;
+}

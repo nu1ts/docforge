@@ -1,0 +1,143 @@
+/* ============================================================
+   BASE & TYPOGRAPHY
+   ============================================================ */
+
+html {
+    scroll-behavior: smooth;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+}
+
+body {
+    font-family: var(--ifm-font-family-base), 'Inter', system-ui, -apple-system, sans-serif;
+}
+
+*,
+*::before,
+*::after {
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+h1, h2, h3, h4, h5, h6 {
+    font-family: var(--df-font-heading), 'Plus Jakarta Sans', 'Inter', sans-serif;
+}
+
+
+/* ============================================================
+   TEXT SELECTION
+   ============================================================ */
+
+::selection {
+    background: rgba(234, 88, 12, 0.20);
+    color: inherit;
+}
+
+::-moz-selection {
+    background: rgba(234, 88, 12, 0.20);
+    color: inherit;
+}
+
+[data-theme='dark'] ::selection {
+    background: rgba(249, 115, 22, 0.30);
+    color: #FED7AA;
+}
+
+[data-theme='dark'] ::-moz-selection {
+    background: rgba(249, 115, 22, 0.30);
+    color: #FED7AA;
+}
+
+/* Code selection — more contrast */
+code::selection,
+pre::selection,
+.prism-code ::selection,
+.codeBlock ::selection,
+[class*='codeBlock'] ::selection {
+    background: rgba(234, 88, 12, 0.35);
+    color: #FFFFFF;
+}
+
+code::-moz-selection,
+pre::-moz-selection,
+.prism-code ::-moz-selection,
+[class*='codeBlock'] ::-moz-selection {
+    background: rgba(234, 88, 12, 0.35);
+    color: #FFFFFF;
+}
+
+[data-theme='dark'] code::selection,
+[data-theme='dark'] pre::selection,
+[data-theme='dark'] .prism-code ::selection,
+[data-theme='dark'] [class*='codeBlock'] ::selection {
+    background: rgba(249, 115, 22, 0.45);
+    color: #FEF3C7;
+}
+
+[data-theme='dark'] code::-moz-selection,
+[data-theme='dark'] pre::-moz-selection,
+[data-theme='dark'] .prism-code ::-moz-selection,
+[data-theme='dark'] [class*='codeBlock'] ::-moz-selection {
+    background: rgba(249, 115, 22, 0.45);
+    color: #FEF3C7;
+}
+
+/* ============================================================
+   CUSTOM SCROLLBAR
+   ============================================================ */
+
+::-webkit-scrollbar {
+    width: 5px;
+    height: 5px;
+}
+
+::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--df-border-color);
+    border-radius: 10px;
+    transition: background 0.2s;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--ifm-color-primary);
+}
+
+::-webkit-scrollbar-corner {
+    background: transparent;
+}
+
+/* ============================================================
+   ANIMATIONS
+   ============================================================ */
+
+@keyframes df-fade-in {
+    from { opacity: 0; transform: translateY(8px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes df-pulse-glow {
+    0%, 100% { box-shadow: 0 0 8px rgba(234,88,12,0.30); }
+    50%       { box-shadow: 0 0 24px rgba(234,88,12,0.65); }
+}
+
+@keyframes df-ember-flicker {
+    0%, 100% { opacity: 1; }
+    45%       { opacity: 0.85; }
+    50%       { opacity: 0.95; }
+    55%       { opacity: 0.80; }
+}
+
+.main-wrapper {
+    animation: df-fade-in 0.35s ease both;
+}
+
+.df-pulse {
+    animation: df-pulse-glow 2.5s ease-in-out infinite;
+}
+
+.df-flicker {
+    animation: df-ember-flicker 3s ease-in-out infinite;
+}

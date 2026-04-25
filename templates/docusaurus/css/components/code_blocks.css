@@ -1,0 +1,79 @@
+/* ============================================================
+   CODE BLOCKS — Terminal / Forge
+   ============================================================ */
+
+code {
+    font-family: var(--ifm-font-family-monospace), 'JetBrains Mono', 'Fira Code', 'Cascadia Code', monospace;
+    font-size: 0.875em;
+    font-weight: 500;
+    padding: 0.15em 0.45em;
+    border: 1px solid var(--df-border-color);
+    border-radius: 5px;
+    background: var(--df-code-bg-light);
+}
+
+[data-theme='dark'] code {
+    background: rgba(249,115,22,0.08);
+    border-color: rgba(249,115,22,0.15);
+    color: #FDBA74;
+}
+
+.prism-code {
+    font-family: var(--ifm-font-family-monospace), 'JetBrains Mono', 'Fira Code', 'Cascadia Code', monospace !important;
+    font-size: 0.875rem !important;
+    line-height: 1.65 !important;
+    border-radius: 10px !important;
+}
+
+[data-theme='dark'] .prism-code {
+    background: var(--df-code-bg) !important;
+}
+
+[class*='codeBlockContainer'] {
+    border-radius: 12px !important;
+    overflow: hidden;
+    border: 1px solid var(--df-border-color);
+    box-shadow: var(--ifm-global-shadow-lw);
+}
+
+[data-theme='dark'] [class*='codeBlockContainer'] {
+    border-color: rgba(255,255,255,0.06);
+    box-shadow:
+        var(--ifm-global-shadow-md),
+        0 0 0 1px rgba(249,115,22,0.06);
+}
+
+[class*='codeBlockTitle'] {
+    font-family: 'JetBrains Mono', 'Fira Code', 'Cascadia Code', monospace;
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    background: var(--df-gradient-brand) !important;
+    color: rgba(255,255,255,0.90) !important;
+    border-bottom: 1px solid rgba(255,255,255,0.10);
+    padding: 8px 16px;
+}
+
+[class*='copyButton'] {
+    border-radius: 6px;
+    transition: all 0.2s ease;
+}
+
+[class*='copyButton']:hover {
+    background: rgba(249,115,22,0.20) !important;
+}
+
+[class*='lineNumber'] {
+    color: var(--df-text-subtle) !important;
+    opacity: 0.5;
+}
+
+[class*='language-bash'] .token.function,
+[class*='language-shell'] .token.function {
+    color: var(--df-cyan-bright) !important;
+}
+
+[class*='language-python'] .token.string {
+    color: #FBBF24 !important;
+}

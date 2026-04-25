@@ -1,0 +1,14 @@
+/* ============================================================
+   RESPONSIVE OVERRIDES
+   ============================================================ */
+
+@media (max-width: 768px) {
+    .markdown h1 { font-size: 1.75rem; }
+    .markdown h2 { font-size: 1.25rem; }
+    .navbar__brand { font-size: 1rem; }
+}
+
+@media (max-width: 480px) {
+    .markdown h1 { font-size: 1.5rem; }
+    [class*='codeBlockContainer'] { border-radius: 8px !important; }
+}
