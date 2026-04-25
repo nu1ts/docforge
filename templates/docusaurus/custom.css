@@ -204,7 +204,19 @@ h1, h2, h3, h4, h5, h6 {
 
 .navbar__items--right {
     --df-navbar-icons-gap: 30px;
-    gap: var(--df-navbar-icons-gap);
+    gap: 0;
+}
+
+.navbar__items--right > * + * {
+    margin-left: var(--df-navbar-icons-gap);
+}
+
+.navbar__items--right .navbar__search {
+    margin-left: 0;
+}
+
+.navbar__items--right .navbar__search + .df-version {
+    margin-left: 0;
 }
 
 [data-theme='dark'] .navbar {
@@ -1530,6 +1542,10 @@ code {
 /* ============================================================
    SEARCH BAR
    ============================================================ */
+
+.navbar__search {
+    margin-left: 0 !important;
+}
 
 .navbar__search-input {
     font-family: 'JetBrains Mono', 'Fira Code', 'Cascadia Code', monospace;
