@@ -1,4 +1,6 @@
-﻿const config = {
+﻿{% set use_algolia = config.algolia_app_id and config.algolia_api_key and config.algolia_index_name %}
+
+const config = {
     title: '{{ site.title }}',
     tagline: '{{ config.description or "AI-powered developer documentation" }}',
     url: '{{ site.url or "https://example.github.io" }}',
@@ -30,6 +32,24 @@
             {% endfor %}
         },
     },
+
+    {% if not use_algolia %}
+    plugins: [
+        [
+            require.resolve('@easyops-cn/docusaurus-search-local'),
+            {
+                hashed: true,
+                indexDocs: true,
+                indexBlog: false,
+                indexPages: false,
+                docsRouteBasePath: '/',
+                explicitSearchResultPath: true,
+                searchBarPosition: 'right',
+                searchBarShortcut: true,
+            },
+        ],
+    ],
+    {% endif %}
 
     presets: [
         [
@@ -72,6 +92,10 @@
                     docId: 'index',
                     position: 'left',
                     label: 'Docs',
+                },
+                {
+                    type: 'search',
+                    position: 'right',
                 },
                 {% if site.versions | length > 0 %}
                 {
@@ -130,10 +154,17 @@
                 {
                     title: 'Search',
                     items: [
+                        {% if use_algolia %}
                         {
-                            label: 'Set up DocSearch',
-                            href: 'https://docsearch.algolia.com/apply',
+                            label: 'Powered by Algolia',
+                            href: 'https://docsearch.algolia.com/',
                         },
+                        {% else %}
+                        {
+                            label: 'Local search',
+                            href: 'https://github.com/easyops-cn/docusaurus-search-local',
+                        },
+                        {% endif %}
                         {
                             label: 'Search docs',
                             href: 'https://docusaurus.io/docs/search',
@@ -157,7 +188,7 @@
             ],
         },
 
-        {% if config.algolia_app_id and config.algolia_api_key and config.algolia_index_name %}
+        {% if use_algolia %}
         algolia: {
             appId:     '{{ config.algolia_app_id }}',
             apiKey:    '{{ config.algolia_api_key }}',
