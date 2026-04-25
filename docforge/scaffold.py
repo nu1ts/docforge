@@ -321,7 +321,7 @@ def init_config(project_root, project_name):
                          '  repo_name: "%s"\n'
                          '  locale: "en"\n'
                          '  locales: ["en"]\n'
-                         '  no_index: true\n'
+                         '  no_index: false\n'
                          '\n'
                          '  # Documentation versions.\n'
                          '  # These settings must be nested under "site".\n'

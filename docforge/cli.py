@@ -77,6 +77,17 @@ _COMMAND_META = {
         ],
         [],
     ),
+    "preview": (
+        "🔍 ",
+        "Preview the production build locally at http://localhost:3000",
+        "docforge preview [--config FILE] [--port PORT]",
+        [
+            ("--config FILE", "Path to config file.  [default: docforge.yaml]"),
+            ("--port PORT",   "Port to serve on.     [default: 3000]"),
+            ("--help",        "Show this message and exit."),
+        ],
+        [],
+    ),
     "token": (
         "🔑 ",
         "Generate a new developer access token and print its SHA-256 hash.",
@@ -172,12 +183,15 @@ def _find_docusaurus_cli(site_dir):
     return None
 
 
-def _get_docusaurus_cmd(site_dir, action):
+def _get_docusaurus_cmd(site_dir, action, port=None):
     node = _get_node_exe()
     cli = _find_docusaurus_cli(site_dir)
 
     if node and cli:
-        return [node, cli, action]
+        cmd = [node, cli, action]
+        if port is not None:
+            cmd += ["--port", str(port)]
+        return cmd
 
     npm = _get_npm_exe()
     if not npm:
@@ -191,6 +205,10 @@ def _get_docusaurus_cmd(site_dir, action):
         return [npm, "start"]
     if action == "build":
         return [npm, "run", "build"]
+    if action == "serve":
+        if port is not None:
+            return [npm, "run", "serve", "--", "--port", str(port)]
+        return [npm, "run", "serve"]
 
     raise ValueError("Unknown Docusaurus action: %s" % action)
 
@@ -286,8 +304,9 @@ def _print_help():
         ("init",     "🔨 ", "Initialize a new docforge project"),
         ("generate", "🤖 ", "Generate docs from source code using Gemini AI"),
         ("collect",  "📦 ", "Collect source context into docs/_context/"),
-        ("serve",    "🌐 ", "Start Docusaurus local dev server"),
+        ("serve",    "🌐 ", "Start Docusaurus dev server"),
         ("build",    "🏗️",  "Build Docusaurus site for production"),
+        ("preview",  "🔍 ", "Preview production build locally"),
         ("token",    "🔑 ", "Generate a new developer access token"),
     ]
 
@@ -551,10 +570,62 @@ def build(config):
     code = _run(cmd, cwd=str(site_dir))
 
     if code == 0:
+        console.print()
         _print_success("Built to [cyan]%s[/]" % build_dir)
+        _print_step("Run [cyan]docforge preview[/] to preview with working search")
     else:
         _print_error("Build failed (exit code %d)" % code)
         sys.exit(code)
+
+
+# ── preview ───────────────────────────────────────────────────────────
+
+@main.command(cls=RichCommand)
+@click.option("--config", default="docforge.yaml", help="Path to config file.")
+@click.option("--port",   default=3000, type=int,   help="Port to serve on.")
+def preview(config, port):
+    _print_header("Previewing production build", "🔍")
+
+    _ensure_node_in_path()
+
+    root = find_project_root()
+
+    from docforge.config import ProjectConfig
+
+    cfg = ProjectConfig.from_file(os.path.join(str(root), str(config)))
+
+    site_dir = os.path.join(str(root), str(cfg.docusaurus_dir))
+    build_dir = os.path.join(site_dir, "build")
+
+    if not os.path.exists(build_dir):
+        console.print()
+        _print_error("No production build found.")
+        console.print()
+        _print_step("Run [cyan]docforge build[/] first")
+        console.print()
+        sys.exit(1)
+
+    node_modules = os.path.join(site_dir, "node_modules")
+    if not os.path.exists(node_modules):
+        console.print()
+        _print_warning("node_modules not found — running npm install first...")
+        console.print()
+        from docforge.scaffold import _run_npm
+        _run_npm(["install"], cwd=site_dir, description="Installing dependencies...")
+        console.print()
+
+    try:
+        cmd = _get_docusaurus_cmd(str(site_dir), "serve", port=port)
+    except RuntimeError as exc:
+        _print_error(str(exc))
+        sys.exit(1)
+
+    console.print()
+    console.print("  [dim]URL:[/]    [cyan]http://localhost:%d[/]" % port)
+    console.print("  [dim]Dir:[/]    [cyan]%s[/]" % build_dir)
+    console.print()
+
+    _run(cmd, cwd=str(site_dir))
 
 
 # ── token ─────────────────────────────────────────────────────────────
