@@ -191,6 +191,64 @@ h1, h2, h3, h4, h5, h6 {
 
 
 /* ============================================================
+   TEXT SELECTION
+   ============================================================ */
+
+::selection {
+    background: rgba(234, 88, 12, 0.20);
+    color: inherit;
+}
+
+::-moz-selection {
+    background: rgba(234, 88, 12, 0.20);
+    color: inherit;
+}
+
+[data-theme='dark'] ::selection {
+    background: rgba(249, 115, 22, 0.30);
+    color: #FED7AA;
+}
+
+[data-theme='dark'] ::-moz-selection {
+    background: rgba(249, 115, 22, 0.30);
+    color: #FED7AA;
+}
+
+/* Code selection — more contrast */
+code::selection,
+pre::selection,
+.prism-code ::selection,
+[class*='codeBlock'] ::selection {
+    background: rgba(234, 88, 12, 0.35);
+    color: #FFFFFF;
+}
+
+code::-moz-selection,
+pre::-moz-selection,
+.prism-code ::-moz-selection,
+[class*='codeBlock'] ::-moz-selection {
+    background: rgba(234, 88, 12, 0.35);
+    color: #FFFFFF;
+}
+
+[data-theme='dark'] code::selection,
+[data-theme='dark'] pre::selection,
+[data-theme='dark'] .prism-code ::selection,
+[data-theme='dark'] [class*='codeBlock'] ::selection {
+    background: rgba(249, 115, 22, 0.45);
+    color: #FEF3C7;
+}
+
+[data-theme='dark'] code::-moz-selection,
+[data-theme='dark'] pre::-moz-selection,
+[data-theme='dark'] .prism-code ::-moz-selection,
+[data-theme='dark'] [class*='codeBlock'] ::-moz-selection {
+    background: rgba(249, 115, 22, 0.45);
+    color: #FEF3C7;
+}
+
+
+/* ============================================================
    NAVBAR — Glassmorphism Header
    ============================================================ */
 
@@ -1547,25 +1605,77 @@ code {
     margin-left: 0 !important;
 }
 
+/* ── Local search input ── */
 .navbar__search-input {
     font-family: 'JetBrains Mono', 'Fira Code', 'Cascadia Code', monospace;
     background: var(--df-badge-bg);
     border: 1px solid var(--df-border-subtle);
-    border-radius: 8px;
-    font-size: 0.875rem;
+    border-radius: 10px;
+    font-size: 0.8125rem;
     transition: all 0.2s;
+    padding: 8px 14px 8px 36px;
+    height: 38px;
+    min-width: 200px;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%2378716C' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='11' cy='11' r='8'/%3E%3Cline x1='21' y1='21' x2='16.65' y2='16.65'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: 12px center;
+    background-size: 15px 15px;
+}
+
+[data-theme='dark'] .navbar__search-input {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23A8A29E' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='11' cy='11' r='8'/%3E%3Cline x1='21' y1='21' x2='16.65' y2='16.65'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: 12px center;
+    background-size: 15px 15px;
+    background-color: var(--df-badge-bg);
 }
 
 .navbar__search-input:focus {
     border-color: var(--ifm-color-primary);
     box-shadow: 0 0 0 3px rgba(234,88,12,0.12);
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23EA580C' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='11' cy='11' r='8'/%3E%3Cline x1='21' y1='21' x2='16.65' y2='16.65'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: 12px center;
+    background-size: 15px 15px;
 }
 
+[data-theme='dark'] .navbar__search-input:focus {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23F97316' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='11' cy='11' r='8'/%3E%3Cline x1='21' y1='21' x2='16.65' y2='16.65'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: 12px center;
+    background-size: 15px 15px;
+}
+
+.navbar__search-input:focus-visible,
+.DocSearch-Input:focus-visible {
+    outline: none;
+    border-color: var(--ifm-color-primary);
+    box-shadow:
+        0 0 0 3px rgba(234, 88, 12, 0.14),
+        0 0 0 1px rgba(234, 88, 12, 0.20);
+}
+
+[data-theme='dark'] .navbar__search-input:focus-visible,
+[data-theme='dark'] .DocSearch-Input:focus-visible {
+    box-shadow:
+        0 0 0 3px rgba(249, 115, 22, 0.18),
+        0 0 0 1px rgba(249, 115, 22, 0.28);
+}
+
+.navbar__search-input::placeholder {
+    color: var(--df-text-subtle);
+    opacity: 0.7;
+}
+
+
+/* ── Algolia DocSearch button ── */
 .DocSearch-Button {
     background: var(--df-badge-bg) !important;
     border: 1px solid var(--df-border-subtle) !important;
-    border-radius: 8px !important;
+    border-radius: 10px !important;
     transition: all 0.2s !important;
+    padding: 0 14px 0 12px !important;
+    height: 38px !important;
 }
 
 .DocSearch-Button:hover {
@@ -1573,10 +1683,137 @@ code {
     box-shadow: 0 0 0 3px rgba(234,88,12,0.12) !important;
 }
 
-.DocSearch-Button-Placeholder,
-.DocSearch-Button-Keys {
+.DocSearch-Button-Placeholder {
     font-family: 'JetBrains Mono', 'Fira Code', 'Cascadia Code', monospace !important;
     font-size: 0.8125rem !important;
+    color: var(--df-text-subtle) !important;
+}
+
+.DocSearch-Search-Icon {
+    color: var(--df-text-subtle) !important;
+    width: 16px !important;
+    height: 16px !important;
+}
+
+.DocSearch-Button:hover .DocSearch-Search-Icon {
+    color: var(--ifm-color-primary) !important;
+}
+
+.DocSearch-Button:hover .DocSearch-Button-Placeholder {
+    color: var(--ifm-color-primary) !important;
+}
+
+
+/* ============================================================
+   SEARCH — Shortcut Keys (Ctrl K / ⌘ K)
+   Covers: Algolia DocSearch + @easyops-cn/docusaurus-search-local
+   ============================================================ */
+
+/* ── Algolia keys container ── */
+.DocSearch-Button-Keys {
+    display: flex !important;
+    align-items: center !important;
+    gap: 3px !important;
+    min-width: auto !important;
+    padding: 0 !important;
+}
+
+/* ── Universal key style — targets both plugins ── */
+.DocSearch-Button-Key,
+.navbar__search .search-bar-shortcut-hint kbd,
+.navbar__search .search-bar-shortcut kbd,
+.navbar__search kbd,
+[class*='searchBar'] kbd,
+.search-bar kbd {
+    /* Reset all defaults */
+    all: unset !important;
+    box-sizing: border-box !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+
+    /* Font */
+    font-family: 'JetBrains Mono', 'Fira Code', monospace !important;
+    font-size: 0.625rem !important;
+    font-weight: 700 !important;
+    letter-spacing: 0.04em !important;
+    line-height: 1 !important;
+
+    /* Size */
+    min-width: 20px !important;
+    height: 20px !important;
+    padding: 0 5px !important;
+    border-radius: 4px !important;
+
+    /* Light mode — warm ember tint */
+    background: rgba(234, 88, 12, 0.08) !important;
+    border: 1px solid rgba(234, 88, 12, 0.22) !important;
+    color: #B45309 !important;
+
+    /* Misc */
+    cursor: pointer !important;
+    user-select: none !important;
+    transition: background 0.15s ease,
+                border-color 0.15s ease,
+                color 0.15s ease !important;
+}
+
+/* ── Dark mode ── */
+[data-theme='dark'] .DocSearch-Button-Key,
+[data-theme='dark'] .navbar__search .search-bar-shortcut-hint kbd,
+[data-theme='dark'] .navbar__search .search-bar-shortcut kbd,
+[data-theme='dark'] .navbar__search kbd,
+[data-theme='dark'] [class*='searchBar'] kbd,
+[data-theme='dark'] .search-bar kbd {
+    background: rgba(251, 146, 60, 0.10) !important;
+    border: 1px solid rgba(251, 146, 60, 0.30) !important;
+    color: #FB923C !important;
+}
+
+/* ── Hover — light ── */
+.DocSearch-Button:hover .DocSearch-Button-Key,
+.navbar__search:hover kbd,
+[class*='searchBar']:hover kbd {
+    background: rgba(234, 88, 12, 0.14) !important;
+    border-color: rgba(234, 88, 12, 0.38) !important;
+    color: #EA580C !important;
+}
+
+/* ── Hover — dark ── */
+[data-theme='dark'] .DocSearch-Button:hover .DocSearch-Button-Key,
+[data-theme='dark'] .navbar__search:hover kbd,
+[data-theme='dark'] [class*='searchBar']:hover kbd {
+    background: rgba(251, 146, 60, 0.18) !important;
+    border-color: rgba(251, 146, 60, 0.48) !important;
+    color: #FDBA74 !important;
+}
+
+/* ── Kill Algolia's pseudo-elements inside key ── */
+.DocSearch-Button-Key::before,
+.DocSearch-Button-Key::after {
+    display: none !important;
+    content: none !important;
+}
+
+/* ── Local search shortcut hint container ── */
+.navbar__search .search-bar-shortcut-hint,
+.navbar__search .search-bar-shortcut,
+[class*='searchBarShortcut'] {
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 2px !important;
+    pointer-events: none !important;
+}
+
+/* ── Override Algolia CSS variables (belt + suspenders) ── */
+:root {
+    --docsearch-key-gradient:      rgba(234, 88, 12, 0.08);
+    --docsearch-key-shadow:        none;
+}
+
+[data-theme='dark'] {
+    --docsearch-key-gradient:      rgba(251, 146, 60, 0.10);
+    --docsearch-key-shadow:        none;
 }
 
 
