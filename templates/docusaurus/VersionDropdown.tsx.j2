@@ -1,4 +1,5 @@
 import React from 'react';
+import { useLocation } from '@docusaurus/router';
 
 interface VersionItem {
   label: string;
@@ -6,18 +7,102 @@ interface VersionItem {
   isCurrent: boolean;
 }
 
-const VERSIONS: VersionItem[] = [
+const SITE_BASE_URL = '{{ site.base_url or "/" }}';
+
+const RAW_VERSIONS: VersionItem[] = [
   {% for v in site.versions %}
   { label: '{{ v.label }}', url: '{{ v.url }}', isCurrent: {{ 'true' if v.is_current else 'false' }} },
   {% endfor %}
 ];
 
+function normalizePath(path: string): string {
+  if (!path) return '/';
+
+  let value = path.trim();
+
+  if (!value.startsWith('/')) {
+    value = '/' + value;
+  }
+
+  value = value.replace(/\/+/g, '/');
+
+  if (value.length > 1 && value.endsWith('/')) {
+    value = value.slice(0, -1);
+  }
+
+  return value || '/';
+}
+
+function isAbsoluteUrl(url: string): boolean {
+  return /^https?:\/\//i.test(url);
+}
+
+function resolveVersionHref(url: string): string {
+  if (isAbsoluteUrl(url)) {
+    return url;
+  }
+
+  if (url === '/') {
+    return SITE_BASE_URL;
+  }
+
+  return url;
+}
+
+function getComparablePath(url: string): string | null {
+  const resolved = resolveVersionHref(url);
+
+  if (isAbsoluteUrl(resolved)) {
+    try {
+      return normalizePath(new URL(resolved).pathname);
+    } catch {
+      return null;
+    }
+  }
+
+  return normalizePath(resolved);
+}
+
+function isPathMatch(currentPath: string, targetPath: string): boolean {
+  if (targetPath === '/') {
+    return currentPath === '/';
+  }
+
+  return currentPath === targetPath || currentPath.startsWith(targetPath + '/');
+}
+
 export default function VersionDropdown(): JSX.Element | null {
-  if (VERSIONS.length === 0) {
+  const location = useLocation();
+
+  if (RAW_VERSIONS.length === 0) {
     return null;
   }
 
-  const current = VERSIONS.find((v) => v.isCurrent) || VERSIONS[0];
+  const versions = RAW_VERSIONS.map((v) => ({
+    ...v,
+    href: resolveVersionHref(v.url),
+    path: getComparablePath(v.url),
+  }));
+
+  const fallback = versions.find((v) => v.isCurrent) || versions[0];
+  const currentPath = normalizePath(location.pathname);
+
+  let active = fallback;
+
+  const candidates = [...versions]
+    .filter((v) => v.path)
+    .sort((a, b) => {
+      const aLen = a.path ? a.path.length : 0;
+      const bLen = b.path ? b.path.length : 0;
+      return bLen - aLen;
+    });
+
+  for (const v of candidates) {
+    if (v.path && isPathMatch(currentPath, v.path)) {
+      active = v;
+      break;
+    }
+  }
 
   return (
     <div className="df-version">
@@ -27,7 +112,7 @@ export default function VersionDropdown(): JSX.Element | null {
         aria-label="Select documentation version"
         aria-haspopup="listbox"
       >
-        <span className="df-version__label">{current.label}</span>
+        <span className="df-version__label">{active.label}</span>
         <svg
           viewBox="0 0 24 24"
           fill="none"
@@ -43,20 +128,25 @@ export default function VersionDropdown(): JSX.Element | null {
           <polyline points="6 9 12 15 18 9" />
         </svg>
       </button>
-      <ul className="df-version__menu" role="listbox">
-        {VERSIONS.map((v) => (
-          <li key={v.label} role="option" aria-selected={v.isCurrent}>
-            <a
-              href={v.url}
-              className={
-                'df-version__item' +
-                (v.isCurrent ? ' df-version__item--active' : '')
-              }
-            >
-              {v.label}
-            </a>
-          </li>
-        ))}
+
+      <ul className="df-version__menu" role="listbox" aria-label="Versions">
+        {versions.map((v) => {
+          const isActive = v.label === active.label;
+
+          return (
+            <li key={v.label} role="option" aria-selected={isActive}>
+              <a
+                href={v.href}
+                className={
+                  'df-version__item' +
+                  (isActive ? ' df-version__item--active' : '')
+                }
+              >
+                {v.label}
+              </a>
+            </li>
+          );
+        })}
       </ul>
     </div>
   );
