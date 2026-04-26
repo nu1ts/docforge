@@ -106,10 +106,15 @@
    TOC (Table of Contents — right sidebar)
    ============================================================ */
 
-/* Wrap the TOC in a subtle background on wide screens */
+.table-of-contents,
+.table-of-contents ul {
+    padding: 0;
+    margin: 0;
+    list-style: none;
+}
+
 .table-of-contents {
     font-size: 0.8rem;
-    padding: 0;
 }
 
 .table-of-contents li {
@@ -141,6 +146,18 @@
     text-decoration: none;
 }
 
+.table-of-contents ul .table-of-contents__link {
+    padding-left: 24px;
+}
+
+.table-of-contents ul ul .table-of-contents__link {
+    padding-left: 36px;
+}
+
+.table-of-contents ul ul ul .table-of-contents__link {
+    padding-left: 48px;
+}
+
 .table-of-contents .table-of-contents {
-    padding-left: 12px;
+    padding-left: 0;
 }

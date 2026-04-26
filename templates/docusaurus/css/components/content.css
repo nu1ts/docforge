@@ -149,9 +149,11 @@ article.margin-bottom--xl {
 
 /* ── Tables ── */
 .markdown table {
+    display: table;
     border-collapse: separate;
     border-spacing: 0;
     width: 100%;
+    min-width: 100%;
     margin: 1.75rem 0;
     border-radius: var(--df-radius-xl);
     overflow: hidden;
