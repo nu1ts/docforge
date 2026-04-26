@@ -4,28 +4,30 @@
 
 .theme-doc-sidebar-container {
     border-right: 1px solid var(--df-border-color) !important;
-
-    /* Sidebar background: surface + subtle vertical dot strip */
     background-color: var(--ifm-background-surface-color);
     background-image:
-        /* Faint ember glow at top */
         radial-gradient(
             ellipse 80% 120px at 50% 0%,
             rgba(234,88,12,0.06) 0%,
             transparent 100%
         ),
-        /* Dot grid texture */
         var(--df-bg-dots-light),
         var(--df-bg-noise);
     background-size:
-        100% 100%,
+        100% 180px,
         var(--df-bg-dots-size),
         256px 256px;
-    background-attachment: local, fixed, fixed;
+    background-repeat:
+        no-repeat,
+        repeat,
+        repeat;
+    background-attachment:
+        scroll,
+        scroll,
+        scroll;
     position: relative;
 }
 
-/* Dark mode: deeper glow */
 [data-theme='dark'] .theme-doc-sidebar-container {
     background-image:
         radial-gradient(

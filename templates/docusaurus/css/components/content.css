@@ -2,9 +2,50 @@
    MAIN CONTENT AREA — Forge Ember
    ============================================================ */
 
-/* The main doc wrapper — subtle grid texture */
 .main-wrapper {
     animation: df-fade-in 0.35s ease both;
+    background-color: var(--ifm-background-color);
+    background-image:
+        radial-gradient(
+            ellipse 70% 320px at 50% 0%,
+            rgba(234,88,12,0.04) 0%,
+            transparent 100%
+        ),
+        var(--df-bg-dots-light),
+        var(--df-bg-noise);
+    background-size:
+        100% 320px,
+        var(--df-bg-dots-size),
+        256px 256px;
+    background-repeat:
+        no-repeat,
+        repeat,
+        repeat;
+    background-attachment:
+        scroll,
+        scroll,
+        scroll;
+}
+
+[data-theme='dark'] .main-wrapper {
+    background-color: var(--ifm-background-color);
+    background-image:
+        radial-gradient(
+            ellipse 70% 320px at 50% 0%,
+            rgba(249,115,22,0.05) 0%,
+            transparent 100%
+        ),
+        var(--df-bg-dots-light),
+        var(--df-bg-noise);
+}
+
+.theme-doc-page,
+.theme-doc-root,
+.theme-doc-page main,
+.theme-doc-markdown,
+.container.padding-top--md,
+article.margin-bottom--xl {
+    background: transparent !important;
 }
 
 /* Article / doc content pane */
