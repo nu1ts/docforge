@@ -11,6 +11,7 @@
 :root {
     /* Brand — Forge Orange */
     --ifm-color-primary:            #EA580C;
+    --ifm-color-primary-rgb:        234, 88, 12;
     --ifm-color-primary-dark:       #C2410C;
     --ifm-color-primary-darker:     #9A3412;
     --ifm-color-primary-darkest:    #7C2D12;
