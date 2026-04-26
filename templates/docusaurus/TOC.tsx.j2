@@ -1,0 +1,60 @@
+import React from 'react';
+import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
+import TOC from '@theme-original/TOC';
+import type TOCType from '@theme/TOC';
+import type {WrapperProps} from '@docusaurus/types';
+
+const TOC_HEADINGS: Record<string, string> = {
+  en: 'On this page',
+  ru: 'На этой странице',
+  de: 'Auf dieser Seite',
+  fr: 'Sur cette page',
+  es: 'En esta página',
+  pt: 'Nesta página',
+  'pt-br': 'Nesta página',
+  zh: '本页内容',
+  'zh-cn': '本页内容',
+  'zh-tw': '本頁內容',
+  ja: 'このページの内容',
+  ko: '이 페이지에서',
+  ar: 'في هذه الصفحة',
+  it: 'In questa pagina',
+  nl: 'Op deze pagina',
+  pl: 'Na tej stronie',
+  tr: 'Bu sayfada',
+  hi: 'इस पृष्ठ पर',
+  uk: 'На цій сторінці',
+  cs: 'Na této stránce',
+  sv: 'På den här sidan',
+};
+
+function getTocHeading(locale: string): string {
+  const normalized = locale.toLowerCase();
+
+  if (TOC_HEADINGS[normalized]) {
+    return TOC_HEADINGS[normalized];
+  }
+
+  const base = normalized.split('-')[0];
+  if (TOC_HEADINGS[base]) {
+    return TOC_HEADINGS[base];
+  }
+
+  return 'On this page';
+}
+
+export default function TOCWrapper(
+  props: WrapperProps<typeof TOCType>
+): JSX.Element {
+  const {i18n} = useDocusaurusContext();
+  const heading = getTocHeading(i18n.currentLocale);
+
+  return (
+    <aside className="df-toc">
+      <div className="df-toc__title">{heading}</div>
+      <div className="df-toc__content">
+        <TOC {...props} />
+      </div>
+    </aside>
+  );
+}

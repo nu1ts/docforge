@@ -122,17 +122,19 @@ def generate_doc(doc, context, config, project_root, client, gen_config):
         )
         content = response.text
 
-    frontmatter = (
-            "---\n"
-            'title: "%s"\n'
-            "sidebar_position: %d\n"
-            "generated: true\n"
-            'model: "%s"\n'
-            "---\n\n"
-            % (doc.title, doc.sidebar_position, config.model)
-    )
+    frontmatter = [
+        "---",
+        'title: "%s"' % doc.title,
+        'sidebar_label: "%s"' % (doc.sidebar_label or doc.title),
+        "sidebar_position: %d" % doc.sidebar_position,
+        "generated: true",
+        'model: "%s"' % config.model,
+        "---",
+        "",
+        ""
+    ]
 
-    return frontmatter + content
+    return "\n".join(frontmatter) + content
 
 
 def generate_all(config, context, project_root, only=None):

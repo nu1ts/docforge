@@ -190,6 +190,7 @@ def sync_docusaurus_config(project_root, config):
         "LocaleDropdown.tsx.j2": os.path.join("src", "theme", "LocaleDropdown", "index.tsx"),
         "VersionDropdown.tsx.j2": os.path.join("src", "theme", "VersionDropdown", "index.tsx"),
         "NavbarComponentTypes.tsx.j2": os.path.join("src", "theme", "NavbarItem", "ComponentTypes.tsx"),
+        "TOC.tsx.j2": os.path.join("src", "theme", "TOC", "index.tsx"),
     }
 
     for template_name, output_name in files_to_sync.items():
@@ -377,6 +378,7 @@ def init_docusaurus(project_root, config_path="docforge.yaml", npm_exe=None):
         "LocaleDropdown.tsx.j2": os.path.join("src", "theme", "LocaleDropdown", "index.tsx"),
         "VersionDropdown.tsx.j2": os.path.join("src", "theme", "VersionDropdown", "index.tsx"),
         "NavbarComponentTypes.tsx.j2": os.path.join("src", "theme", "NavbarItem", "ComponentTypes.tsx"),
+        "TOC.tsx.j2": os.path.join("src", "theme", "TOC", "index.tsx"),
     }
 
     for template_name, output_name in files_to_render.items():

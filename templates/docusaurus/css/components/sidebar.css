@@ -105,8 +105,48 @@
 
 
 /* ============================================================
-   TOC (Table of Contents — right sidebar)
+   TOC
    ============================================================ */
+
+@media (min-width: 997px) {
+    .df-toc {
+        position: sticky;
+        top: calc(var(--ifm-navbar-height) + 16px);
+        max-height: calc(100vh - var(--ifm-navbar-height) - 24px);
+        overflow-y: auto;
+        align-self: flex-start;
+    }
+
+    .df-toc .theme-doc-toc-desktop,
+    .df-toc [class*='tableOfContents_'] {
+        position: static !important;
+        top: auto !important;
+        max-height: none !important;
+        overflow: visible !important;
+    }
+
+    .df-toc__title {
+        margin: 0 0 12px 12px;
+        font-family: var(--ifm-font-family-monospace), monospace;
+        font-size: 0.72rem;
+        font-weight: 700;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: var(--df-text-subtle);
+    }
+}
+
+@media (max-width: 996px) {
+    .df-toc {
+        position: static;
+        max-height: none;
+        overflow: visible;
+    }
+
+    .df-toc__title {
+        display: none;
+    }
+}
 
 .table-of-contents,
 .table-of-contents ul {
@@ -117,6 +157,11 @@
 
 .table-of-contents {
     font-size: 0.8rem;
+    border-left: 1px solid var(--df-border-color);
+}
+
+[data-theme='dark'] .table-of-contents {
+    border-left-color: rgba(255, 255, 255, 0.06);
 }
 
 .table-of-contents li {
@@ -125,27 +170,26 @@
 }
 
 .table-of-contents__link {
-    color: var(--df-text-subtle);
-    transition: color 0.15s, border-color 0.15s;
     display: block;
-    padding: 6px 0 6px 12px;
-    border-left: 1px solid var(--df-border-color);
-    margin-left: 0;
-    line-height: 1.5;
+    padding: 5px 12px;
+    margin-left: -1px;
+    border-left: 2px solid transparent;
+    color: var(--df-text-subtle);
+    line-height: 1.55;
     font-weight: 400;
+    font-size: 0.8rem;
+    transition: color 0.12s ease, border-color 0.12s ease;
 }
 
 .table-of-contents__link:hover {
     color: var(--ifm-color-primary);
-    border-left-color: var(--ifm-color-primary);
     text-decoration: none;
 }
 
 .table-of-contents__link--active {
     color: var(--ifm-color-primary);
-    font-weight: 500;
     border-left-color: var(--ifm-color-primary);
-    text-decoration: none;
+    font-weight: 600;
 }
 
 .table-of-contents ul .table-of-contents__link {
@@ -158,8 +202,4 @@
 
 .table-of-contents ul ul ul .table-of-contents__link {
     padding-left: 48px;
-}
-
-.table-of-contents .table-of-contents {
-    padding-left: 0;
 }

@@ -14,10 +14,11 @@ class SourceConfig:
 
 class DocConfig:
     def __init__(self, doc_id, output, title, prompt_template, sources,
-                 sidebar_position=1, extra_context=None):
+                 sidebar_position=1, sidebar_label=None, extra_context=None):
         self.id = doc_id
         self.output = output
         self.title = title
+        self.sidebar_label = sidebar_label
         self.prompt_template = prompt_template
         self.sources = sources
         self.sidebar_position = sidebar_position
