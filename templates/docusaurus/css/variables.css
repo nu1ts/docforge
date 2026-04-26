@@ -1,7 +1,11 @@
+/* ============================================================
+   DOCFORGE — Design Tokens
+   ============================================================ */
+
 @import url('https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&family=JetBrains+Mono:wght@400;500;600&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap');
 
 /* ============================================================
-   DESIGN TOKENS — LIGHT MODE
+   LIGHT MODE
    ============================================================ */
 
 :root {
@@ -28,6 +32,14 @@
     --df-gradient-ai:               linear-gradient(135deg, #06B6D4 0%, #3B82F6 100%);
     --df-gradient-surface:          linear-gradient(135deg, #FFF7ED 0%, #FEF3C7 100%);
     --df-gradient-glow:             linear-gradient(135deg, rgba(234,88,12,0.12) 0%, rgba(245,158,11,0.12) 100%);
+
+    /* Background textures */
+    --df-bg-dots-light:             radial-gradient(circle, rgba(234,88,12,0.08) 1px, transparent 1px);
+    --df-bg-dots-size:              24px 24px;
+    --df-bg-grid-light:             linear-gradient(rgba(234,88,12,0.04) 1px, transparent 1px),
+                                    linear-gradient(90deg, rgba(234,88,12,0.04) 1px, transparent 1px);
+    --df-bg-grid-size:              32px 32px;
+    --df-bg-noise:                  url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.035'/%3E%3C/svg%3E");
 
     /* Typography */
     --ifm-font-family-base:         'Inter', system-ui, -apple-system, sans-serif;
@@ -99,7 +111,7 @@
 
 
 /* ============================================================
-   DESIGN TOKENS — DARK MODE (Forge Night)
+   DARK MODE (Forge Night)
    ============================================================ */
 
 [data-theme='dark'] {
@@ -117,6 +129,11 @@
     --df-gradient-ai:               linear-gradient(135deg, #22D3EE 0%, #60A5FA 100%);
     --df-gradient-surface:          linear-gradient(135deg, #1C1917 0%, #1A1614 100%);
     --df-gradient-glow:             linear-gradient(135deg, rgba(249,115,22,0.15) 0%, rgba(251,191,36,0.15) 100%);
+
+    /* Background textures — dark */
+    --df-bg-dots-light:             radial-gradient(circle, rgba(249,115,22,0.10) 1px, transparent 1px);
+    --df-bg-grid-light:             linear-gradient(rgba(249,115,22,0.05) 1px, transparent 1px),
+                                    linear-gradient(90deg, rgba(249,115,22,0.05) 1px, transparent 1px);
 
     --df-shadow-brand:              0 4px 24px rgba(249,115,22,0.40);
     --df-shadow-glow:               0 0 32px rgba(249,115,22,0.55);

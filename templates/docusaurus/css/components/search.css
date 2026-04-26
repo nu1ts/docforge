@@ -2,9 +2,7 @@
    SEARCH BAR
    ============================================================ */
 
-.navbar__search {
-    margin-left: 0 !important;
-}
+.navbar__search { margin-left: 0 !important; }
 
 /* ── Local search input ── */
 .navbar__search-input {
@@ -67,15 +65,8 @@
         0 0 0 1px rgba(249, 115, 22, 0.28);
 }
 
-.navbar__search-input::placeholder {
-    color: #A16207;
-    opacity: 0.88;
-}
-
-[data-theme='dark'] .navbar__search-input::placeholder {
-    color: #FDBA74;
-    opacity: 0.82;
-}
+.navbar__search-input::placeholder { color: #A16207; opacity: 0.88; }
+[data-theme='dark'] .navbar__search-input::placeholder { color: #FDBA74; opacity: 0.82; }
 
 
 /* ── Algolia DocSearch button ── */
@@ -105,20 +96,11 @@
     height: 16px !important;
 }
 
-.DocSearch-Button:hover .DocSearch-Search-Icon {
-    color: var(--ifm-color-primary) !important;
-}
-
-.DocSearch-Button:hover .DocSearch-Button-Placeholder {
-    color: var(--ifm-color-primary) !important;
-}
+.DocSearch-Button:hover .DocSearch-Search-Icon     { color: var(--ifm-color-primary) !important; }
+.DocSearch-Button:hover .DocSearch-Button-Placeholder { color: var(--ifm-color-primary) !important; }
 
 
-/* ============================================================
-   SEARCH — Label + Magnifier (DocSearch & local-search)
-   ============================================================ */
-
-/* Search label + magnifier */
+/* ── Label + Magnifier (DocSearch & local-search) ── */
 .DocSearch-Button-Placeholder,
 .aa-DetachedSearchButtonPlaceholder,
 [class*='searchBar'] .aa-DetachedSearchButtonPlaceholder,
@@ -173,59 +155,41 @@
 
 /* ============================================================
    SEARCH — Shortcut Keys (Ctrl K / ⌘ K)
-   Covers: Algolia DocSearch + @easyops-cn/docusaurus-search-local
    ============================================================ */
 
-/* ── Algolia keys container ── */
 .DocSearch-Button-Keys {
-    display: flex !important;
-    align-items: center !important;
-    gap: 3px !important;
-    min-width: auto !important;
-    padding: 0 !important;
+    display: flex !important; align-items: center !important;
+    gap: 3px !important; min-width: auto !important; padding: 0 !important;
 }
 
-/* ── Universal key style — targets both plugins ── */
 .DocSearch-Button-Key,
 .navbar__search .search-bar-shortcut-hint kbd,
 .navbar__search .search-bar-shortcut kbd,
 .navbar__search kbd,
 [class*='searchBar'] kbd,
 .search-bar kbd {
-    /* Reset all defaults */
     all: unset !important;
     box-sizing: border-box !important;
     display: inline-flex !important;
     align-items: center !important;
     justify-content: center !important;
-
-    /* Font */
     font-family: 'JetBrains Mono', 'Fira Code', monospace !important;
     font-size: 0.625rem !important;
     font-weight: 700 !important;
     letter-spacing: 0.04em !important;
     line-height: 1 !important;
-
-    /* Size */
     min-width: 20px !important;
     height: 20px !important;
     padding: 0 5px !important;
     border-radius: 4px !important;
-
-    /* Light mode — warm ember tint */
     background: rgba(234, 88, 12, 0.08) !important;
     border: 1px solid rgba(234, 88, 12, 0.22) !important;
     color: #B45309 !important;
-
-    /* Misc */
     cursor: pointer !important;
     user-select: none !important;
-    transition: background 0.15s ease,
-                border-color 0.15s ease,
-                color 0.15s ease !important;
+    transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease !important;
 }
 
-/* ── Dark mode ── */
 [data-theme='dark'] .DocSearch-Button-Key,
 [data-theme='dark'] .navbar__search .search-bar-shortcut-hint kbd,
 [data-theme='dark'] .navbar__search .search-bar-shortcut kbd,
@@ -237,7 +201,6 @@
     color: #FB923C !important;
 }
 
-/* ── Hover — light ── */
 .DocSearch-Button:hover .DocSearch-Button-Key,
 .navbar__search:hover kbd,
 [class*='searchBar']:hover kbd {
@@ -246,7 +209,6 @@
     color: #EA580C !important;
 }
 
-/* ── Hover — dark ── */
 [data-theme='dark'] .DocSearch-Button:hover .DocSearch-Button-Key,
 [data-theme='dark'] .navbar__search:hover kbd,
 [data-theme='dark'] [class*='searchBar']:hover kbd {
@@ -255,14 +217,11 @@
     color: #FDBA74 !important;
 }
 
-/* ── Kill Algolia's pseudo-elements inside key ── */
 .DocSearch-Button-Key::before,
 .DocSearch-Button-Key::after {
-    display: none !important;
-    content: none !important;
+    display: none !important; content: none !important;
 }
 
-/* ── Local search shortcut hint container ── */
 .navbar__search .search-bar-shortcut-hint,
 .navbar__search .search-bar-shortcut,
 [class*='searchBarShortcut'] {
@@ -272,13 +231,12 @@
     pointer-events: none !important;
 }
 
-/* ── Override Algolia CSS variables (belt + suspenders) ── */
 :root {
-    --docsearch-key-gradient:      rgba(234, 88, 12, 0.08);
-    --docsearch-key-shadow:        none;
+    --docsearch-key-gradient: rgba(234, 88, 12, 0.08);
+    --docsearch-key-shadow:   none;
 }
 
 [data-theme='dark'] {
-    --docsearch-key-gradient:      rgba(251, 146, 60, 0.10);
-    --docsearch-key-shadow:        none;
+    --docsearch-key-gradient: rgba(251, 146, 60, 0.10);
+    --docsearch-key-shadow:   none;
 }

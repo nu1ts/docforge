@@ -1,7 +1,55 @@
 /* ============================================================
-   CONTENT AREA — Markdown
+   MAIN CONTENT AREA — Forge Ember
    ============================================================ */
 
+/* The main doc wrapper — subtle grid texture */
+.main-wrapper {
+    animation: df-fade-in 0.35s ease both;
+}
+
+/* Article / doc content pane */
+.container.padding-top--md,
+article.margin-bottom--xl {
+    position: relative;
+}
+
+/* Ambient top-glow on the content column */
+.theme-doc-markdown,
+.markdown {
+    position: relative;
+}
+
+/* Very faint ember radial at h1 area */
+.theme-doc-markdown::before {
+    content: '';
+    position: absolute;
+    top: -40px;
+    left: -60px;
+    right: -60px;
+    height: 320px;
+    background: radial-gradient(
+        ellipse 70% 100% at 50% 0%,
+        rgba(234,88,12,0.055) 0%,
+        transparent 100%
+    );
+    pointer-events: none;
+    z-index: 0;
+}
+
+[data-theme='dark'] .theme-doc-markdown::before {
+    background: radial-gradient(
+        ellipse 70% 100% at 50% 0%,
+        rgba(249,115,22,0.07) 0%,
+        transparent 100%
+    );
+}
+
+.theme-doc-markdown > * {
+    position: relative;
+    z-index: 1;
+}
+
+/* ── Markdown base ── */
 .markdown {
     --ifm-heading-color:    inherit;
     --ifm-link-color:       var(--ifm-color-primary);
@@ -80,14 +128,8 @@
     opacity: 0.85;
 }
 
-.markdown p {
-    margin-bottom: 1.375rem;
-}
-
-.markdown strong {
-    font-weight: 700;
-    color: inherit;
-}
+.markdown p        { margin-bottom: 1.375rem; }
+.markdown strong   { font-weight: 700; color: inherit; }
 
 .markdown blockquote {
     border-left: 3px solid var(--df-amber);
@@ -105,10 +147,7 @@
 }
 
 
-/* ============================================================
-   TABLES
-   ============================================================ */
-
+/* ── Tables ── */
 .markdown table {
     border-collapse: separate;
     border-spacing: 0;
@@ -120,46 +159,28 @@
     box-shadow: var(--ifm-global-shadow-lw);
 }
 
-.markdown thead tr {
-    background: var(--df-gradient-brand);
-}
+.markdown thead tr { background: var(--df-gradient-brand); }
 
 .markdown thead th {
     color: #ffffff;
     font-family: 'JetBrains Mono', 'Fira Code', 'Cascadia Code', monospace;
-    font-weight: 600;
-    font-size: 0.75rem;
-    text-transform: uppercase;
-    letter-spacing: 0.07em;
-    padding: 13px 18px;
-    border: none !important;
+    font-weight: 600; font-size: 0.75rem;
+    text-transform: uppercase; letter-spacing: 0.07em;
+    padding: 13px 18px; border: none !important;
 }
 
-.markdown tbody tr {
-    transition: background-color 0.15s;
-}
-
-.markdown tbody tr:nth-child(even) {
-    background: var(--df-badge-bg);
-}
-
-.markdown tbody tr:hover {
-    background: var(--ifm-hover-overlay);
-}
+.markdown tbody tr { transition: background-color 0.15s; }
+.markdown tbody tr:nth-child(even) { background: var(--df-badge-bg); }
+.markdown tbody tr:hover            { background: var(--ifm-hover-overlay); }
 
 .markdown tbody td {
-    padding: 11px 18px;
-    border: none !important;
+    padding: 11px 18px; border: none !important;
     border-top: 1px solid var(--df-border-color) !important;
-    font-size: 0.9rem;
-    vertical-align: middle;
+    font-size: 0.9rem; vertical-align: middle;
 }
 
 
-/* ============================================================
-   ADMONITIONS
-   ============================================================ */
-
+/* ── Admonitions ── */
 .admonition {
     border-left-width: 3px;
     border-radius: var(--ifm-card-border-radius);
@@ -168,39 +189,19 @@
 }
 
 .admonition-heading h5 {
-    font-size: 0.75rem;
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-    font-weight: 700;
+    font-size: 0.75rem; text-transform: uppercase;
+    letter-spacing: 0.08em; font-weight: 700;
     font-family: 'JetBrains Mono', 'Fira Code', 'Cascadia Code', monospace;
 }
 
-/* Note — AI Cyan (Gemini color) */
-.admonition-note {
-    background: rgba(6,182,212,0.06);
-    border-color: var(--df-cyan);
-}
-
-.admonition-tip {
-    background: rgba(16,185,129,0.06);
-    border-color: var(--df-green);
-}
-
+.admonition-note    { background: rgba(6,182,212,0.06);   border-color: var(--df-cyan);  }
+.admonition-tip     { background: rgba(16,185,129,0.06);  border-color: var(--df-green); }
 .admonition-caution,
-.admonition-warning {
-    background: rgba(245,158,11,0.06);
-    border-color: var(--df-amber);
-}
+.admonition-warning { background: rgba(245,158,11,0.06);  border-color: var(--df-amber); }
+.admonition-danger  { background: rgba(239,68,68,0.06);   border-color: var(--df-red);   }
 
-.admonition-danger {
-    background: rgba(239,68,68,0.06);
-    border-color: var(--df-red);
-}
 
-/* ============================================================
-   BREADCRUMBS
-   ============================================================ */
-
+/* ── Breadcrumbs ── */
 .breadcrumbs__item {
     font-size: 0.8125rem;
     font-family: 'JetBrains Mono', 'Fira Code', 'Cascadia Code', monospace;
@@ -208,8 +209,7 @@
 
 .breadcrumbs__link {
     color: var(--df-text-muted);
-    border-radius: 4px;
-    padding: 2px 6px;
+    border-radius: 4px; padding: 2px 6px;
     transition: all 0.15s;
 }
 
@@ -219,10 +219,8 @@
     text-decoration: none;
 }
 
-/* ============================================================
-   PAGINATION NAV
-   ============================================================ */
 
+/* ── Pagination nav ── */
 .pagination-nav__link {
     border: 1px solid var(--df-border-color);
     border-radius: var(--df-radius-xl);
@@ -232,46 +230,33 @@
 
 .pagination-nav__link:hover {
     border-color: var(--ifm-color-primary);
-    box-shadow:
-        0 0 0 3px var(--df-badge-bg),
-        var(--df-shadow-brand);
+    box-shadow: 0 0 0 3px var(--df-badge-bg), var(--df-shadow-brand);
     text-decoration: none;
     transform: translateY(-1px);
 }
 
 .pagination-nav__sublabel {
     font-family: 'JetBrains Mono', 'Fira Code', 'Cascadia Code', monospace;
-    font-size: 0.6875rem;
-    text-transform: uppercase;
-    letter-spacing: 0.07em;
-    color: var(--df-text-subtle);
+    font-size: 0.6875rem; text-transform: uppercase;
+    letter-spacing: 0.07em; color: var(--df-text-subtle);
     margin-bottom: 4px;
 }
 
 .pagination-nav__label {
-    font-size: 0.9375rem;
-    font-weight: 700;
-    letter-spacing: -0.01em;
+    font-size: 0.9375rem; font-weight: 700; letter-spacing: -0.01em;
 }
 
-/* ============================================================
-   LAST-UPDATED & EDIT LINKS
-   ============================================================ */
 
+/* ── Last updated / edit links ── */
 .theme-last-updated {
     font-family: 'JetBrains Mono', 'Fira Code', 'Cascadia Code', monospace;
-    font-size: 0.75rem;
-    color: var(--df-text-subtle);
-    opacity: 0.8;
+    font-size: 0.75rem; color: var(--df-text-subtle); opacity: 0.8;
 }
 
 .theme-edit-this-page {
-    font-size: 0.8125rem;
-    color: var(--df-text-muted);
-    transition: color 0.15s;
+    font-size: 0.8125rem; color: var(--df-text-muted); transition: color 0.15s;
 }
 
 .theme-edit-this-page:hover {
-    color: var(--ifm-color-primary);
-    text-decoration: none;
+    color: var(--ifm-color-primary); text-decoration: none;
 }

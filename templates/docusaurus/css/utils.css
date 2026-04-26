@@ -1,7 +1,8 @@
 /* ============================================================
-   BUTTONS
+   UTILITY — Forge Components
    ============================================================ */
 
+/* ── Buttons ── */
 .button {
     font-weight: 600;
     letter-spacing: 0.01em;
@@ -10,7 +11,6 @@
     overflow: hidden;
 }
 
-/* Primary — forge fire */
 .button--primary {
     background: var(--df-gradient-brand) !important;
     border: none !important;
@@ -24,7 +24,6 @@
     transform: translateY(-1px);
 }
 
-/* Secondary — glass */
 .button--secondary {
     background: rgba(234,88,12,0.08) !important;
     border: 1px solid var(--df-border-subtle) !important;
@@ -39,10 +38,7 @@
 }
 
 
-/* ============================================================
-   UTILITY — Forge Components
-   ============================================================ */
-
+/* ── Cards ── */
 .df-card {
     background: var(--df-glass-bg);
     border: 1px solid var(--df-glass-border);
@@ -58,51 +54,37 @@
     box-shadow: var(--ifm-global-shadow-tl);
 }
 
-/* Forge badge — янтарный */
+
+/* ── Badges ── */
 .df-badge {
-    display: inline-flex;
-    align-items: center;
-    gap: 5px;
-    padding: 3px 10px;
-    border-radius: 100px;
-    font-size: 0.6875rem;
-    font-weight: 700;
+    display: inline-flex; align-items: center; gap: 5px;
+    padding: 3px 10px; border-radius: 100px;
+    font-size: 0.6875rem; font-weight: 700;
     font-family: 'JetBrains Mono', 'Fira Code', 'Cascadia Code', monospace;
-    text-transform: uppercase;
-    letter-spacing: 0.06em;
+    text-transform: uppercase; letter-spacing: 0.06em;
     background: var(--df-badge-bg);
     color: var(--df-badge-color);
     border: 1px solid var(--df-badge-border);
 }
 
-/* AI badge — cyan (Gemini) */
 .df-ai-badge {
-    display: inline-flex;
-    align-items: center;
-    gap: 5px;
-    padding: 3px 10px;
-    border-radius: 100px;
-    font-size: 0.6875rem;
-    font-weight: 700;
+    display: inline-flex; align-items: center; gap: 5px;
+    padding: 3px 10px; border-radius: 100px;
+    font-size: 0.6875rem; font-weight: 700;
     font-family: 'JetBrains Mono', 'Fira Code', 'Cascadia Code', monospace;
-    text-transform: uppercase;
-    letter-spacing: 0.06em;
+    text-transform: uppercase; letter-spacing: 0.06em;
     background: var(--df-ai-badge-bg);
     color: var(--df-ai-badge-color);
     border: 1px solid var(--df-ai-badge-border);
 }
 
-/* Deploy badge */
 .df-deploy-badge {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
+    display: inline-flex; align-items: center; gap: 6px;
     padding: 4px 12px 4px 8px;
     background: var(--df-glass-bg);
     border: 1px solid var(--df-glass-border);
     border-radius: 100px;
-    font-size: 0.6875rem;
-    font-weight: 600;
+    font-size: 0.6875rem; font-weight: 600;
     font-family: 'JetBrains Mono', 'Fira Code', 'Cascadia Code', monospace;
     color: var(--df-text-muted);
     backdrop-filter: blur(8px);
@@ -116,23 +98,18 @@
     box-shadow: 0 0 12px rgba(234,88,12,0.25);
 }
 
-.df-deploy-badge::before {
-    content: '⚡';
-    font-size: 0.75rem;
-}
+.df-deploy-badge::before { content: '⚡'; font-size: 0.75rem; }
 
-/* Terminal input */
+
+/* ── Terminal input ── */
 .df-terminal-input {
     font-family: 'JetBrains Mono', 'Fira Code', 'Cascadia Code', monospace;
-    font-size: 0.9375rem;
-    letter-spacing: 0.05em;
+    font-size: 0.9375rem; letter-spacing: 0.05em;
     background: rgba(12,10,9,0.70);
     border: 1px solid rgba(249,115,22,0.20);
-    border-radius: 10px;
-    color: #E7E5E4;
+    border-radius: 10px; color: #E7E5E4;
     caret-color: var(--ifm-color-primary);
-    padding: 12px 16px;
-    width: 100%;
+    padding: 12px 16px; width: 100%;
     outline: none;
     transition: border-color 0.2s, box-shadow 0.2s;
 }
@@ -147,18 +124,13 @@
     animation: df-blink 1.2s step-end infinite;
 }
 
-@keyframes df-blink {
-    0%, 100% { opacity: 1; }
-    50%       { opacity: 0; }
-}
 
-/* Glow text */
+/* ── Text helpers ── */
 .df-glow {
     color: var(--ifm-color-primary);
     text-shadow: 0 0 16px rgba(234,88,12,0.55);
 }
 
-/* Gradient text */
 .df-gradient-text {
     background: var(--df-gradient-brand);
     -webkit-background-clip: text;
@@ -166,10 +138,36 @@
     background-clip: text;
 }
 
-/* AI gradient text — cyan */
 .df-gradient-ai {
     background: var(--df-gradient-ai);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
 }
+
+
+/* ── Animations ── */
+@keyframes df-fade-in {
+    from { opacity: 0; transform: translateY(8px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes df-pulse-glow {
+    0%, 100% { box-shadow: 0 0 8px rgba(234,88,12,0.30); }
+    50%       { box-shadow: 0 0 24px rgba(234,88,12,0.65); }
+}
+
+@keyframes df-ember-flicker {
+    0%, 100% { opacity: 1; }
+    45%       { opacity: 0.85; }
+    50%       { opacity: 0.95; }
+    55%       { opacity: 0.80; }
+}
+
+@keyframes df-blink {
+    0%, 100% { opacity: 1; }
+    50%       { opacity: 0; }
+}
+
+.df-pulse   { animation: df-pulse-glow    2.5s ease-in-out infinite; }
+.df-flicker { animation: df-ember-flicker 3s   ease-in-out infinite; }
